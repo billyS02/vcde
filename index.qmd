@@ -30,7 +30,7 @@ ax.grid(True)
 plt.show()
 ```
 
-## Methodology
+## Methodik
 You can include complex math like $$E = mc^2$$ and immediately follow it with an interactive 3D figure to visualize your results.
 
 ```{=html}
@@ -76,3 +76,19 @@ You can include complex math like $$E = mc^2$$ and immediately follow it with an
     });
 </script>
 ```
+## 1. Einordnung
+
+
+## 2. YOLO: Intro
+
+
+## 3. YOLO: Implementierung
+
+
+## 4. YOLO: Demo
+
+
+## 5. Ausblick
+
+
+## Fazit
