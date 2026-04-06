@@ -2,56 +2,56 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "My Awesome Paper Title",
+    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
     "section": "",
     "text": "Nach Knuth (1984) ist TeX… This is a single-file Quarto website hosted on GitHub Pages. It combines Markdown text, LaTeX math, and interactive 3D elements.\n\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nr = np.arange(0, 2, 0.01)\ntheta = 2 * np.pi * r\nfig, ax = plt.subplots(\n  subplot_kw = {'projection': 'polar'} \n)\nax.plot(theta, r)\nax.set_rticks([0.5, 1, 1.5, 2])\nax.grid(True)\nplt.show()\n\n\n\n\n\n\n\nFigure 1: A line plot on a polar axis"
   },
   {
     "objectID": "index.html#abstract",
     "href": "index.html#abstract",
-    "title": "My Awesome Paper Title",
+    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
     "section": "",
     "text": "Nach Knuth (1984) ist TeX… This is a single-file Quarto website hosted on GitHub Pages. It combines Markdown text, LaTeX math, and interactive 3D elements.\n\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nr = np.arange(0, 2, 0.01)\ntheta = 2 * np.pi * r\nfig, ax = plt.subplots(\n  subplot_kw = {'projection': 'polar'} \n)\nax.plot(theta, r)\nax.set_rticks([0.5, 1, 1.5, 2])\nax.grid(True)\nplt.show()\n\n\n\n\n\n\n\nFigure 1: A line plot on a polar axis"
   },
   {
     "objectID": "index.html#methodik",
     "href": "index.html#methodik",
-    "title": "My Awesome Paper Title",
+    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
     "section": "Methodik",
     "text": "Methodik\nYou can include complex math like \\[E = mc^2\\] and immediately follow it with an interactive 3D figure to visualize your results."
   },
   {
     "objectID": "index.html#einordnung",
     "href": "index.html#einordnung",
-    "title": "My Awesome Paper Title",
+    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
     "section": "1. Einordnung",
     "text": "1. Einordnung"
   },
   {
     "objectID": "index.html#yolo-intro",
     "href": "index.html#yolo-intro",
-    "title": "My Awesome Paper Title",
+    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
     "section": "2. YOLO: Intro",
     "text": "2. YOLO: Intro"
   },
   {
     "objectID": "index.html#yolo-implementierung",
     "href": "index.html#yolo-implementierung",
-    "title": "My Awesome Paper Title",
+    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
     "section": "3. YOLO: Implementierung",
     "text": "3. YOLO: Implementierung"
   },
   {
     "objectID": "index.html#yolo-demo",
     "href": "index.html#yolo-demo",
-    "title": "My Awesome Paper Title",
+    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
     "section": "4. YOLO: Demo",
     "text": "4. YOLO: Demo"
   },
   {
     "objectID": "index.html#ausblick",
     "href": "index.html#ausblick",
-    "title": "My Awesome Paper Title",
+    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
     "section": "5. Ausblick",
     "text": "5. Ausblick"
   }
