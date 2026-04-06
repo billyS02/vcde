@@ -1,6 +1,6 @@
 ---
-title: "My Awesome Paper Title"
-author: "Your Name"
+title: "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens"
+author: "Bledar Sllamniku (Digital Engineering Student)"
 format:
   html:
     theme: cosmo
