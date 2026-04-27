@@ -1,17 +1,80 @@
 [
   {
+    "objectID": "template.html",
+    "href": "template.html",
+    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
+    "section": "",
+    "text": "[Diesen Absatz am Ende schreiben. Erwähnt werden sollten: - Hintergründe für das Thema - Zusammenfassung YOLO - Ergebnisse YOLO - Zusammenfassung Diskussion/Ausblick]"
+  },
+  {
+    "objectID": "template.html#abstract",
+    "href": "template.html#abstract",
+    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
+    "section": "",
+    "text": "[Diesen Absatz am Ende schreiben. Erwähnt werden sollten: - Hintergründe für das Thema - Zusammenfassung YOLO - Ergebnisse YOLO - Zusammenfassung Diskussion/Ausblick]"
+  },
+  {
+    "objectID": "template.html#methodik",
+    "href": "template.html#methodik",
+    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
+    "section": "Methodik",
+    "text": "Methodik\nYou can include complex math like \\[E = mc^2\\] and immediately follow it with an interactive 3D figure to visualize your results."
+  },
+  {
+    "objectID": "template.html#einordnung",
+    "href": "template.html#einordnung",
+    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
+    "section": "1. Einordnung",
+    "text": "1. Einordnung"
+  },
+  {
+    "objectID": "template.html#yolo-intro",
+    "href": "template.html#yolo-intro",
+    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
+    "section": "2. YOLO: Intro",
+    "text": "2. YOLO: Intro"
+  },
+  {
+    "objectID": "template.html#yolo-implementierung",
+    "href": "template.html#yolo-implementierung",
+    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
+    "section": "3. YOLO: Implementierung",
+    "text": "3. YOLO: Implementierung"
+  },
+  {
+    "objectID": "template.html#yolo-demo",
+    "href": "template.html#yolo-demo",
+    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
+    "section": "4. YOLO: Demo",
+    "text": "4. YOLO: Demo"
+  },
+  {
+    "objectID": "template.html#ausblick",
+    "href": "template.html#ausblick",
+    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
+    "section": "5. Ausblick",
+    "text": "5. Ausblick"
+  },
+  {
+    "objectID": "template.html#fazit",
+    "href": "template.html#fazit",
+    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
+    "section": "Fazit",
+    "text": "Fazit"
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
     "section": "",
-    "text": "Nach Knuth (1984) ist TeX… This is a single-file Quarto website hosted on GitHub Pages. It combines Markdown text, LaTeX math, and interactive 3D elements.\n\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nr = np.arange(0, 2, 0.01)\ntheta = 2 * np.pi * r\nfig, ax = plt.subplots(\n  subplot_kw = {'projection': 'polar'} \n)\nax.plot(theta, r)\nax.set_rticks([0.5, 1, 1.5, 2])\nax.grid(True)\nplt.show()\n\n\n\n\n\n\n\nFigure 1: A line plot on a polar axis"
+    "text": "[Diesen Absatz am Ende schreiben. Erwähnt werden sollten: - Hintergründe für das Thema - Zusammenfassung YOLO - Ergebnisse YOLO - Zusammenfassung Diskussion/Ausblick]"
   },
   {
     "objectID": "index.html#abstract",
     "href": "index.html#abstract",
     "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
     "section": "",
-    "text": "Nach Knuth (1984) ist TeX… This is a single-file Quarto website hosted on GitHub Pages. It combines Markdown text, LaTeX math, and interactive 3D elements.\n\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nr = np.arange(0, 2, 0.01)\ntheta = 2 * np.pi * r\nfig, ax = plt.subplots(\n  subplot_kw = {'projection': 'polar'} \n)\nax.plot(theta, r)\nax.set_rticks([0.5, 1, 1.5, 2])\nax.grid(True)\nplt.show()\n\n\n\n\n\n\n\nFigure 1: A line plot on a polar axis"
+    "text": "[Diesen Absatz am Ende schreiben. Erwähnt werden sollten: - Hintergründe für das Thema - Zusammenfassung YOLO - Ergebnisse YOLO - Zusammenfassung Diskussion/Ausblick]"
   },
   {
     "objectID": "index.html#methodik",
@@ -54,5 +117,12 @@
     "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
     "section": "5. Ausblick",
     "text": "5. Ausblick"
+  },
+  {
+    "objectID": "index.html#fazit",
+    "href": "index.html#fazit",
+    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
+    "section": "Fazit",
+    "text": "Fazit"
   }
 ]
