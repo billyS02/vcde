@@ -170,13 +170,13 @@ div.csl-indent {
 <h2 class="anchored" data-anchor-id="sec-einordnung">1. Einordnung</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><embed src="./img/pipeline.pdf" class="img-fluid"></p>
-<figcaption>Pipeline im Visual Computing. [friedrich2026]</figcaption>
+<p><img src="./img/pipeline.png" class="img-fluid figure-img"></p>
+<figcaption>Pipeline im Visual Computing. <span class="citation" data-cites="friedrich2026">(<a href="#ref-friedrich2026" role="doc-biblioref">Friedrich 2026</a>)</span></figcaption>
 </figure>
 </div>
 <p>Die Objekterkennung ist Teil des vierten Blocks (<em>Recognition</em>) der klassischen Pipeline des Visual Computings und behandelt das Finden von Objekten in einem Bild oder Video. Dabei wird für jedes Objekt der <strong>Ort</strong> und die <strong>Klassifizierung</strong> zurückgegeben. Visuell wird also eine sog. <em>Bounding Box</em> erzeugt, die das erkannte Objekt umrahmt, zusammen mit einem Label, die das Objekt einer Klasse zuschreibt.</p>
-<p>Besondere Anforderungen stellt dabei das <strong>autonome Fahren</strong>: Hier reicht es nicht, Objekte lediglich zu erkennen, denn zusätzlich muss das auch in <strong>Echtzeit</strong> geschehen, also mit mindestens 24 fps (Frames pro Sekunde), damit ein Fahrzeug rechtzeitig reagieren kann. Klassische Verfahren wie <em>R-CNN</em> sind zwar präzise, scheitern jedoch an genau diesem Anspruch, da sie das Bild in mehreren Schritten verarbeiten <span class="citation" data-cites="girshick2014">(<a href="#ref-girshick2014" role="doc-biblioref">Girshick et al. 2014</a>)</span>.<br>
-<strong>YOLO</strong> (<em>You Only Look Once</em>) löst dieses Problem mit einem anderen Ansatz. Das gesamte Bild wird in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Erkennung von bis zu 45 fps ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht <span class="citation" data-cites="redmon2016">(<a href="#ref-redmon2016" role="doc-biblioref">Redmon et al. 2016</a>)</span>.</p>
+<p>Besondere Anforderungen stellt dabei das <strong>autonome Fahren</strong>: Hier reicht es nicht, Objekte lediglich zu erkennen, denn zusätzlich muss das auch in <strong>Echtzeit</strong> geschehen, also mit mindestens 24 fps (Frames pro Sekunde), damit ein Fahrzeug rechtzeitig reagieren kann. Klassische Verfahren wie <em>R-CNN</em> sind zwar präzise, scheitern jedoch an genau diesem Anspruch, da sie das Bild in mehreren Schritten verarbeiten <span class="citation" data-cites="girshick2014">(<a href="#ref-girshick2014" role="doc-biblioref">Girshick et al. 2014</a>)</span>.</p>
+<p><strong>YOLO</strong> (<em>You Only Look Once</em>) löst dieses Problem mit einem anderen Ansatz. Das gesamte Bild wird in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Erkennung von bis zu 45 fps ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht <span class="citation" data-cites="redmon2016">(<a href="#ref-redmon2016" role="doc-biblioref">Redmon et al. 2016</a>)</span>.</p>
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 </section>
 <section id="sec-intro" class="level2">
@@ -205,6 +205,9 @@ div.csl-indent {
 
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-friedrich2026" class="csl-entry" role="listitem">
+Friedrich, Prof. Dr. Markus. 2026. <em>Visual Computing: Erkennung (Klassifikation, Segmentierung, Objekterkennung, Anomalierkennung)</em>.
+</div>
 <div id="ref-girshick2014" class="csl-entry" role="listitem">
 Girshick, Ross, Jeff Donahue, Trevor Darrell, and Jitendra Malik. 2014. <em>Rich Feature Hierarchies for Accurate Object Detection and Semantic Segmentation</em>. <a href="https://arxiv.org/abs/1311.2524">https://arxiv.org/abs/1311.2524</a>.
 </div>
