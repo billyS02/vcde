@@ -1,7 +1,7 @@
 ---
 title: "Echtzeit-Objekterkennung mit YOLO"
-subtitle: "Eine Implementierung am Beispiel des Autonomen Fahrens"
-author: "Bledar Sllamniku (Digital Engineering Student)"
+subtitle: "**Eine Implementierung am Beispiel des Autonomen Fahrens**"
+author: "Bledar Sllamniku (Digital Engineering – B.Sc.)"
 format:
   html:
     theme: cosmo
@@ -42,7 +42,7 @@ Dazugehörige Code-Snippets stehen im gesamten Verlauf dieser Webseite ebenso zu
 \n
 
 Ist die sukzessive Implementierung im Kapitel [<u>YOLO: Implementierung</u>](#sec-implementierung) abgearbeitet worden, erfolgt eine **Demonstration** in Kapitel [<u>YOLO: Demo</u>](#sec-demo), in der eine Echtzeit-Objekterkennung anhand eines Videos aus dem Straßenverkehr getestet werden soll.
-Zugleich erhält der Leser die Möglichkeit, die Implementierung mit eigenen Medien auszuprobieren und durch **interaktive Inhalte**, die Implementierung zu manipulieren (z.B. das Anpassen der Parameter).
+Zugleich erhält der Leser die Möglichkeit, die Implementierung mit eigenen Medien auszuprobieren und durch **interaktive Inhalte** die Implementierung zu manipulieren (z.B. das Anpassen der Parameter).
 
 \n
 
