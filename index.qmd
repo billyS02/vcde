@@ -59,10 +59,10 @@ Abgeschlossen wird das Thema mit dem Kapitel [<u>Ausblick</u>](#sec-ausblick), w
 
 ## 1. Einordnung {#sec-einordnung}
 
-![Pipeline im Visual Computing. [friedrichErkennung2026]](./img/pipeline.pdf)
-Die Objekterkennung ist Teil des vierten Blocks (*Recognition*) der klassischen Pipeline des Visual Computings und behandelt das Auffinden von Objekten in einem Bild oder Video.
-Dabei wird pro Objekt der **Ort** und die **Klassifizierung** zurückgegeben. 
-Visuell wird also eine sog. *Bounding Box* erzeugt, die das erkannte Objekt umrahmt, zusammen mit einem Label, die das Objekt einer Klasse zuschreibt
+![Pipeline im Visual Computing. [friedrichErkennung2026]](./img/pipeline.pdf){fig-align="center" width="80%"}  
+Die Objekterkennung ist Teil des vierten Blocks (*Recognition*) der klassischen Pipeline des Visual Computings und behandelt das Finden von Objekten in einem Bild oder Video.
+Dabei wird für jedes Objekt der **Ort** und die **Klassifizierung** zurückgegeben.
+Visuell wird also eine sog. *Bounding Box* erzeugt, die das erkannte Objekt umrahmt, zusammen mit einem Label, die das Objekt einer Klasse zuschreibt.
 
 
 
