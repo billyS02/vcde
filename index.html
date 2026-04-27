@@ -90,35 +90,6 @@ div.csl-indent {
   }
 }</script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -197,10 +168,15 @@ window.Quarto = {
 </section>
 <section id="sec-einordnung" class="level2">
 <h2 class="anchored" data-anchor-id="sec-einordnung">1. Einordnung</h2>
-<p><embed src="./img/pipeline.pdf" class="img-fluid quarto-figure quarto-figure-center" style="width:80.0%"><br>
-Die Objekterkennung ist Teil des vierten Blocks (<em>Recognition</em>) der klassischen Pipeline des Visual Computings und behandelt das Finden von Objekten in einem Bild oder Video. Dabei wird für jedes Objekt der <strong>Ort</strong> und die <strong>Klassifizierung</strong> zurückgegeben. Visuell wird also eine sog. <em>Bounding Box</em> erzeugt, die das erkannte Objekt umrahmt, zusammen mit einem Label, die das Objekt einer Klasse zuschreibt.</p>
-<p>Besondere Anforderungen stellt dabei das <strong>autonome Fahren</strong>: Hier reicht es nicht, Objekte lediglich zu erkennen, denn zusätzlich muss das auch in <strong>Echtzeit</strong> geschehen, also mit mindestens <span class="math display">\[24 fps\]</span> (Frames pro Sekunde), damit ein Fahrzeug rechtzeitig reagieren kann. Klassische Verfahren wie <em>R-CNN</em> sind zwar präzise, scheitern jedoch an genau diesem Anspruch, da sie das Bild in mehreren Schritten verarbeiten <span class="citation" data-cites="girshick2014">(<a href="#ref-girshick2014" role="doc-biblioref">Girshick et al. 2014</a>)</span>.<br>
-<strong>YOLO</strong> (<em>You Only Look Once</em>) löst dieses Problem mit einem anderen Ansatz. Das gesamte Bild wird in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Erkennung von bis zu <span class="math display">\[45 fps\]</span> ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht <span class="citation" data-cites="redmon2016">(<a href="#ref-redmon2016" role="doc-biblioref">Redmon et al. 2016</a>)</span>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><embed src="./img/pipeline.pdf" class="img-fluid"></p>
+<figcaption>Pipeline im Visual Computing. [friedrichErkennung2026]</figcaption>
+</figure>
+</div>
+<p>Die Objekterkennung ist Teil des vierten Blocks (<em>Recognition</em>) der klassischen Pipeline des Visual Computings und behandelt das Finden von Objekten in einem Bild oder Video. Dabei wird für jedes Objekt der <strong>Ort</strong> und die <strong>Klassifizierung</strong> zurückgegeben. Visuell wird also eine sog. <em>Bounding Box</em> erzeugt, die das erkannte Objekt umrahmt, zusammen mit einem Label, die das Objekt einer Klasse zuschreibt.</p>
+<p>Besondere Anforderungen stellt dabei das <strong>autonome Fahren</strong>: Hier reicht es nicht, Objekte lediglich zu erkennen, denn zusätzlich muss das auch in <strong>Echtzeit</strong> geschehen, also mit mindestens 24 fps (Frames pro Sekunde), damit ein Fahrzeug rechtzeitig reagieren kann. Klassische Verfahren wie <em>R-CNN</em> sind zwar präzise, scheitern jedoch an genau diesem Anspruch, da sie das Bild in mehreren Schritten verarbeiten <span class="citation" data-cites="girshick2014">(<a href="#ref-girshick2014" role="doc-biblioref">Girshick et al. 2014</a>)</span>.<br>
+<strong>YOLO</strong> (<em>You Only Look Once</em>) löst dieses Problem mit einem anderen Ansatz. Das gesamte Bild wird in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Erkennung von bis zu 45 fps ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht <span class="citation" data-cites="redmon2016">(<a href="#ref-redmon2016" role="doc-biblioref">Redmon et al. 2016</a>)</span>.</p>
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 </section>
 <section id="sec-intro" class="level2">
