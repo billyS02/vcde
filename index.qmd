@@ -11,57 +11,17 @@ bibliography: references.bib
 ## Abstract
 
 [Diesen Absatz am Ende schreiben. Erwähnt werden sollten:
-    - Hintergründe für das Thema
-    - Zusammenfassung YOLO
-    - Ergebnisse YOLO
-    - Zusammenfassung Diskussion/Ausblick]
+    - Hintergründe für das Thema  
+    - Zusammenfassung YOLO  
+    - Ergebnisse YOLO  
+    - Zusammenfassung Diskussion/Ausblick]  
 
 ## Methodik
-You can include complex math like $$E = mc^2$$ and immediately follow it with an interactive 3D figure to visualize your results.
 
-```{=html}
+Die Echtzeit-Objekterkennung erfolgt in diesem Projekt über die Open-Source-Technologie **YOLO** und **OpenCV**. Zur Einführung und Implementierung der verwendeten Software beginnt dieses Projekt mit einer kurzen Einordnung der **Objekterkennung** allgemein,
+um dem Leser die **Vernetzung** des Kernthemas zu anderen Tehmen zu erleichtern. Die Brücke zu *YOLO* erfüglt über das gleichnamige Introduction (Kapitel 1), wo dem
 
-<script src="https://cdn.babylonjs.com/babylon.js"></script>
 
-<div style="width: 100%; height: 400px; position: relative; margin: 20px 0;">
-    <canvas id="renderCanvas" style="width: 100%; height: 100%; touch-action: none; border: 1px solid #ddd; display: block; border-radius: 8px;"></canvas>
-</div>
-
-<script>
-    window.addEventListener('DOMContentLoaded', function() {
-        const canvas = document.getElementById("renderCanvas");
-        if (!canvas) return;
-
-        const engine = new BABYLON.Engine(canvas, true);
-
-        const createScene = function () {
-            const scene = new BABYLON.Scene(engine);
-            scene.clearColor = new BABYLON.Color3(0.95, 0.95, 0.95);
-
-            const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI/4, Math.PI/3, 5, BABYLON.Vector3.Zero(), scene);
-            camera.attachControl(canvas, true);
-
-            const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
-            
-            const box = BABYLON.MeshBuilder.CreateBox("box", {size: 1.5}, scene);
-            const material = new BABYLON.StandardMaterial("mat", scene);
-            material.diffuseColor = new BABYLON.Color3(0.1, 0.4, 0.8);
-            box.material = material;
-
-            scene.registerBeforeRender(function () {
-                box.rotation.y += 0.01;
-                box.rotation.x += 0.005;
-            });
-
-            return scene;
-        };
-
-        const scene = createScene();
-        engine.runRenderLoop(() => scene.render());
-        window.addEventListener("resize", () => engine.resize());
-    });
-</script>
-```
 ## 1. Einordnung
 
 
