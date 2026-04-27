@@ -41,7 +41,7 @@ Die Echtzeit-Objekterkennung erfolgt in diesem Projekt über die frei verfügbar
 
 Die Brücke zu YOLO wird über das gleichnamige Kapitel [<u>YOLO: Intro</u>](#sec-intro) geschlagen, wo dem Leser die Geschichte und die Natur der verwendeteten Technologie nahegelegt und mit anderen Standards verglichen werden.
 Zugleich werden die **System Requierements** abgearbeitet (z.B. das Erstellen eines Virtual Environments oder das Installieren von notwendigen Bibliotheken), um die Schritt-für-Schritt **Reproduzierbarkeit** Seitens des Lesers zu gewährleisten.
-Dazugehörige Code-Snippets stehen im gesamten Verlauf dieser Webseite ebenso zur Verfügung und können direkt in die eigene Entwicklerumgebung (VSCode, etc.) kopiert werden.
+Dazugehörige Code-Snippets stehen im gesamten Verlauf dieser Webseite ebenso zur Verfügung und können direkt in die eigene Entwicklungsumgebung (VSCode, etc.) kopiert werden.
 
 \n
 
