@@ -68,11 +68,11 @@ Visuell wird also eine sog. *Bounding Box* erzeugt, die das erkannte Objekt umra
 \n
 
 Besondere Anforderungen stellt dabei das **autonome Fahren**: Hier reicht es nicht, Objekte lediglich zu erkennen, denn zusätzlich muss das auch in **Echtzeit** geschehen, also mit mindestens 24 fps (Frames pro Sekunde), damit ein Fahrzeug rechtzeitig reagieren kann.
-Klassische Verfahren wie *R-CNN* sind zwar präzise, scheitern jedoch an genau diesem Anspruch, da sie das Bild in mehreren Schritten verarbeiten [@girshick2014].
+Klassische Verfahren wie R-CNN sind zwar präzise, scheitern jedoch an genau diesem Anspruch, da sie das Bild in mehreren Schritten verarbeiten [@girshick2014]. Die Rede ist von einem *Two-Stage-Detector*.
 
 \n
 
-**YOLO** (*You Only Look Once*) löst dieses Problem mit einem anderen Ansatz. Das gesamte Bild wird in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Erkennung von bis zu 45 fps ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht [@redmon2016].
+Als One-Stage-Detector löst **YOLO** (You Only Look Once) dieses Problem mit einem anderen Ansatz. Das gesamte Bild wird in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Erkennung von bis zu 45 fps ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht [@redmon2016].
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
