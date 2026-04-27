@@ -9,15 +9,15 @@ bibliography: references.bib
 ---
 
 ::: {.callout-note appearance="minimal"}
-**Inhalt**  
+**Inhalte**  
 [Abstract](#sec-abstract)  
 [Methodik](#sec-methodik)  
 [1. Einordnung](#sec-einordnung)  
 [2. YOLO: Intro](#sec-intro)  
 [3. YOLO: Implementierung](#sec-implementierung)  
 [4. YOLO: Demo](#sec-demo)  
-[5. Ausblick](#sec-ausblick)
-[Fazit] (#sec-fazit)
+[5. Ausblick](#sec-ausblick)  
+[Fazit](#sec-fazit)
 :::
 
 ## Abstract {#sec-abstract} 
