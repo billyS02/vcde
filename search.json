@@ -65,70 +65,70 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
+    "title": "Echtzeit-Objekterkennung mit YOLO",
     "section": "",
     "text": "Inhalte\nAbstract\nMethodik\n1. Einordnung\n2. YOLO: Intro\n3. YOLO: Implementierung\n4. YOLO: Demo\n5. Ausblick\nFazit"
   },
   {
     "objectID": "index.html#sec-abstract",
     "href": "index.html#sec-abstract",
-    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
+    "title": "Echtzeit-Objekterkennung mit YOLO",
     "section": "Abstract",
     "text": "Abstract\n[Diesen Absatz am Ende schreiben. Erwähnt werden sollten:\n- Hintergründe für das Thema\n- Zusammenfassung YOLO\n- Ergebnisse YOLO\n- Zusammenfassung Diskussion/Ausblick]"
   },
   {
     "objectID": "index.html#sec-methodik",
     "href": "index.html#sec-methodik",
-    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
+    "title": "Echtzeit-Objekterkennung mit YOLO",
     "section": "Methodik",
     "text": "Methodik\nDie Echtzeit-Objekterkennung erfolgt in diesem Projekt über die Open-Source-Technologien YOLO und OpenCV. Zur Einführung und der darauffolgenden Implementierung dieser, beginnt dieses Projekt mit einer kurzen Einordnung der Objekterkennung allgemein, um dem Leser1 die Vernetzung des Kernthemas zu anderen Tehmen zu erleichtern.\nDie Brücke zu YOLO wird über das gleichnamige Kapitel YOLO: Intro geschlagen, wo dem Leser die Geschichte und die Natur der verwendeteten Technologie nahegelegt und mit anderen Standards verglichen werden. Zugleich werden die System Requierements abgearbeitet (z.B. das Erstellen eines Virtual Environments oder das Installieren von notwendigen Bibliotheken) um die Schritt-für-Schritt Reproduzierbarkeit Seitens des Lesers zu gewährleisten. Dazugehörige Code-Snippets stehen im gesamten Verlauf dieser Webseite ebenso zur Verfügung und können direkt in die eigene Entwicklerumgebung (VSCode, etc.) kopiert werden.\nIst die sukzessive Implementierung im Kapitel YOLO: Implementierung abgearbeitet worden, erfolgt eine Demonstration in Kapitel YOLO: Demo, in der eine Echtzeit-Objekterkennung anhand eines Videos aus dem Straßenverkehr getestet werden soll. Zugleich erhält der Leser die Möglichkeit, die Implementierung mit eigenen Medien auszuprobieren und durch interaktive Inhalte, die Implementierung zu manipulieren (z.B. das Anpassen der Parameter).\nAbgeschlossen wird das Thema mit dem Kapitel Ausblick, wo die Grenzen und künftigen Entwicklungen von YOLO diskutiert und womöglich – für geeignete Anwendungen - auch andere Modelle vorgeschlagen werden."
   },
   {
     "objectID": "index.html#sec-einordnung",
     "href": "index.html#sec-einordnung",
-    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
+    "title": "Echtzeit-Objekterkennung mit YOLO",
     "section": "1. Einordnung",
     "text": "1. Einordnung"
   },
   {
     "objectID": "index.html#sec-intro",
     "href": "index.html#sec-intro",
-    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
+    "title": "Echtzeit-Objekterkennung mit YOLO",
     "section": "2. YOLO: Intro",
     "text": "2. YOLO: Intro"
   },
   {
     "objectID": "index.html#sec-implementierung",
     "href": "index.html#sec-implementierung",
-    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
+    "title": "Echtzeit-Objekterkennung mit YOLO",
     "section": "3. YOLO: Implementierung",
     "text": "3. YOLO: Implementierung"
   },
   {
     "objectID": "index.html#sec-demo",
     "href": "index.html#sec-demo",
-    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
+    "title": "Echtzeit-Objekterkennung mit YOLO",
     "section": "4. YOLO: Demo",
     "text": "4. YOLO: Demo"
   },
   {
     "objectID": "index.html#sec-ausblick",
     "href": "index.html#sec-ausblick",
-    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
+    "title": "Echtzeit-Objekterkennung mit YOLO",
     "section": "5. Ausblick",
     "text": "5. Ausblick"
   },
   {
     "objectID": "index.html#sec-fazit",
     "href": "index.html#sec-fazit",
-    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
+    "title": "Echtzeit-Objekterkennung mit YOLO",
     "section": "Fazit",
     "text": "Fazit\n[Dieses Kapitel am Ende verfassen. Dient als Zusammenfassung von Kapitel 1. Einordnung bishin zu Kapitel 5. Ausblick]."
   },
   {
     "objectID": "index.html#footnotes",
     "href": "index.html#footnotes",
-    "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
+    "title": "Echtzeit-Objekterkennung mit YOLO",
     "section": "Footnotes",
     "text": "Footnotes\n\n\nAus Gründen der Lesbarkeit wird in der gesamten Webseite das generische Maskulinum verwendet.↩︎"
   }
