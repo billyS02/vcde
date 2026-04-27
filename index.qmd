@@ -18,12 +18,17 @@ bibliography: references.bib
 
 ## Methodik
 
+::: {.callout-note appearance="minimal"}
+**Inhalt**  
+[1. Einordnung](#sec-einordnung) · [2. YOLO: Intro](#sec-intro) · [3. YOLO: Implementierung](#sec-implementierung) · [4. YOLO: Demo](#sec-demo) · [5. Ausblick](#sec-ausblick)
+:::
+
 Die Echtzeit-Objekterkennung erfolgt in diesem Projekt über die Open-Source-Technologien **YOLO** und **OpenCV**. Zur Einführung und der darauffolgenden Implementierung dieser, beginnt dieses Projekt mit einer kurzen [<u>Einordnung</u>](#sec-einordnung) der **Objekterkennung** allgemein, um dem Leser[^1] die **Vernetzung** des Kernthemas zu anderen Tehmen zu erleichtern. 
 
 \n
 
 Die Brücke zu YOLO wird über das gleichnamige Kapitel [<u>YOLO: Intro</u>](#sec-intro) geschlagen, wo dem Leser die Geschichte und die Natur der verwendeteten Technologie nahegelegt und mit anderen Standards verglichen werden.
-Zugleich werden die **System Requierements** abgearbeitet (z.B. das Erstellen eines Virtual Environments und das Installieren von notwendigen Bibliotheken) um die Schritt-für-Schritt **Reproduzierbarkeit** Seitens des Lesers zu gewährleisten.
+Zugleich werden die **System Requierements** abgearbeitet (z.B. das Erstellen eines Virtual Environments oder das Installieren von notwendigen Bibliotheken) um die Schritt-für-Schritt **Reproduzierbarkeit** Seitens des Lesers zu gewährleisten.
 Dazugehörige Code-Snippets stehen im gesamten Verlauf dieser Webseite ebenso zur Verfügung und können direkt in die eigene Entwicklerumgebung (VSCode, etc.) kopiert werden.
 
 \n
