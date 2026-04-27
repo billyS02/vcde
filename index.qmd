@@ -22,9 +22,9 @@ Die Echtzeit-Objekterkennung erfolgt in diesem Projekt über die Open-Source-Tec
 
 \n
 
-Die Brücke zu *YOLO* wird über das gleichnamige Kapitel [<u>YOLO: Intro</u>](#sec-intro) geschlagen, wo dem Leser die Geschichte und die Natur der verwendeteten Technologie nahegelegt und mit anderen Standards verglichen werden.
-Zugleich werden die System Requierements abgearbeitet (z.B. das Erstellen eines Virtual Environments und das Installieren von notwendigen Bibliotheken) um die Schritt-für-Schritt Reproduzierbarkeit Seitens des Lesers zu gewährleisten.
-Dazugehörige Code-Snippets stehen im gesamten Verlauf dieser Webseite ebenso zur Verfügung und können in die eigene Entwicklerumgebung kopiert werden.
+Die Brücke zu YOLO wird über das gleichnamige Kapitel [<u>YOLO: Intro</u>](#sec-intro) geschlagen, wo dem Leser die Geschichte und die Natur der verwendeteten Technologie nahegelegt und mit anderen Standards verglichen werden.
+Zugleich werden die **System Requierements** abgearbeitet (z.B. das Erstellen eines Virtual Environments und das Installieren von notwendigen Bibliotheken) um die Schritt-für-Schritt **Reproduzierbarkeit** Seitens des Lesers zu gewährleisten.
+Dazugehörige Code-Snippets stehen im gesamten Verlauf dieser Webseite ebenso zur Verfügung und können direkt in die eigene Entwicklerumgebung (VSCode, etc.) kopiert werden.
 
 \n
 
@@ -33,10 +33,11 @@ Zugleich erhält der Leser die Möglichkeit, die Implementierung mit eigenen Med
 
 \n
 
-Abgeschlossen wird das Thema mit dem Kapitel [<u>Ausblick</u>](#sec-ausblick), wo die Grenzen von YOLO diskutiert werden auf womöglich – für jeweilige Anwendungen - bessere Modelle vorgeschlagen werden.
+Abgeschlossen wird das Thema mit dem Kapitel [<u>Ausblick</u>](#sec-ausblick), wo die **Grenzen** und künftige Entwicklungen von YOLO diskutiert und womöglich – für geeignete Anwendungen - andere Modelle vorgeschlagen werden.
 
 
 [^1]: Aus Gründen der Lesbarkeit wird in der gesamten Webseite das generische Maskulinum verwendet.
+
 
 ## 1. Einordnung {#sec-einordnung}
 
