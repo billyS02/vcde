@@ -1,5 +1,6 @@
 ---
-title: "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens"
+title: "Echtzeit-Objekterkennung mit YOLO"
+subtitle: "Eine Implementierung am Beispiel des Autonomen Fahrens"
 author: "Bledar Sllamniku (Digital Engineering Student)"
 format:
   html:
