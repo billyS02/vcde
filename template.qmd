@@ -78,3 +78,19 @@ You can include complex math like $$E = mc^2$$ and immediately follow it with an
 
 
 ## Fazit
+
+
+
+
+
+
+
+
+
+
+
+::: {.callout-note}      ← blau, Info-Icon
+::: {.callout-tip}       ← grün, Glühbirnen-Icon
+::: {.callout-warning}   ← orange, Warn-Icon
+::: {.callout-important} ← rot, Ausrufezeichen
+::: {.callout-caution}   ← gelb, Vorsicht-Icon
