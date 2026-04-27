@@ -1,7 +1,7 @@
 ---
 title: "Echtzeit-Objekterkennung mit YOLO"
 subtitle: "**Eine Implementierung am Beispiel des Autonomen Fahrens**"
-author: "Bledar Sllamniku (Digital Engineering – B.Sc.)"
+author: "Bledar Sllamniku (Digital Engineering, B.Sc.)"
 format:
   html:
     theme: cosmo
@@ -31,7 +31,7 @@ bibliography: references.bib
 
 ## Methodik {#sec-methodik}
 
-Die Echtzeit-Objekterkennung erfolgt in diesem Projekt über die Open-Source-Technologien **YOLO** und **OpenCV**. Zur Einführung und der darauffolgenden Implementierung dieser, beginnt dieses Projekt mit einer kurzen [<u>Einordnung</u>](#sec-einordnung) der **Objekterkennung** allgemein, um dem Leser[^1] die **Vernetzung** des Kernthemas zu anderen Tehmen zu erleichtern. 
+Die Echtzeit-Objekterkennung erfolgt in diesem Projekt über die frei verfügbaren Technologien **YOLO** und **OpenCV**. Zur Einführung und der darauffolgenden Implementierung dieser, beginnt dieses Projekt mit einer kurzen [<u>Einordnung</u>](#sec-einordnung) der **Objekterkennung** allgemein, um dem Leser[^1] die **Vernetzung** des Kernthemas zu anderen Tehmen zu erleichtern. 
 
 \n
 
