@@ -67,7 +67,7 @@
     "href": "index.html",
     "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
     "section": "",
-    "text": "Inhalt\nAbstract\nMethodik\n1. Einordnung\n2. YOLO: Intro\n3. YOLO: Implementierung\n4. YOLO: Demo\n5. Ausblick Fazit (#sec-fazit)"
+    "text": "Inhalte\nAbstract\nMethodik\n1. Einordnung\n2. YOLO: Intro\n3. YOLO: Implementierung\n4. YOLO: Demo\n5. Ausblick\nFazit"
   },
   {
     "objectID": "index.html#sec-abstract",
