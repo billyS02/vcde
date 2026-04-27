@@ -60,7 +60,7 @@
     "href": "template.html#fazit",
     "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
     "section": "Fazit",
-    "text": "Fazit\n::: {.callout-note} ← blau, Info-Icon ::: {.callout-tip} ← grün, Glühbirnen-Icon ::: {.callout-warning} ← orange, Warn-Icon ::: {.callout-important} ← rot, Ausrufezeichen ::: {.callout-caution} ← gelb, Vorsicht-Icon"
+    "text": "Fazit\n::: {.callout-note} ← blau, Info-Icon ::: {.callout-tip} ← grün, Glühbirnen-Icon ::: {.callout-warning} ← orange, Warn-Icon ::: {.callout-important} ← rot, Ausrufezeichen ::: {.callout-caution} ← gelb, Vorsicht-Icon\n::: {.callout-note appearance=“minimal”} ← dezent, nur Rand ::: {.callout-note appearance=“simple”} ← ohne farbigen Header ::: {.callout-note appearance=“default”} ← mit farbigem Header-Banner"
   },
   {
     "objectID": "index.html",
@@ -88,7 +88,7 @@
     "href": "index.html#sec-einordnung",
     "title": "Echtzeit-Objekterkennung mit YOLO",
     "section": "1. Einordnung",
-    "text": "1. Einordnung"
+    "text": "1. Einordnung\n Die Objekterkennung ist Teil des vierten Blocks (Recognition) der klassischen Pipeline des Visual Computings und behandelt das Auffinden von Objekten in einem Bild oder Video. Dabei wird pro Objekt der Ort und die Klassifizierung zurückgegeben. Visuell wird also eine sog. Bounding Box erzeugt, die das erkannte Objekt umrahmt, zusammen mit einem Label, die das Objekt einer Klasse zuschreibt"
   },
   {
     "objectID": "index.html#sec-intro",
