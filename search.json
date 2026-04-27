@@ -60,7 +60,7 @@
     "href": "template.html#fazit",
     "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
     "section": "Fazit",
-    "text": "Fazit"
+    "text": "Fazit\n::: {.callout-note} ← blau, Info-Icon ::: {.callout-tip} ← grün, Glühbirnen-Icon ::: {.callout-warning} ← orange, Warn-Icon ::: {.callout-important} ← rot, Ausrufezeichen ::: {.callout-caution} ← gelb, Vorsicht-Icon"
   },
   {
     "objectID": "index.html",
