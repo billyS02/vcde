@@ -67,21 +67,21 @@
     "href": "index.html",
     "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
     "section": "",
-    "text": "[Diesen Absatz am Ende schreiben. Erwähnt werden sollten: - Hintergründe für das Thema - Zusammenfassung YOLO - Ergebnisse YOLO - Zusammenfassung Diskussion/Ausblick]"
+    "text": "[Diesen Absatz am Ende schreiben. Erwähnt werden sollten: - Hintergründe für das Thema\n- Zusammenfassung YOLO\n- Ergebnisse YOLO\n- Zusammenfassung Diskussion/Ausblick]"
   },
   {
     "objectID": "index.html#abstract",
     "href": "index.html#abstract",
     "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
     "section": "",
-    "text": "[Diesen Absatz am Ende schreiben. Erwähnt werden sollten: - Hintergründe für das Thema - Zusammenfassung YOLO - Ergebnisse YOLO - Zusammenfassung Diskussion/Ausblick]"
+    "text": "[Diesen Absatz am Ende schreiben. Erwähnt werden sollten: - Hintergründe für das Thema\n- Zusammenfassung YOLO\n- Ergebnisse YOLO\n- Zusammenfassung Diskussion/Ausblick]"
   },
   {
     "objectID": "index.html#methodik",
     "href": "index.html#methodik",
     "title": "Echtzeit-Objekterkennung mit YOLO: Eine Implementierung am Beispiel des Autonomen Fahrens",
     "section": "Methodik",
-    "text": "Methodik\nYou can include complex math like \\[E = mc^2\\] and immediately follow it with an interactive 3D figure to visualize your results."
+    "text": "Methodik\nDie Echtzeit-Objekterkennung erfolgt in diesem Projekt über die Open-Source-Technologie YOLO und OpenCV. Zur Einführung und Implementierung der verwendeten Software beginnt dieses Projekt mit einer kurzen Einordnung der Objekterkennung allgemein, um dem Leser die Vernetzung des Kernthemas zu anderen Tehmen zu erleichtern. Die Brücke zu YOLO erfüglt über das gleichnamige Introduction (Kapitel 1), wo dem"
   },
   {
     "objectID": "index.html#einordnung",
