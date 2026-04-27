@@ -50,7 +50,7 @@ Zugleich erhält der Leser die Möglichkeit, die Implementierung mit eigenen Med
 
 \n
 
-Abgeschlossen wird das Thema mit dem Kapitel [<u>Ausblick</u>](#sec-ausblick), wo die **Grenzen und künftigen Entwicklungen** von YOLO diskutiert und womöglich – für etwaige Anwendungen - auch geeignetere Modelle vorgeschlagen werden.
+Abgeschlossen wird das Thema mit dem Kapitel [<u>Ausblick</u>](#sec-ausblick), wo die **Grenzen und künftigen Entwicklungen** von YOLO diskutiert und für etwaige Anwendungen geeignetere Modelle vorgeschlagen werden.
 
 
 [^1]: Aus Gründen der Lesbarkeit wird in der gesamten Webseite das generische Maskulinum verwendet.
@@ -72,7 +72,7 @@ Klassische Verfahren wie R-CNN sind zwar präzise, scheitern jedoch an genau die
 
 \n
 
-Als One-Stage-Detector löst **YOLO** (You Only Look Once) dieses Problem mit einem anderen Ansatz. Das gesamte Bild wird in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Erkennung von bis zu 45 fps ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht [@redmon2016].
+Als One-Stage-Detector löst **YOLO** (You Only Look Once) dieses Problem mit einem anderen Ansatz. Das gesamte Bild wird nämlich in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Erkennung von bis zu 45 fps ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht [@redmon2016].
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
