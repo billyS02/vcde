@@ -8,6 +8,18 @@ jupyter: python3
 bibliography: references.bib
 ---
 
+::: {.callout-note appearance="minimal"}
+**Inhalt**  
+[Abstract](#sec-abstract)  
+[Methodik](#sec-methodik)  
+[1. Einordnung](#sec-einordnung)  
+[2. YOLO: Intro](#sec-intro)  
+[3. YOLO: Implementierung](#sec-implementierung)  
+[4. YOLO: Demo](#sec-demo)  
+[5. Ausblick](#sec-ausblick)
+[Fazit] (#sec-fazit)
+:::
+
 ## Abstract {#sec-abstract} 
 
 [Diesen Absatz am Ende schreiben. Erwähnt werden sollten:  
@@ -15,18 +27,6 @@ bibliography: references.bib
     - Zusammenfassung YOLO  
     - Ergebnisse YOLO  
     - Zusammenfassung Diskussion/Ausblick]  
-
-
-::: {.callout-note appearance="minimal"}
-**Inhalt**  
-[Abstract](#sec-abstract)
-[Methodik](#sec-methodik)  
-[1. Einordnung](#sec-einordnung)  
-[2. YOLO: Intro](#sec-intro)  
-[3. YOLO: Implementierung](#sec-implementierung)  
-[4. YOLO: Demo](#sec-demo)  
-[5. Ausblick](#sec-ausblick)
-:::
 
 ## Methodik {#sec-methodik}
 
@@ -45,7 +45,7 @@ Zugleich erhält der Leser die Möglichkeit, die Implementierung mit eigenen Med
 
 \n
 
-Abgeschlossen wird das Thema mit dem Kapitel [<u>Ausblick</u>](#sec-ausblick), wo die **Grenzen und künftige Entwicklungen** von YOLO diskutiert und womöglich – für geeignete Anwendungen - andere Modelle vorgeschlagen werden.
+Abgeschlossen wird das Thema mit dem Kapitel [<u>Ausblick</u>](#sec-ausblick), wo die **Grenzen und künftigen Entwicklungen** von YOLO diskutiert und womöglich – für geeignete Anwendungen - auch andere Modelle vorgeschlagen werden.
 
 
 [^1]: Aus Gründen der Lesbarkeit wird in der gesamten Webseite das generische Maskulinum verwendet.
@@ -66,6 +66,6 @@ Abgeschlossen wird das Thema mit dem Kapitel [<u>Ausblick</u>](#sec-ausblick), w
 ## 5. Ausblick {#sec-ausblick}
 
 
-## Fazit
+## Fazit {#sec-fazit}
 
 [Dieses Kapitel am Ende verfassen. Dient als Zusammenfassung von Kapitel *1. Einordnung* bishin zu Kapitel *5. Ausblick*].
