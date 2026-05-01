@@ -85,15 +85,17 @@ Das bedeutet, dass das gesamte Bild **genau einmal durch ein einziges** Neuronal
 Es gibt also keine zweiten Schritte oder separaten Klassifikatoren.
 
 Wir erinnern uns: Zweistufige Verfahren wie R-CNN beginnen hingegen mit sog. *Region Proposals*, d.h. der Algorithmus schlägt zunächst hunderte mögliche Bildausschnitte vor, die ein Objekt enthalten könnten und klassifiziert dann jeden einzeln.
-**Faster R-CNN** schafft als einer der schnellsten Varianten etwa 5 fps auf einem Standard Backbone [@ren2015], was für ein fahrendes Auto schlicht zu wenig ist.
+**Faster R-CNN** schafft als einer der schnellsten Varianten etwa 5 fps bis 17 fps auf einem Standard Backbone [@ren2015], was für ein fahrendes Auto schlicht zu wenig ist.
+
+![Geschwindigkeit von YOLO im Vergleich zu anderen Modellen. [@sanchez2020]](./img/yolo_compare.png){fig-align="center"}  
 
 ### 2.1 Architektur
 
-Das sog. Grid-System macht die Verarbeitung eines ganzen Bildes auf einem einzigen Netz erst möglich.
-Das Eingabebild wird dabei in ein gleichmäßiges Raster $S x S$ aufgeteilt und wie eine Schablone auf das Bild gelegt.
-Jede dieser Rasterzellen übernimmt dann die Verantwortung für genau den Bildbereich, den sie abdeckt [@redmon2015].
+Das sog. **Grid-System** macht die Verarbeitung eines ganzen Bildes in einem einzigen Netz erst möglich.
+Das Eingabebild wird dabei in ein gleichmäßiges Raster $S \times S$ aufgeteilt und wie eine Schablone über das Bild gelegt.
+Jede dieser Rasterzellen übernimmt dann die Verantwortung für genau den Bildbereich, den sie abdeckt.
+Konkret gilt: Fällt der Mittelpunkt eines Objekts in eine bestimme Zelle, ist genau diese für die Erkennung dieses Objektes verantworklich [@redmon2015].
 
-BILD EINFÜGEN
 
 Für jeder dieser Zellen sagt das Modell gleichzeitig mehrere Dinge vorher:
 
@@ -109,7 +111,7 @@ $$
 Das **Gesamtmodell** gibt seinen Output als kompakten Tensor (XYZ) der Dimension $S \times S \times (B \cdot 5 + C)$ aus.
 Für die PASCAL-VOC-Auswertung ($S=7$, $B=2$, $C=20$ Klassen) ergibt das einen Tensor der Größe $7 \times 7 \times 30$ [@redmon2015].
 
-BILD EINFÜGEN
+![Das Bild wird in ein $S \times S$ Grid aufgeteilt. Jede Zelle sagt $B$ Bounding Boxes mit Confidence und $C$ Klassenwahrscheinlichkeiten voraus – alles kodiert in einem einzigen $S \times S \times (B \cdot 5 + C)$ Tensor. [@redmon2015, Figure 2]](./img/yolo_SSGrid.png){fig-align="center"}  
 
 ### 2.2 YOLO-Versionen
 
@@ -129,6 +131,33 @@ Die wichtigsten Meilensteine sind wohl:
 
 ### 2.3 Herausforderungen
 
+o leistungsfähig YOLO auch ist – es gibt Szenarien, in denen das 
+System an seine Grenzen stößt. Diese zu kennen ist wichtig, 
+um die Ergebnisse im Demo-Kapitel korrekt einordnen zu können.
+
+**Occlusion (Verdeckung):** Da jede Rasterzelle nur eine Klasse vorhersagen 
+kann, hat YOLO Schwierigkeiten, wenn mehrere Objekte derselben Klasse 
+eng beieinanderliegen oder sich überlappen – z.B. eine Menschenmenge 
+oder dicht aufgefahrene Fahrzeuge. Verdeckte Objekte werden oft 
+gar nicht oder als falsche Klasse erkannt [@terven2023].
+
+**Kleine Objekte:** Das Grid-System ist von Natur aus eine Vergröberung 
+des Bildes. Sehr kleine Objekte – die vielleicht nur in einer einzigen 
+Zelle liegen – gehen dabei leicht unter. Die Originalautoren räumen 
+dieses Problem selbst ein [@redmon2015].
+
+**FPS vs. Genauigkeit:** YOLO existiert in verschiedenen Größen 
+(z.B. `yolov8n` bis `yolov8x`). Kleinere Varianten sind schneller, 
+aber ungenauer; größere Varianten präziser, aber langsamer. 
+Welche Variante sinnvoll ist, hängt immer vom konkreten Einsatzzweck ab – 
+ein Roboter in einer kontrollierten Umgebung hat andere Anforderungen 
+als ein Fahrzeug im Straßenverkehr.
+
+**Umgebungsbedingungen:** Viele Modelle haben 
+Schwierigkeiten, unter herausfordernden Bedingungen wie schlechten 
+Lichtverhältnissen, Regen oder dicht gedrängten Szenen 
+hohe Genauigkeit aufrechtzuerhalten  – YOLO bildet 
+hier keine Ausnahme.
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
