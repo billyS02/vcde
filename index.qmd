@@ -96,19 +96,38 @@ BILD EINFÜGEN
 
 Für jeder dieser Zellen sagt das Modell gleichzeitig mehrere Dinge vorher:
 
-- **<u>Bounding Boxes</u>**: Jede Zelle schlägt $B$ mögliche Bounding Boxes vor, beschrieben durch fünf Werte aus Mittelpunkt $(x, y)$ des erkannten Objekts zur Rasterzelle, Abmessung $(w, h)$ zwischen Box und Gesamtbild und Confidence Score.  
-- **<u>Confidence Score</u>**: Dieser Wert beantwortet zum einen, ob ein Objekt überhaupt in der Box vorhanden ist und zum anderen, wie gut die Box wirklich zum Objekt passt. Formal ausgedrückt:
+- **Bounding Boxes**: Jede Zelle schlägt $B$ mögliche Bounding Boxes vor, beschrieben durch fünf Werte aus Mittelpunkt $(x, y)$ des erkannten Objekts zur Rasterzelle, Abmessung $(w, h)$ zwischen Box und Gesamtbild und Confidence Score.  
+- **Confidence Score**: Dieser Wert beantwortet zum einen, ob ein Objekt überhaupt in der Box vorhanden ist und zum anderen, wie gut die Box wirklich zum Objekt passt. Formal ausgedrückt:
 
 $$
 \text{Confidence} = \Pr(\text{Object}) \times \text{IOU}_{\text{pred}}^{\text{truth}}
 $$
 
-- **<u>Klassenwahrscheinlichkeiten</u>**: Zusätzlich zur Box schätzt jede Zelle, welcher Klasse das Objekt angehört, also z.B. „Auto", „Person" oder „Fahrrad". Diese Klassenwahrscheinlichkeit wird am Ende mit dem Confidence Score multipliziert, sodass das Modell für jede Box einen finalen, klassenspezifischen Score ausgibt.
+- **Klassenwahrscheinlichkeiten**: Zusätzlich zur Box schätzt jede Zelle, welcher Klasse das Objekt angehört, also z.B. „Auto", „Person" oder „Fahrrad". Diese Klassenwahrscheinlichkeit wird am Ende mit dem Confidence Score multipliziert, sodass das Modell für jede Box einen finalen, klassenspezifischen Score ausgibt.
 
 Das **Gesamtmodell** gibt seinen Output als kompakten Tensor (XYZ) der Dimension $S \times S \times (B \cdot 5 + C)$ aus.
 Für die PASCAL-VOC-Auswertung ($S=7$, $B=2$, $C=20$ Klassen) ergibt das einen Tensor der Größe $7 \times 7 \times 30$ [@redmon2015].
 
 BILD EINFÜGEN
+
+### 2.2 YOLO-Versionen
+
+Seit der Erstveröffentlichung 2015 wurde YOLO stetig weiterentwickelt. 
+Jede Version adressierte konkrete Schwächen der Vorgängerversion: Scheinbar mal in Richtung Geschwindigkeit, mal in Richtung Genauigkeit und mal in Richtung einfacherer Nutzbarkeit. 
+
+![YOLO Timeline von v1 bis v7. [@keita2024]](./img/yolo_timeline.png){fig-align="center"}  
+
+Die wichtigsten Meilensteine sind wohl:
+
+- **YOLOv1 (2015):** Das Grundprinzip, also die Grid-basierte Regression in einem Durchgang.
+- **YOLOv2 (2016):** Einführung von *Anchor Boxes*, die typische Objektformen vorwegnehmen und die Erkennung kleiner Objekte verbessern.
+- **YOLOv3 (2018):** Erkennung auf **drei Skalen** gleichzeitig; besonders hilfreich für Objekte unterschiedlicher Größe im selben Bild.
+- **YOLOv4/v5 (2020):** Community-getriebene Weiterentwicklungen mit zahlreichen Trainingstricks; YOLOv5 vollzog den Wechsel zu PyTorch und vereinfachte den Export auf Edge-Geräte erheblich [@terven2023].
+- **<u>YOLOv8</u> (2023):** Die aktuell verbreitetste Version. Kernneuerung ist die *anchor-free* Architektur: Statt vordefinierten Acnhor Boxes lernt das Modell Boxpositionen direkt, was den Trainingsprozess vereinfacht und die Genauigkeit steigert. Zudem wurde ein *decoupled head* eingeführt, der Klassifizierung und Lokalisation in getrennten Zweigen berechnet [@jocher2023].
+
+
+### 2.3 Herausforderungen
+
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
