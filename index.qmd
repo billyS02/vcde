@@ -35,7 +35,7 @@ bibliography: references.bib
 
 ## Methodik {#sec-methodik}
 
-Die Echtzeit-Objekterkennung erfolgt in diesem Projekt über die frei verfügbaren Technologien **YOLO** und **OpenCV**. Zur Einführung und der darauffolgenden Implementierung dieser, beginnt dieses Projekt mit einer kurzen [<u>Einordnung</u>](#sec-einordnung) der **Objekterkennung** allgemein, um dem Leser[^1] die **Vernetzung** des Kernthemas zu anderen Tehmen zu erleichtern. 
+Die Echtzeit-Objekterkennung erfolgt in diesem Projekt über die frei verfügbaren Technologien **YOLO** und **OpenCV**. Zur Einführung und der darauffolgenden Implementierung dieser, beginnt dieses Projekt mit einer kurzen [<u>Einordnung</u>](#sec-einordnung) der **Objekterkennung** als Wiederholung, um dem Leser[^1] die **Vernetzung** des Kernthemas zu anderen Tehmen zu erleichtern. 
 
 \n
 
@@ -53,7 +53,7 @@ Zugleich erhält der Leser die Möglichkeit, die Implementierung mit eigenen Med
 Abgeschlossen wird das Thema mit dem Kapitel [<u>Ausblick</u>](#sec-ausblick), wo die **Grenzen und künftigen Entwicklungen** von YOLO diskutiert und für etwaige Anwendungen geeignetere Modelle vorgeschlagen werden.
 
 
-[^1]: Aus Gründen der Lesbarkeit wird in der gesamten Webseite das generische Maskulinum verwendet.
+[^1]: Aus Gründen der Lesbarkeit wird im Verlauf der gesamten Webseite das generische Maskulinum verwendet.
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
@@ -68,22 +68,45 @@ Visuell wird also eine sog. *Bounding Box* erzeugt, die das erkannte Objekt umra
 \n
 
 Besondere Anforderungen stellt dabei das **autonome Fahren**: Hier reicht es nicht, Objekte lediglich zu erkennen, denn zusätzlich muss das auch in **Echtzeit** geschehen, also mit mindestens 24 fps (Frames pro Sekunde), damit ein Fahrzeug rechtzeitig reagieren kann.
-Klassische Verfahren wie R-CNN sind zwar präzise, scheitern jedoch an genau diesem Anspruch, da sie das Bild in mehreren Schritten verarbeiten [@girshick2014]. Die Rede ist von einem *Two-Stage-Detector*.
+Klassische Verfahren wie R-CNN sind zwar präzise, scheitern jedoch an genau diesem Anspruch, da sie das Bild in mehreren Schritten verarbeiten [@girshick2014]. Die Rede ist von einem sogenannten *Two-Stage-Detector*.
 
 \n
 
-Als One-Stage-Detector löst **YOLO** (You Only Look Once) dieses Problem mit einem anderen Ansatz. Das gesamte Bild wird nämlich in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Erkennung von 45 fps (als base model) bis zu 166 fps (als fast model) ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht [@redmon2016].
+Als One-Stage-Detector löst **YOLO** (You Only Look Once) dieses Problem mit einem anderen Ansatz. Das gesamte Medium wird nämlich in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Erkennung von 45 fps (als base model) bis zu 166 fps (als fast model) ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht [@redmon2015].
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
 ## 2. YOLO: Intro {#sec-intro}
 
+YOLO ist ein Open Source Projekt zur Echtzeit-Objekterkennung welches in seiner Originalfassung erstmalig 2015 von Joseph Redmon, Santosh Divvala, Ross Girshik und Ali Farhadi unter dem Titel *You Only Look Once: Unified, Real-Time Object Detection* veröffentlich wurde [@redmon2015]. 
+Die Autoren setzten in ihrer Forschungsarbeit auf einen Ansatz, der die Objekterkennung als ein einziges Regressionsproblem formuliert.
+Das bedeutet, dass das gesamte Bild **genau einmal** durch ein **einziges** Neuronales Netz geschickt wird und dieses dabei gleichzeitig alle erkannten Objekte mit ihren Positionen und Klasen ausgibt.
+Es gibt also keine zweiten Schritte oder separaten Klassifikatoren.
 
+Wir erinnern uns: Zweistufige Verfahren wie R-CNN beginnen hingegen mit sog. *Region Proposals*, d.h. der Algorithmus schlägt zunächst hunderte mögliche Bildausschnitte vor, die ein Objekt enthalten könnten und klassifiziert dann jeden einzeln.
+**Faster R-CNN** schafft als einer der schnellsten Varianten etwa 5 fps auf einem Standard Backbone [@ren2015], was für ein fahrendes Auto schlicht zu wenig ist.
 
+### 2.1 Architektur
 
+Das sog. Grid-System macht die Verarbeitung eines ganzen Bildes auf einem einzigen Netz erst möglich.
+Das Eingabebild wird also in ein gleichmäßiges Raster $S x S$ aufgeteilt und wie eine Schablone auf das Bild gelegt.
+Jede dieser Rasterzellen übernimmt dann die Verantwortung für genau den Bildbereich, den sie abdeckt [@redmon2015].
 
+BILD EINFÜGEN
 
+FÜr jeder dieser Zellen sagt das Modell gleichzeitig mehrere Dinge vorher:
 
+- Bounding Boxes: Jede Zelle schlägt $B$ mögliche Bounding Boxes vor, beschrieben durch die fünf Werte Mittelpunkt $(x, y)$, Abmessung $(w, h)$ und Confidence Score.  
+- Confidence Score: Dieser Wert beantwortet zum einen, ob ein Objekt überhaupt in der Box vorhanden ist und zum anderen, wie gut die Box wirklich zum Objekt passt. Formal ausgedrückt:
+
+$$\text{Confidence} = \Pr(\text{Object}) \times \text{IOU}_{\text{pred}}^{\text{truth}}$$
+
+- Klassenwahrscheinlichkeiten: Zusätzlich zur Box schätzt jede Zelle, welcher Klasse das Objekt angehört, also z.B. „Auto", „Person" oder „Fahrrad". Diese Klassenwahrscheinlichkeit wird am Ende mit dem Confidence Score multipliziert, sodass das Modell für jede Box einen finalen, klassenspezifischen Score ausgibt.
+
+Das **Gesamtmodell** gibt seinen Output als kompakten Tensor (XYZ) der Dimension $S \times S \times (B \cdot 5 + C)$ aus.
+Für die PASCAL-VOC-Auswertung ($S=7$, $B=2$, $C=20$ Klassen) ergibt das einen Tensor der Größe $7 \times 7 \times 30$ [@redmon2015].
+
+BILD EINFÜGEN
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
