@@ -223,6 +223,12 @@ window.Quarto = {
 <section id="architektur" class="level3">
 <h3 class="anchored" data-anchor-id="architektur">2.1 Architektur</h3>
 <p>Das sog. <strong>Grid-System</strong> macht die Verarbeitung eines ganzen Bildes in einem einzigen Netz erst möglich. Das Eingabebild wird dabei in ein gleichmäßiges Raster <span class="math inline">\(S \times S\)</span> aufgeteilt und wie eine Schablone über das Bild gelegt. Jede dieser Rasterzellen übernimmt dann die Verantwortung für genau den Bildbereich, den sie abdeckt. Konkret gilt: Fällt der Mittelpunkt eines Objekts in eine bestimme Zelle, ist genau diese für die Erkennung dieses Objektes verantworklich <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>)</span>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./img/yolo_SSGrid.png" class="img-fluid figure-img"></p>
+<figcaption>Das Bild wird in ein <span class="math inline">\(S \times S\)</span> Grid aufgeteilt. Jede Zelle sagt <span class="math inline">\(B\)</span> Bounding Boxes mit Confidence und <span class="math inline">\(C\)</span> Klassenwahrscheinlichkeiten voraus. Alles kodiert in einem einzigen Tesnor: <span class="math inline">\(S \times S \times (B \cdot 5 + C)\)</span>. <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015, fig. 2</a>)</span></figcaption>
+</figure>
+</div>
 <p>Für jeder dieser Zellen sagt das Modell gleichzeitig mehrere Dinge vorher:</p>
 <ul>
 <li><strong>Bounding Boxes</strong>: Jede Zelle schlägt <span class="math inline">\(B\)</span> mögliche Bounding Boxes vor, beschrieben durch fünf Werte aus Mittelpunkt <span class="math inline">\((x, y)\)</span> des erkannten Objekts zur Rasterzelle, Abmessung <span class="math inline">\((w, h)\)</span> zwischen Box und Gesamtbild und Confidence Score.<br>
@@ -240,12 +246,6 @@ window.Quarto = {
 </ul>
 <p>Das <strong>Gesamtmodell</strong> fasst alle Vorhersagen aller Zellen in einer einzigen verschachtelten Zahlenstruktur zusammen, einem sog. <strong>Tensor</strong>, vereinfacht gesagt ein mehrdimensionales Array. Seine Dimension ist <span class="math inline">\(S \times S \times (B \cdot 5 + C)\)</span>, d.h. jede der <span class="math inline">\(S \times S\)</span> Zellen werden <span class="math inline">\(B\)</span> Boxen mit je 5 Werten sowie <span class="math inline">\(C\)</span> Klassenwahrscheinlichkeiten gespeichert.<br>
 Die Autoren evaluierten ihr Modell auf <strong>PASCAL VOC</strong>, einem standardisierten Benchmark-Datensatz für Objekterkennung mit 20 vordefinierten Klassen (u.a. Auto, Person, Hund), der in der Computer-Vision-Forschung als gemeinsame Vergleichsbasis weit verbreitet ist. Mit <span class="math inline">\(S = 7\)</span>, <span class="math inline">\(B = 2\)</span> und <span class="math inline">\(C = 20\)</span> ergibt sich ein Ausgabe-Tensor der Größe <span class="math inline">\(7 \times 7 \times 30\)</span> <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>)</span>.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./img/yolo_SSGrid.png" class="img-fluid figure-img"></p>
-<figcaption>Das Bild wird in ein <span class="math inline">\(S \times S\)</span> Grid aufgeteilt. Jede Zelle sagt <span class="math inline">\(B\)</span> Bounding Boxes mit Confidence und <span class="math inline">\(C\)</span> Klassenwahrscheinlichkeiten voraus. Alles kodiert in einem einzigen Tesnor: <span class="math inline">\(S \times S \times (B \cdot 5 + C)\)</span>. <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015, fig. 2</a>)</span></figcaption>
-</figure>
-</div>
 </section>
 <section id="yolo-versionen" class="level3">
 <h3 class="anchored" data-anchor-id="yolo-versionen">2.2 YOLO-Versionen</h3>
