@@ -234,7 +234,9 @@ window.Quarto = {
 \times
 \underbrace{\text{IOU}_{\text{pred}}^{\text{truth}}}_{\substack{\text{Wie gut passt} \\ \text{die Box?}}}
 \]</span></p>
+<div style="margin-left: 1.5em;">
 <p>Der erste Term ist 0, wenn kein Objekt in der Zelle liegt, andernfalls 1. Der zweite Term (IOU) misst hier die Überlappung zwischen der vorhergesagten Box und dem tatsächlichen Objekt: Ein Wert von 1 bedeutet erfekte Übereinstimmung, 0 bedeutet keine Überlappung. Liegt z.B. ein Auto exakt in der vorhergesagten Box, ist IOU nahe 1. Ist die Box stark verschoben, sinkt IOU entsprechend.</p>
+</div>
 <ul>
 <li><strong>Klassenwahrscheinlichkeiten</strong>: Zusätzlich zur Box schätzt jede Zelle, welcher Klasse das Objekt angehört, also z.B. „Auto”, „Person” oder „Fahrrad”. Diese Klassenwahrscheinlichkeit wird am Ende mit dem Confidence Score multipliziert, sodass das Modell für jede Box einen finalen, klassenspezifischen Score ausgibt.</li>
 </ul>
