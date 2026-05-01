@@ -101,11 +101,20 @@ Konkret gilt: Fällt der Mittelpunkt eines Objekts in eine bestimme Zelle, ist g
 Für jeder dieser Zellen sagt das Modell gleichzeitig mehrere Dinge vorher:
 
 - **Bounding Boxes**: Jede Zelle schlägt $B$ mögliche Bounding Boxes vor, beschrieben durch fünf Werte aus Mittelpunkt $(x, y)$ des erkannten Objekts zur Rasterzelle, Abmessung $(w, h)$ zwischen Box und Gesamtbild und Confidence Score.  
-- **Confidence Score**: Dieser Wert beantwortet zum einen, ob ein Objekt überhaupt in der Box vorhanden ist und zum anderen, wie gut die Box wirklich zum Objekt passt. Formal ausgedrückt:
+- **Confidence Score**: Dieser Wert beantwortet zum einen, ob ein Objekt überhaupt in der Box vorhanden ist und zum anderen, wie gut die Box wirklich zum Objekt passt. Das Modell kombiniert beide Informationen in einer einzigen Kennzahl [@redmon2015]:
 
 $$
-\text{Confidence} = \Pr(\text{Object}) \times \text{IOU}_{\text{pred}}^{\text{truth}}
+\text{Confidence} = 
+\underbrace{\Pr(\text{Object})}_{\substack{\text{Ist ein Objekt} \\ \text{vorhanden?}}}
+\times
+\underbrace{\text{IOU}_{\text{pred}}^{\text{truth}}}_{\substack{\text{Wie gut passt} \\ \text{die Box?}}}
 $$
+
+  Der erste Term ist 0, wenn kein Objekt in der Zelle liegt, andernfalls 1. 
+  Der zweite Term (IOU) misst hier die Überlappung zwischen der vorhergesagten Box und
+  dem tatsächlichen Objekt: Ein Wert von 1 bedeutet erfekte Übereinstimmung, 
+  0 bedeutet keine Überlappung. Liegt z.B. ein Auto exakt in der vorhergesagten Box, 
+  ist IOU nahe 1. Ist die Box stark verschoben, sinkt IOU entsprechend.
 
 - **Klassenwahrscheinlichkeiten**: Zusätzlich zur Box schätzt jede Zelle, welcher Klasse das Objekt angehört, also z.B. „Auto", „Person" oder „Fahrrad". Diese Klassenwahrscheinlichkeit wird am Ende mit dem Confidence Score multipliziert, sodass das Modell für jede Box einen finalen, klassenspezifischen Score ausgibt.
 
@@ -125,40 +134,45 @@ Die wichtigsten Meilensteine sind wohl:
 
 - **YOLOv1 (2015):** Das Grundprinzip, also die Grid-basierte Regression in einem Durchgang.
 - **YOLOv2 (2016):** Einführung von *Anchor Boxes*, die typische Objektformen vorwegnehmen und die Erkennung kleiner Objekte verbessern.
-- **YOLOv3 (2018):** Erkennung auf **drei Skalen** gleichzeitig; besonders hilfreich für Objekte unterschiedlicher Größe im selben Bild.
+- **YOLOv3 (2018):** Erkennung auf *drei Skalen* gleichzeitig; besonders hilfreich für Objekte unterschiedlicher Größe im selben Bild.
 - **YOLOv4/v5 (2020):** Community-getriebene Weiterentwicklungen mit zahlreichen Trainingstricks; YOLOv5 vollzog den Wechsel zu PyTorch und vereinfachte den Export auf Edge-Geräte erheblich [@terven2023].
 - **<u>YOLOv8</u> (2023):** Die aktuell verbreitetste Version. Kernneuerung ist die *anchor-free* Architektur: Statt vordefinierten Acnhor Boxes lernt das Modell Boxpositionen direkt, was den Trainingsprozess vereinfacht und die Genauigkeit steigert. Zudem wurde ein *decoupled head* eingeführt, der Klassifizierung und Lokalisation in getrennten Zweigen berechnet [@jocher2023].
 
 
 ### 2.3 Herausforderungen
 
-o leistungsfähig YOLO auch ist – es gibt Szenarien, in denen das 
+So leistungsfähig YOLO auch ist – es gibt Szenarien, in denen das 
 System an seine Grenzen stößt. Diese zu kennen ist wichtig, 
 um die Ergebnisse im Demo-Kapitel korrekt einordnen zu können.
 
-**Occlusion (Verdeckung):** Da jede Rasterzelle nur eine Klasse vorhersagen 
-kann, hat YOLO Schwierigkeiten, wenn mehrere Objekte derselben Klasse 
-eng beieinanderliegen oder sich überlappen – z.B. eine Menschenmenge 
-oder dicht aufgefahrene Fahrzeuge. Verdeckte Objekte werden oft 
-gar nicht oder als falsche Klasse erkannt [@terven2023].
+**Occlusion (Verdeckung):** Da jede Rasterzelle nur eine Klasse vorhersagen kann, 
+hat YOLO Schwierigkeiten, wenn mehrere Objekte derselben Klasse eng 
+beieinanderliegen oder sich überlappen – z.B. eine Menschenmenge oder dicht 
+aufgefahrene Fahrzeuge. Verdeckte Objekte werden oft gar nicht oder als falsche 
+Klasse erkannt [@terven2023].
 
-**Kleine Objekte:** Das Grid-System ist von Natur aus eine Vergröberung 
-des Bildes. Sehr kleine Objekte – die vielleicht nur in einer einzigen 
-Zelle liegen – gehen dabei leicht unter. Die Originalautoren räumen 
-dieses Problem selbst ein [@redmon2015].
+**Kleine Objekte:** Das Grid-System ist von Natur aus eine Vergröberung des Bildes. 
+Sehr kleine Objekte – die vielleicht nur in einer einzigen Zelle liegen – gehen 
+dabei leicht unter. Die Originalautoren räumen dieses Problem selbst ein [@redmon2015].
 
-**FPS vs. Genauigkeit:** YOLO existiert in verschiedenen Größen 
-(z.B. `yolov8n` bis `yolov8x`). Kleinere Varianten sind schneller, 
-aber ungenauer; größere Varianten präziser, aber langsamer. 
-Welche Variante sinnvoll ist, hängt immer vom konkreten Einsatzzweck ab – 
-ein Roboter in einer kontrollierten Umgebung hat andere Anforderungen 
-als ein Fahrzeug im Straßenverkehr.
+**FPS vs. Genauigkeit:** YOLO existiert in verschiedenen Größen (z.B. `yolov8n` 
+bis `yolov8x`). Kleinere Varianten sind schneller, aber ungenauer; größere 
+präziser, aber langsamer. Welche Variante sinnvoll ist, hängt stets vom 
+Einsatzszenario ab – ein Roboter in einer kontrollierten Umgebung hat andere 
+Anforderungen als ein Fahrzeug im Straßenverkehr.
 
-**Umgebungsbedingungen:** Viele Modelle haben 
-Schwierigkeiten, unter herausfordernden Bedingungen wie schlechten 
-Lichtverhältnissen, Regen oder dicht gedrängten Szenen 
-hohe Genauigkeit aufrechtzuerhalten  – YOLO bildet 
-hier keine Ausnahme.
+**Fehleranalyse im Vergleich zu Fast R-CNN:** Die Fehlerarten beider Modelle 
+unterscheiden sich grundlegend. YOLO macht deutlich mehr **Lokalisierungsfehler** 
+(Loc: 19.0% vs. 8.6%) – die Box sitzt also häufiger nicht exakt. Fast R-CNN 
+hingegen erkennt fast dreimal so häufig **Hintergrundbereiche fälschlicherweise 
+als Objekte** (Background: 13.6% vs. 4.75%), weil es jeden Ausschnitt isoliert 
+betrachtet und den größeren Bildkontext nicht sieht [@redmon2015].
+
+![Error Analysis: Fast R-CNN (links) vs. YOLO (rechts). YOLO macht mehr Lokalisierungsfehler, Fast R-CNN hingegen deutlich mehr Hintergrundfehler. [@redmon2015, Fig. 4]](./img/yolo_fig4.png){fig-align="center"}
+
+**Umgebungsbedingungen:** Schlechte Lichtverhältnisse, Regen oder dicht gedrängte 
+Szenen können die Erkennungsrate erheblich senken – YOLO bildet hier keine Ausnahme 
+[@terven2023].
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
