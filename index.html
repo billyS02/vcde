@@ -90,6 +90,35 @@ div.csl-indent {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -160,7 +189,7 @@ div.csl-indent {
 </section>
 <section id="sec-methodik" class="level2">
 <h2 class="anchored" data-anchor-id="sec-methodik">Methodik</h2>
-<p>Die Echtzeit-Objekterkennung erfolgt in diesem Projekt über die frei verfügbaren Technologien <strong>YOLO</strong> und <strong>OpenCV</strong>. Zur Einführung und der darauffolgenden Implementierung dieser, beginnt dieses Projekt mit einer kurzen <a href="#sec-einordnung"><u>Einordnung</u></a> der <strong>Objekterkennung</strong> allgemein, um dem Leser<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> die <strong>Vernetzung</strong> des Kernthemas zu anderen Tehmen zu erleichtern.</p>
+<p>Die Echtzeit-Objekterkennung erfolgt in diesem Projekt über die frei verfügbaren Technologien <strong>YOLO</strong> und <strong>OpenCV</strong>. Zur Einführung und der darauffolgenden Implementierung dieser, beginnt dieses Projekt mit einer kurzen <a href="#sec-einordnung"><u>Einordnung</u></a> der <strong>Objekterkennung</strong> als Wiederholung, um dem Leser<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> die <strong>Vernetzung</strong> des Kernthemas zu anderen Tehmen zu erleichtern.</p>
 <p>Die Brücke zu YOLO wird über das gleichnamige Kapitel <a href="#sec-intro"><u>YOLO: Intro</u></a> geschlagen, wo dem Leser die Geschichte und die Natur der verwendeteten Technologie nahegelegt und mit anderen Standards verglichen werden. Zugleich werden die <strong>System Requierements</strong> abgearbeitet (z.B. das Erstellen eines Virtual Environments oder das Installieren von notwendigen Bibliotheken), um die Schritt-für-Schritt <strong>Reproduzierbarkeit</strong> Seitens des Lesers zu gewährleisten. Dazugehörige Code-Snippets stehen im gesamten Verlauf dieser Webseite ebenso zur Verfügung und können direkt in die eigene Entwicklungsumgebung (VSCode, etc.) kopiert werden.</p>
 <p>Ist die sukzessive Implementierung im Kapitel <a href="#sec-implementierung"><u>YOLO: Implementierung</u></a> abgearbeitet worden, erfolgt eine <strong>Demonstration</strong> in Kapitel <a href="#sec-demo"><u>YOLO: Demo</u></a>, in der eine Echtzeit-Objekterkennung anhand eines Videos aus dem Straßenverkehr getestet werden soll. Zugleich erhält der Leser die Möglichkeit, die Implementierung mit eigenen Medien auszuprobieren und durch <strong>interaktive Inhalte</strong> die Implementierung zu manipulieren (z.B. das Anpassen von Parametern).</p>
 <p>Abgeschlossen wird das Thema mit dem Kapitel <a href="#sec-ausblick"><u>Ausblick</u></a>, wo die <strong>Grenzen und künftigen Entwicklungen</strong> von YOLO diskutiert und für etwaige Anwendungen geeignetere Modelle vorgeschlagen werden.</p>
@@ -175,13 +204,32 @@ div.csl-indent {
 </figure>
 </div>
 <p>Die Objekterkennung ist Teil des vierten Blocks (<em>Recognition</em>) der klassischen Pipeline des Visual Computings und behandelt das Finden von Objekten in einem Bild oder Video. Dabei wird für jedes Objekt der <strong>Ort</strong> und die <strong>Klassifizierung</strong> zurückgegeben. Visuell wird also eine sog. <em>Bounding Box</em> erzeugt, die das erkannte Objekt umrahmt, zusammen mit einem Label, die das Objekt einer Klasse zuschreibt.</p>
-<p>Besondere Anforderungen stellt dabei das <strong>autonome Fahren</strong>: Hier reicht es nicht, Objekte lediglich zu erkennen, denn zusätzlich muss das auch in <strong>Echtzeit</strong> geschehen, also mit mindestens 24 fps (Frames pro Sekunde), damit ein Fahrzeug rechtzeitig reagieren kann. Klassische Verfahren wie R-CNN sind zwar präzise, scheitern jedoch an genau diesem Anspruch, da sie das Bild in mehreren Schritten verarbeiten <span class="citation" data-cites="girshick2014">(<a href="#ref-girshick2014" role="doc-biblioref">Girshick et al. 2014</a>)</span>. Die Rede ist von einem <em>Two-Stage-Detector</em>.</p>
-<p>Als One-Stage-Detector löst <strong>YOLO</strong> (You Only Look Once) dieses Problem mit einem anderen Ansatz. Das gesamte Bild wird nämlich in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Erkennung von 45 fps (als base model) bis zu 166 fps (als fast model) ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht <span class="citation" data-cites="redmon2016">(<a href="#ref-redmon2016" role="doc-biblioref">Redmon et al. 2016</a>)</span>.</p>
+<p>Besondere Anforderungen stellt dabei das <strong>autonome Fahren</strong>: Hier reicht es nicht, Objekte lediglich zu erkennen, denn zusätzlich muss das auch in <strong>Echtzeit</strong> geschehen, also mit mindestens 24 fps (Frames pro Sekunde), damit ein Fahrzeug rechtzeitig reagieren kann. Klassische Verfahren wie R-CNN sind zwar präzise, scheitern jedoch an genau diesem Anspruch, da sie das Bild in mehreren Schritten verarbeiten <span class="citation" data-cites="girshick2014">(<a href="#ref-girshick2014" role="doc-biblioref">Girshick et al. 2014</a>)</span>. Die Rede ist von einem sogenannten <em>Two-Stage-Detector</em>.</p>
+<p>Als One-Stage-Detector löst <strong>YOLO</strong> (You Only Look Once) dieses Problem mit einem anderen Ansatz. Das gesamte Medium wird nämlich in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Erkennung von 45 fps (als base model) bis zu 166 fps (als fast model) ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>)</span>.</p>
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 </section>
 <section id="sec-intro" class="level2">
 <h2 class="anchored" data-anchor-id="sec-intro">2. YOLO: Intro</h2>
+<p>YOLO ist ein Open Source Projekt zur Echtzeit-Objekterkennung welches in seiner Originalfassung erstmalig 2015 von Joseph Redmon, Santosh Divvala, Ross Girshik und Ali Farhadi unter dem Titel <em>You Only Look Once: Unified, Real-Time Object Detection</em> veröffentlich wurde <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>)</span>. Die Autoren setzten in ihrer Forschungsarbeit auf einen Ansatz, der die Objekterkennung als ein einziges Regressionsproblem formuliert. Das bedeutet, dass das gesamte Bild <strong>genau einmal</strong> durch ein <strong>einziges</strong> Neuronales Netz geschickt wird und dieses dabei gleichzeitig alle erkannten Objekte mit ihren Positionen und Klasen ausgibt. Es gibt also keine zweiten Schritte oder separaten Klassifikatoren.</p>
+<p>Wir erinnern uns: Zweistufige Verfahren wie R-CNN beginnen hingegen mit sog. <em>Region Proposals</em>, d.h. der Algorithmus schlägt zunächst hunderte mögliche Bildausschnitte vor, die ein Objekt enthalten könnten und klassifiziert dann jeden einzeln. <strong>Faster R-CNN</strong> schafft als einer der schnellsten Varianten etwa 5 fps auf einem Standard Backbone <span class="citation" data-cites="ren2015">(<a href="#ref-ren2015" role="doc-biblioref"><strong>ren2015?</strong></a>)</span>, was für ein fahrendes Auto schlicht zu wenig ist.</p>
+<section id="architektur" class="level3">
+<h3 class="anchored" data-anchor-id="architektur">2.1 Architektur</h3>
+<p>Das sog. Grid-System macht die Verarbeitung eines ganzen Bildes auf einem einzigen Netz erst möglich. Das Eingabebild wird also in ein gleichmäßiges Raster <span class="math inline">\(S x S\)</span> aufgeteilt und wie eine Schablone auf das Bild gelegt. Jede dieser Rasterzellen übernimmt dann die Verantwortung für genau den Bildbereich, den sie abdeckt <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>)</span>.</p>
+<p>BILD EINFÜGEN</p>
+<p>FÜr jeder dieser Zellen sagt das Modell gleichzeitig mehrere Dinge vorher:</p>
+<ul>
+<li>Bounding Boxes: Jede Zelle schlägt <span class="math inline">\(B\)</span> mögliche Bounding Boxes vor, beschrieben durch die fünf Werte Mittelpunkt <span class="math inline">\((x, y)\)</span>, Abmessung <span class="math inline">\((w, h)\)</span> und Confidence Score.<br>
+</li>
+<li>Confidence Score: Dieser Wert beantwortet zum einen, ob ein Objekt überhaupt in der Box vorhanden ist und zum anderen, wie gut die Box wirklich zum Objekt passt. Formal ausgedrückt:</li>
+</ul>
+<p><span class="math display">\[\text{Confidence} = \Pr(\text{Object}) \times \text{IOU}_{\text{pred}}^{\text{truth}}\]</span></p>
+<ul>
+<li>Klassenwahrscheinlichkeiten: Zusätzlich zur Box schätzt jede Zelle, welcher Klasse das Objekt angehört, also z.B. „Auto”, „Person” oder „Fahrrad”. Diese Klassenwahrscheinlichkeit wird am Ende mit dem Confidence Score multipliziert, sodass das Modell für jede Box einen finalen, klassenspezifischen Score ausgibt.</li>
+</ul>
+<p>Das <strong>Gesamtmodell</strong> gibt seinen Output als kompakten Tensor (XYZ) der Dimension <span class="math inline">\(S \times S \times (B \cdot 5 + C)\)</span> aus. Für die PASCAL-VOC-Auswertung (<span class="math inline">\(S=7\)</span>, <span class="math inline">\(B=2\)</span>, <span class="math inline">\(C=20\)</span> Klassen) ergibt das einen Tensor der Größe <span class="math inline">\(7 \times 7 \times 30\)</span> <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>)</span>.</p>
+<p>BILD EINFÜGEN</p>
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+</section>
 </section>
 <section id="sec-implementierung" class="level2">
 <h2 class="anchored" data-anchor-id="sec-implementierung">3. YOLO: Implementierung</h2>
@@ -211,13 +259,13 @@ Friedrich, Prof. Dr. Markus. 2026. <em>Visual Computing: Erkennung (Klassifikati
 <div id="ref-girshick2014" class="csl-entry" role="listitem">
 Girshick, Ross, Jeff Donahue, Trevor Darrell, and Jitendra Malik. 2014. <em>Rich Feature Hierarchies for Accurate Object Detection and Semantic Segmentation</em>. <a href="https://arxiv.org/abs/1311.2524">https://arxiv.org/abs/1311.2524</a>.
 </div>
-<div id="ref-redmon2016" class="csl-entry" role="listitem">
-Redmon, Joseph, Santosh Divvala, Ross Girshick, and Ali Farhadi. 2016. <em>You Only Look Once: Unified, Real-Time Object Detection</em>. <a href="https://arxiv.org/abs/1506.02640">https://arxiv.org/abs/1506.02640</a>.
+<div id="ref-redmon2015" class="csl-entry" role="listitem">
+Redmon, Joseph, Santosh Divvala, Ross Girshick, and Ali Farhadi. 2015. <em>You Only Look Once: Unified, Real-Time Object Detection</em>. <a href="https://arxiv.org/abs/1506.02640">https://arxiv.org/abs/1506.02640</a>.
 </div>
 </div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
-<li id="fn1"><p>Aus Gründen der Lesbarkeit wird in der gesamten Webseite das generische Maskulinum verwendet.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Aus Gründen der Lesbarkeit wird im Verlauf der gesamten Webseite das generische Maskulinum verwendet.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
