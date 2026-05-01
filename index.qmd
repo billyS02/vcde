@@ -32,6 +32,8 @@ bibliography: references.bib
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
+::: {.callout-note collapse="true"}
+
 ## Methodik {#sec-methodik}
 
 Die Echtzeit-Objekterkennung erfolgt in diesem Projekt über die frei verfügbaren Technologien **YOLO** und **OpenCV**. 
@@ -58,6 +60,8 @@ Abgeschlossen wird das Thema mit [Fazit](#sec-fazit), wo die **Ergebnisse und k�
 
 
 [^1]: Aus Gründen der Lesbarkeit wird im Verlauf der gesamten Webseite das generische Maskulinum verwendet.
+
+:::
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
@@ -156,12 +160,12 @@ Die Originalautoren räumen dieses Problem selbst ein [@redmon2015, Kapitel 2.4]
 **FPS vs. Genauigkeit:** YOLO existiert in verschiedenen Größen (z.B. yolov8n bis yolov8x). 
 Kleinere Varianten sind schneller, aber ungenauer. 
 Größere präziser, aber langsamer. 
-Welche Variante sinnvoll ist, hängt stets vom Einsatzszenario ab. 
+Welche Variante sinnvoll ist, hängt stets vom Einsatszenario ab. 
 Ein Roboter in einer kontrollierten Umgebung hat selbstverständlich andere Anforderungen als ein Fahrzeug im Straßenverkehr.
 
 **Umgebungsbedingungen:** Schlechte Lichtverhältnisse, Regen oder dicht gedrängter Verkehr können die Erkennungsrate erheblich senken, besonders im Kontext des autonomen Fahrens eine nicht zu unterschätzende Einschränkung.
 
-**Fehleranalyse im Vergleich zu Fast R-CNN:** Die Fehlerarten beider Modelle unterscheiden sich grundlegend. 
+**Fehleranalyse im Vergleich zu Fast R-CNN:** Die Fehlerarten beider Modelle unterschieden sich grundlegend. 
 YOLO macht deutlich mehr Lokalisierungsfehler (Loc: 19.0% vs. 8.6%); die Box sitzt also häufiger nicht exakt.  
 Fast R-CNN hingegen erkennt fast dreimal so häufig Hintergrundbereiche fälschlicherweise als Objekte (Background: 13.6% vs. 4.75%), weil es jeden Ausschnitt isoliert betrachtet und den größeren Bildkontext nicht sieht [@redmon2015].
 
