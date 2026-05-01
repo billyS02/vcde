@@ -85,7 +85,7 @@ Das bedeutet, dass das gesamte Bild **genau einmal durch ein einziges** Neuronal
 Es gibt also keine zweiten Schritte oder separaten Klassifikatoren.
 
 Wir erinnern uns: Zweistufige Verfahren wie R-CNN beginnen hingegen mit sog. *Region Proposals*, d.h. der Algorithmus schlägt zunächst hunderte mögliche Bildausschnitte vor, die ein Objekt enthalten könnten und klassifiziert dann jeden einzeln.
-**Faster R-CNN** schafft als einer der schnellsten Varianten etwa 5 fps bis 17 fps auf einem Standard Backbone [@ren2015], was für ein fahrendes Auto schlicht zu wenig ist.
+**Faster R-CNN** schafft als einer der schnellsten Varianten etwa 5 fps bis 17 fps auf einem Standard Backbone, was für ein fahrendes Auto schlicht zu wenig ist.
 
 ![Geschwindigkeit von YOLO im Vergleich zu anderen Modellen. [@sanchez2020]](./img/yolo_compare.png){fig-align="center"}  
 
