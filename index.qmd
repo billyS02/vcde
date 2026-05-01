@@ -78,7 +78,7 @@ Als One-Stage-Detector löst **YOLO** (You Only Look Once) dieses Problem mit ei
 
 ## 2. YOLO: Intro {#sec-intro}
 
-YOLO ist ein Open Source Projekt zur Echtzeit-Objekterkennung welches in seiner Originalfassung erstmalig 2015 von Joseph Redmon, Santosh Divvala, Ross Girshik und Ali Farhadi unter dem Titel *You Only Look Once: Unified, Real-Time Object Detection* veröffentlich wurde [@redmon2015]. 
+YOLO ist ein Open Source Projekt zur Echtzeit-Objekterkennung welches in seiner Originalfassung erstmalig 2015 von Joseph Redmon, Santosh Divvala, Ross Girshik und Ali Farhadi unter dem Titel *You Only Look Once: Unified, Real-Time Object Detection* veröffentlich wurde [@redmon2015]. \n
 Die Autoren setzten in ihrer Forschungsarbeit auf einen Ansatz, der die Objekterkennung als ein einziges Regressionsproblem formuliert.
 Das bedeutet, dass das gesamte Bild **genau einmal** durch ein **einziges** Neuronales Netz geschickt wird und dieses dabei gleichzeitig alle erkannten Objekte mit ihren Positionen und Klasen ausgibt.
 Es gibt also keine zweiten Schritte oder separaten Klassifikatoren.
@@ -89,19 +89,19 @@ Wir erinnern uns: Zweistufige Verfahren wie R-CNN beginnen hingegen mit sog. *Re
 ### 2.1 Architektur
 
 Das sog. Grid-System macht die Verarbeitung eines ganzen Bildes auf einem einzigen Netz erst möglich.
-Das Eingabebild wird also in ein gleichmäßiges Raster $S x S$ aufgeteilt und wie eine Schablone auf das Bild gelegt.
+Das Eingabebild wird dabei in ein gleichmäßiges Raster $S x S$ aufgeteilt und wie eine Schablone auf das Bild gelegt.
 Jede dieser Rasterzellen übernimmt dann die Verantwortung für genau den Bildbereich, den sie abdeckt [@redmon2015].
 
 BILD EINFÜGEN
 
-FÜr jeder dieser Zellen sagt das Modell gleichzeitig mehrere Dinge vorher:
+Für jeder dieser Zellen sagt das Modell gleichzeitig mehrere Dinge vorher:
 
-- Bounding Boxes: Jede Zelle schlägt $B$ mögliche Bounding Boxes vor, beschrieben durch die fünf Werte Mittelpunkt $(x, y)$, Abmessung $(w, h)$ und Confidence Score.  
-- Confidence Score: Dieser Wert beantwortet zum einen, ob ein Objekt überhaupt in der Box vorhanden ist und zum anderen, wie gut die Box wirklich zum Objekt passt. Formal ausgedrückt:
+- **<u>Bounding Boxes</u>**: Jede Zelle schlägt $B$ mögliche Bounding Boxes vor, beschrieben durch fünf Werte aus Mittelpunkt $(x, y)$, Abmessung $(w, h)$ und Confidence Score.  
+- **<u>Confidence Score</u>**: Dieser Wert beantwortet zum einen, ob ein Objekt überhaupt in der Box vorhanden ist und zum anderen, wie gut die Box wirklich zum Objekt passt. Formal ausgedrückt:
 
 $$\text{Confidence} = \Pr(\text{Object}) \times \text{IOU}_{\text{pred}}^{\text{truth}}$$
 
-- Klassenwahrscheinlichkeiten: Zusätzlich zur Box schätzt jede Zelle, welcher Klasse das Objekt angehört, also z.B. „Auto", „Person" oder „Fahrrad". Diese Klassenwahrscheinlichkeit wird am Ende mit dem Confidence Score multipliziert, sodass das Modell für jede Box einen finalen, klassenspezifischen Score ausgibt.
+- **<u>Klassenwahrscheinlichkeiten</u>**: Zusätzlich zur Box schätzt jede Zelle, welcher Klasse das Objekt angehört, also z.B. „Auto", „Person" oder „Fahrrad". Diese Klassenwahrscheinlichkeit wird am Ende mit dem Confidence Score multipliziert, sodass das Modell für jede Box einen finalen, klassenspezifischen Score ausgibt.
 
 Das **Gesamtmodell** gibt seinen Output als kompakten Tensor (XYZ) der Dimension $S \times S \times (B \cdot 5 + C)$ aus.
 Für die PASCAL-VOC-Auswertung ($S=7$, $B=2$, $C=20$ Klassen) ergibt das einen Tensor der Größe $7 \times 7 \times 30$ [@redmon2015].
