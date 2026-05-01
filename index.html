@@ -218,18 +218,39 @@ window.Quarto = {
 <p>BILD EINFÜGEN</p>
 <p>Für jeder dieser Zellen sagt das Modell gleichzeitig mehrere Dinge vorher:</p>
 <ul>
-<li><strong><u>Bounding Boxes</u></strong>: Jede Zelle schlägt <span class="math inline">\(B\)</span> mögliche Bounding Boxes vor, beschrieben durch fünf Werte aus Mittelpunkt <span class="math inline">\((x, y)\)</span> des erkannten Objekts zur Rasterzelle, Abmessung <span class="math inline">\((w, h)\)</span> zwischen Box und Gesamtbild und Confidence Score.<br>
+<li><strong>Bounding Boxes</strong>: Jede Zelle schlägt <span class="math inline">\(B\)</span> mögliche Bounding Boxes vor, beschrieben durch fünf Werte aus Mittelpunkt <span class="math inline">\((x, y)\)</span> des erkannten Objekts zur Rasterzelle, Abmessung <span class="math inline">\((w, h)\)</span> zwischen Box und Gesamtbild und Confidence Score.<br>
 </li>
-<li><strong><u>Confidence Score</u></strong>: Dieser Wert beantwortet zum einen, ob ein Objekt überhaupt in der Box vorhanden ist und zum anderen, wie gut die Box wirklich zum Objekt passt. Formal ausgedrückt:</li>
+<li><strong>Confidence Score</strong>: Dieser Wert beantwortet zum einen, ob ein Objekt überhaupt in der Box vorhanden ist und zum anderen, wie gut die Box wirklich zum Objekt passt. Formal ausgedrückt:</li>
 </ul>
 <p><span class="math display">\[
 \text{Confidence} = \Pr(\text{Object}) \times \text{IOU}_{\text{pred}}^{\text{truth}}
 \]</span></p>
 <ul>
-<li><strong><u>Klassenwahrscheinlichkeiten</u></strong>: Zusätzlich zur Box schätzt jede Zelle, welcher Klasse das Objekt angehört, also z.B. „Auto”, „Person” oder „Fahrrad”. Diese Klassenwahrscheinlichkeit wird am Ende mit dem Confidence Score multipliziert, sodass das Modell für jede Box einen finalen, klassenspezifischen Score ausgibt.</li>
+<li><strong>Klassenwahrscheinlichkeiten</strong>: Zusätzlich zur Box schätzt jede Zelle, welcher Klasse das Objekt angehört, also z.B. „Auto”, „Person” oder „Fahrrad”. Diese Klassenwahrscheinlichkeit wird am Ende mit dem Confidence Score multipliziert, sodass das Modell für jede Box einen finalen, klassenspezifischen Score ausgibt.</li>
 </ul>
 <p>Das <strong>Gesamtmodell</strong> gibt seinen Output als kompakten Tensor (XYZ) der Dimension <span class="math inline">\(S \times S \times (B \cdot 5 + C)\)</span> aus. Für die PASCAL-VOC-Auswertung (<span class="math inline">\(S=7\)</span>, <span class="math inline">\(B=2\)</span>, <span class="math inline">\(C=20\)</span> Klassen) ergibt das einen Tensor der Größe <span class="math inline">\(7 \times 7 \times 30\)</span> <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>)</span>.</p>
 <p>BILD EINFÜGEN</p>
+</section>
+<section id="yolo-versionen" class="level3">
+<h3 class="anchored" data-anchor-id="yolo-versionen">2.2 YOLO-Versionen</h3>
+<p>Seit der Erstveröffentlichung 2015 wurde YOLO stetig weiterentwickelt. Jede Version adressierte konkrete Schwächen der Vorgängerversion: Scheinbar mal in Richtung Geschwindigkeit, mal in Richtung Genauigkeit und mal in Richtung einfacherer Nutzbarkeit.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./img/yolo_timeline.png" class="img-fluid figure-img"></p>
+<figcaption>YOLO Timeline von v1 bis v7. <span class="citation" data-cites="keita2024">(<a href="#ref-keita2024" role="doc-biblioref">Keita 2024</a>)</span></figcaption>
+</figure>
+</div>
+<p>Die wichtigsten Meilensteine sind wohl:</p>
+<ul>
+<li><strong>YOLOv1 (2015):</strong> Das Grundprinzip, also die Grid-basierte Regression in einem Durchgang.</li>
+<li><strong>YOLOv2 (2016):</strong> Einführung von <em>Anchor Boxes</em>, die typische Objektformen vorwegnehmen und die Erkennung kleiner Objekte verbessern.</li>
+<li><strong>YOLOv3 (2018):</strong> Erkennung auf <strong>drei Skalen</strong> gleichzeitig; besonders hilfreich für Objekte unterschiedlicher Größe im selben Bild.</li>
+<li><strong>YOLOv4/v5 (2020):</strong> Community-getriebene Weiterentwicklungen mit zahlreichen Trainingstricks; YOLOv5 vollzog den Wechsel zu PyTorch und vereinfachte den Export auf Edge-Geräte erheblich <span class="citation" data-cites="terven2023">(<a href="#ref-terven2023" role="doc-biblioref"><strong>terven2023?</strong></a>)</span>.</li>
+<li><strong><u>YOLOv8</u> (2023):</strong> Die aktuell verbreitetste Version. Kernneuerung ist die <em>anchor-free</em> Architektur: Statt vordefinierten Acnhor Boxes lernt das Modell Boxpositionen direkt, was den Trainingsprozess vereinfacht und die Genauigkeit steigert. Zudem wurde ein <em>decoupled head</em> eingeführt, der Klassifizierung und Lokalisation in getrennten Zweigen berechnet <span class="citation" data-cites="jocher2023">(<a href="#ref-jocher2023" role="doc-biblioref"><strong>jocher2023?</strong></a>)</span>.</li>
+</ul>
+</section>
+<section id="herausforderungen" class="level3">
+<h3 class="anchored" data-anchor-id="herausforderungen">2.3 Herausforderungen</h3>
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 </section>
 </section>
@@ -260,6 +281,9 @@ Friedrich, Prof. Dr. Markus. 2026. <em>Visual Computing: Erkennung (Klassifikati
 </div>
 <div id="ref-girshick2014" class="csl-entry" role="listitem">
 Girshick, Ross, Jeff Donahue, Trevor Darrell, and Jitendra Malik. 2014. <em>Rich Feature Hierarchies for Accurate Object Detection and Semantic Segmentation</em>. <a href="https://arxiv.org/abs/1311.2524">https://arxiv.org/abs/1311.2524</a>.
+</div>
+<div id="ref-keita2024" class="csl-entry" role="listitem">
+Keita, Zoumana. 2024. <span>“YOLO Object Detection Erklärt.”</span> In <em>Datacamp</em>. <a href="https://www.datacamp.com/de/blog/yolo-object-detection-explained">https://www.datacamp.com/de/blog/yolo-object-detection-explained</a>.
 </div>
 <div id="ref-redmon2015" class="csl-entry" role="listitem">
 Redmon, Joseph, Santosh Divvala, Ross Girshick, and Ali Farhadi. 2015. <em>You Only Look Once: Unified, Real-Time Object Detection</em>. <a href="https://arxiv.org/abs/1506.02640">https://arxiv.org/abs/1506.02640</a>.
