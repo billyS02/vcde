@@ -72,12 +72,15 @@ Visuell wird also eine sog. *Bounding Box* erzeugt, die das erkannte Objekt umra
 
 \n
 
-Besondere Anforderungen stellt dabei das **autonome Fahren**: Hier reicht es nicht, Objekte lediglich zu erkennen, denn zusätzlich muss das auch in **Echtzeit** geschehen, also mit mindestens 24 fps (Frames pro Sekunde), damit ein Fahrzeug rechtzeitig reagieren kann.
-Klassische Verfahren wie R-CNN sind zwar präzise, scheitern jedoch an genau diesem Anspruch, da sie das Bild in mehreren Schritten verarbeiten [@girshick2014]. Die Rede ist von einem sogenannten *Two-Stage-Detector*.
+Besondere Anforderungen stellt dabei das **autonome Fahren**. 
+Hier reicht es nicht, Objekte lediglich zu erkennen, denn zusätzlich muss das auch in **Echtzeit** geschehen, also mit mindestens 24 fps (Frames pro Sekunde), damit ein Fahrzeug rechtzeitig reagieren kann.
+Klassische Verfahren wie R-CNN sind zwar präzise, scheitern jedoch an genau diesem Anspruch, da sie das Bild in mehreren Schritten verarbeiten [@girshick2014]. 
+Die Rede ist von einem sogenannten *Two-Stage-Detector*.
 
 \n
 
-Als One-Stage-Detector löst **YOLO** (You Only Look Once) dieses Problem mit einem anderen Ansatz. Das gesamte Medium wird nämlich in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Erkennung von 45 fps (als base model) bis zu 166 fps (als fast model) ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht [@redmon2015].
+Als One-Stage-Detector löst **YOLO** (You Only Look Once) dieses Problem mit einem anderen Ansatz. 
+Das gesamte Medium wird nämlich in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Erkennung von 45 fps (als base model) bis zu 166 fps (als fast model) ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht [@redmon2015].
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
