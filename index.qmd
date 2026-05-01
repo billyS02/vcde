@@ -102,14 +102,14 @@ Wir erinnern uns: Zweistufige Verfahren wie R-CNN beginnen hingegen mit sog. *Re
 Das sog. **Grid-System** macht die Verarbeitung eines ganzen Bildes in einem einzigen Netz erst möglich.
 Das Eingabebild wird dabei in ein gleichmäßiges Raster $S \times S$ aufgeteilt und wie eine Schablone über das Bild gelegt.
 Jede dieser Rasterzellen übernimmt dann die Verantwortung für genau den Bildbereich, den sie abdeckt.
-Konkret gilt: Fällt der Mittelpunkt eines Objekts in eine bestimme Zelle, ist genau diese für die Erkennung dieses Objektes verantworklich [@redmon2015].
+Konkret gilt: Fällt der Mittelpunkt eines Objekts in eine bestimme Zelle, ist genau diese für die Erkennung dieses Objektes verantworklich [@redmon2015, Abschnitt 2].
 
 ![Das Bild wird in ein $S \times S$ Grid aufgeteilt. Jede Zelle sagt $B$ Bounding Boxes mit Confidence und $C$ Klassenwahrscheinlichkeiten voraus. Alles kodiert in einem einzigen Tesnor: $S \times S \times (B \cdot 5 + C)$. [@redmon2015, Abbildung 2]](./img/yolo_SSGrid.png){fig-align="center"}  
 
 Für jeder dieser Zellen sagt das Modell gleichzeitig mehrere Dinge vorher:
 
 - **Bounding Boxes**: Jede Zelle schlägt $B$ mögliche Bounding Boxes vor, beschrieben durch fünf Werte aus Mittelpunkt $(x, y)$ des erkannten Objekts zur Rasterzelle, Abmessung $(w, h)$ zwischen Box und Gesamtbild und Confidence Score.  
-- **Confidence Score**: Dieser Wert beantwortet zum einen, ob ein Objekt überhaupt in der Box vorhanden ist und zum anderen, wie gut die Box wirklich zum Objekt passt. Das Modell kombiniert beide Informationen in einer einzigen Kennzahl [@redmon2015]:
+- **Confidence Score**: Dieser Wert beantwortet zum einen, ob ein Objekt überhaupt in der Box vorhanden ist und zum anderen, wie gut die Box wirklich zum Objekt passt. Das Modell kombiniert beide Informationen in einer einzigen Kennzahl:
 
 $$
 \text{Confidence} = 
@@ -123,7 +123,7 @@ $$
 Das **Gesamtmodell** fasst alle Vorhersagen aller Zellen in einer einzigen verschachtelten Zahlenstruktur zusammen (*Tensor*, vereinfacht gesagt ein mehrdimensionales Array).
 Seine Dimension ist $S \times S \times (B \cdot 5 + C)$, d.h. jede der $S \times S$ Zellen werden $B$ Boxen mit je 5 Werten sowie $C$ Klassenwahrscheinlichkeiten gespeichert.  
 Die Autoren evaluierten ihr Modell auf **PASCAL VOC**, einem standardisierten Benchmark-Datensatz für Objekterkennung mit 20 vordefinierten Klassen (u.a. Auto, Person, Hund), der in der Computer-Vision-Forschung als gemeinsame Vergleichsbasis weit verbreitet ist. 
-Mit $S = 7$, $B = 2$ und $C = 20$ ergibt sich ein Ausgabe-Tensor der Größe $7 \times 7 \times 30$ [@redmon2015].
+Mit $S = 7$, $B = 2$ und $C = 20$ ergibt sich ein Ausgabe-Tensor der Größe $7 \times 7 \times 30$.
 
 ### 2.2 YOLO-Versionen
 
