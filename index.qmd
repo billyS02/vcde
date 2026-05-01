@@ -142,8 +142,8 @@ Die wichtigsten Meilensteine sind wohl:
 
 ### 2.3 Herausforderungen
 
-So leistungsfähig YOLO auch ist gibt Szenarien, in denen das System an seine Grenzen stößt. 
-Diese zu kennen ist wichtig, um die Ergebnisse im Demo-Kapitel korrekt einordnen zu können.
+So leistungsfähig YOLO auch ist gibt es Szenarien, in denen das System an seine Grenzen stößt. 
+Diese zu kennen sind wichtig, um die Ergebnisse im Demo-Kapitel korrekt einordnen zu können.
 
 **Occlusion (Verdeckung):** Da jede Rasterzelle nur eine Klasse vorhersagen kann, hat YOLO Schwierigkeiten, wenn mehrere Objekte derselben Klasse eng beieinanderliegen oder sich gar überlappen. 
 Zum Beispiel eine Menschenmenge oder dicht aufgefahrene Fahrzeuge. 
