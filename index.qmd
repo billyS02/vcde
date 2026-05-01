@@ -20,32 +20,6 @@ bibliography: references.bib
 [Fazit](#sec-fazit)
 :::
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  document.querySelectorAll("h2, h3").forEach(function(heading) {
-    let content = [];
-    let next = heading.nextElementSibling;
-    while (next && !["H2", "H3"].includes(next.tagName)) {
-      content.push(next);
-      next = next.nextElementSibling;
-    }
-    if (content.length === 0) return;
-    const wrapper = document.createElement("div");
-    content[0].parentNode.insertBefore(wrapper, content[0]);
-    content.forEach(el => wrapper.appendChild(el));
-    wrapper.style.overflow = "hidden";
-    let collapsed = false;
-    heading.style.cursor = "pointer";
-    heading.insertAdjacentHTML("afterbegin", "<span class='toggle-arrow'>▾ </span>");
-    heading.addEventListener("click", function() {
-      collapsed = !collapsed;
-      wrapper.style.display = collapsed ? "none" : "block";
-      heading.querySelector(".toggle-arrow").textContent = collapsed ? "▸ " : "▾ ";
-    });
-  });
-});
-</script>
-
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
 ## Abstract {#sec-abstract} 
