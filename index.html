@@ -218,11 +218,13 @@ window.Quarto = {
 <p>BILD EINFÜGEN</p>
 <p>Für jeder dieser Zellen sagt das Modell gleichzeitig mehrere Dinge vorher:</p>
 <ul>
-<li><strong><u>Bounding Boxes</u></strong>: Jede Zelle schlägt <span class="math inline">\(B\)</span> mögliche Bounding Boxes vor, beschrieben durch fünf Werte aus Mittelpunkt <span class="math inline">\((x, y)\)</span>, Abmessung <span class="math inline">\((w, h)\)</span> und Confidence Score.<br>
+<li><strong><u>Bounding Boxes</u></strong>: Jede Zelle schlägt <span class="math inline">\(B\)</span> mögliche Bounding Boxes vor, beschrieben durch fünf Werte aus Mittelpunkt <span class="math inline">\((x, y)\)</span> des erkannten Objekts zur Rasterzelle, Abmessung <span class="math inline">\((w, h)\)</span> zwischen Box und Gesamtbild und Confidence Score.<br>
 </li>
 <li><strong><u>Confidence Score</u></strong>: Dieser Wert beantwortet zum einen, ob ein Objekt überhaupt in der Box vorhanden ist und zum anderen, wie gut die Box wirklich zum Objekt passt. Formal ausgedrückt:</li>
 </ul>
-<p><span class="math display">\[\text{Confidence} = \Pr(\text{Object}) \times \text{IOU}_{\text{pred}}^{\text{truth}}\]</span></p>
+<p><span class="math display">\[
+\text{Confidence} = \Pr(\text{Object}) \times \text{IOU}_{\text{pred}}^{\text{truth}}
+\]</span></p>
 <ul>
 <li><strong><u>Klassenwahrscheinlichkeiten</u></strong>: Zusätzlich zur Box schätzt jede Zelle, welcher Klasse das Objekt angehört, also z.B. „Auto”, „Person” oder „Fahrrad”. Diese Klassenwahrscheinlichkeit wird am Ende mit dem Confidence Score multipliziert, sodass das Modell für jede Box einen finalen, klassenspezifischen Score ausgibt.</li>
 </ul>
