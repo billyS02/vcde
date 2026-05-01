@@ -214,17 +214,17 @@ window.Quarto = {
 <p>Wir erinnern uns: Zweistufige Verfahren wie R-CNN beginnen hingegen mit sog. <em>Region Proposals</em>, d.h. der Algorithmus schlägt zunächst hunderte mögliche Bildausschnitte vor, die ein Objekt enthalten könnten und klassifiziert dann jeden einzeln. <strong>Faster R-CNN</strong> schafft als einer der schnellsten Varianten etwa 5 fps auf einem Standard Backbone <span class="citation" data-cites="ren2015">(<a href="#ref-ren2015" role="doc-biblioref"><strong>ren2015?</strong></a>)</span>, was für ein fahrendes Auto schlicht zu wenig ist.</p>
 <section id="architektur" class="level3">
 <h3 class="anchored" data-anchor-id="architektur">2.1 Architektur</h3>
-<p>Das sog. Grid-System macht die Verarbeitung eines ganzen Bildes auf einem einzigen Netz erst möglich. Das Eingabebild wird also in ein gleichmäßiges Raster <span class="math inline">\(S x S\)</span> aufgeteilt und wie eine Schablone auf das Bild gelegt. Jede dieser Rasterzellen übernimmt dann die Verantwortung für genau den Bildbereich, den sie abdeckt <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>)</span>.</p>
+<p>Das sog. Grid-System macht die Verarbeitung eines ganzen Bildes auf einem einzigen Netz erst möglich. Das Eingabebild wird dabei in ein gleichmäßiges Raster <span class="math inline">\(S x S\)</span> aufgeteilt und wie eine Schablone auf das Bild gelegt. Jede dieser Rasterzellen übernimmt dann die Verantwortung für genau den Bildbereich, den sie abdeckt <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>)</span>.</p>
 <p>BILD EINFÜGEN</p>
-<p>FÜr jeder dieser Zellen sagt das Modell gleichzeitig mehrere Dinge vorher:</p>
+<p>Für jeder dieser Zellen sagt das Modell gleichzeitig mehrere Dinge vorher:</p>
 <ul>
-<li>Bounding Boxes: Jede Zelle schlägt <span class="math inline">\(B\)</span> mögliche Bounding Boxes vor, beschrieben durch die fünf Werte Mittelpunkt <span class="math inline">\((x, y)\)</span>, Abmessung <span class="math inline">\((w, h)\)</span> und Confidence Score.<br>
+<li><strong><u>Bounding Boxes</u></strong>: Jede Zelle schlägt <span class="math inline">\(B\)</span> mögliche Bounding Boxes vor, beschrieben durch fünf Werte aus Mittelpunkt <span class="math inline">\((x, y)\)</span>, Abmessung <span class="math inline">\((w, h)\)</span> und Confidence Score.<br>
 </li>
-<li>Confidence Score: Dieser Wert beantwortet zum einen, ob ein Objekt überhaupt in der Box vorhanden ist und zum anderen, wie gut die Box wirklich zum Objekt passt. Formal ausgedrückt:</li>
+<li><strong><u>Confidence Score</u></strong>: Dieser Wert beantwortet zum einen, ob ein Objekt überhaupt in der Box vorhanden ist und zum anderen, wie gut die Box wirklich zum Objekt passt. Formal ausgedrückt:</li>
 </ul>
 <p><span class="math display">\[\text{Confidence} = \Pr(\text{Object}) \times \text{IOU}_{\text{pred}}^{\text{truth}}\]</span></p>
 <ul>
-<li>Klassenwahrscheinlichkeiten: Zusätzlich zur Box schätzt jede Zelle, welcher Klasse das Objekt angehört, also z.B. „Auto”, „Person” oder „Fahrrad”. Diese Klassenwahrscheinlichkeit wird am Ende mit dem Confidence Score multipliziert, sodass das Modell für jede Box einen finalen, klassenspezifischen Score ausgibt.</li>
+<li><strong><u>Klassenwahrscheinlichkeiten</u></strong>: Zusätzlich zur Box schätzt jede Zelle, welcher Klasse das Objekt angehört, also z.B. „Auto”, „Person” oder „Fahrrad”. Diese Klassenwahrscheinlichkeit wird am Ende mit dem Confidence Score multipliziert, sodass das Modell für jede Box einen finalen, klassenspezifischen Score ausgibt.</li>
 </ul>
 <p>Das <strong>Gesamtmodell</strong> gibt seinen Output als kompakten Tensor (XYZ) der Dimension <span class="math inline">\(S \times S \times (B \cdot 5 + C)\)</span> aus. Für die PASCAL-VOC-Auswertung (<span class="math inline">\(S=7\)</span>, <span class="math inline">\(B=2\)</span>, <span class="math inline">\(C=20\)</span> Klassen) ergibt das einen Tensor der Größe <span class="math inline">\(7 \times 7 \times 30\)</span> <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>)</span>.</p>
 <p>BILD EINFÜGEN</p>
