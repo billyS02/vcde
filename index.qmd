@@ -97,6 +97,7 @@ Jede dieser Rasterzellen übernimmt dann die Verantwortung für genau den Bildbe
 Konkret gilt: Fällt der Mittelpunkt eines Objekts in eine bestimme Zelle, ist genau diese für die Erkennung dieses Objektes verantworklich [@redmon2015].
 
 
+
 Für jeder dieser Zellen sagt das Modell gleichzeitig mehrere Dinge vorher:
 
 - **Bounding Boxes**: Jede Zelle schlägt $B$ mögliche Bounding Boxes vor, beschrieben durch fünf Werte aus Mittelpunkt $(x, y)$ des erkannten Objekts zur Rasterzelle, Abmessung $(w, h)$ zwischen Box und Gesamtbild und Confidence Score.  
@@ -111,7 +112,7 @@ $$
 Das **Gesamtmodell** gibt seinen Output als kompakten Tensor (XYZ) der Dimension $S \times S \times (B \cdot 5 + C)$ aus.
 Für die PASCAL-VOC-Auswertung ($S=7$, $B=2$, $C=20$ Klassen) ergibt das einen Tensor der Größe $7 \times 7 \times 30$ [@redmon2015].
 
-![Das Bild wird in ein $S \times S$ Grid aufgeteilt. Jede Zelle sagt $B$ Bounding Boxes mit Confidence und $C$ Klassenwahrscheinlichkeiten voraus – alles kodiert in einem einzigen $S \times S \times (B \cdot 5 + C)$ Tensor. [@redmon2015, Figure 2]](./img/yolo_SSGrid.png){fig-align="center"}  
+![Das Bild wird in ein $S \times S$ Grid aufgeteilt. Jede Zelle sagt $B$ Bounding Boxes mit Confidence und $C$ Klassenwahrscheinlichkeiten voraus. Alles kodiert in einem einzigen Tesnor: $S \times S \times (B \cdot 5 + C)$. [@redmon2015, Figure 2]](./img/yolo_SSGrid.png){fig-align="center"}  
 
 ### 2.2 YOLO-Versionen
 
