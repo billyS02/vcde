@@ -78,9 +78,10 @@ Als One-Stage-Detector löst **YOLO** (You Only Look Once) dieses Problem mit ei
 
 ## 2. YOLO: Intro {#sec-intro}
 
-YOLO ist ein Open Source Projekt zur Echtzeit-Objekterkennung welches in seiner Originalfassung erstmalig 2015 von Joseph Redmon, Santosh Divvala, Ross Girshik und Ali Farhadi unter dem Titel *You Only Look Once: Unified, Real-Time Object Detection* veröffentlich wurde [@redmon2015]. \n
+YOLO ist ein Open Source Projekt zur Echtzeit-Objekterkennung welches in seiner Originalfassung erstmalig 2015 von Joseph Redmon, Santosh Divvala, Ross Girshik und Ali Farhadi unter dem Titel *You Only Look Once: Unified, Real-Time Object Detection* veröffentlich wurde [@redmon2015]. 
+
 Die Autoren setzten in ihrer Forschungsarbeit auf einen Ansatz, der die Objekterkennung als ein einziges Regressionsproblem formuliert.
-Das bedeutet, dass das gesamte Bild **genau einmal** durch ein **einziges** Neuronales Netz geschickt wird und dieses dabei gleichzeitig alle erkannten Objekte mit ihren Positionen und Klasen ausgibt.
+Das bedeutet, dass das gesamte Bild **genau einmal durch ein einziges** Neuronales Netz geschickt wird und dieses dabei gleichzeitig alle erkannten Objekte mit ihren Positionen und Klasen ausgibt.
 Es gibt also keine zweiten Schritte oder separaten Klassifikatoren.
 
 Wir erinnern uns: Zweistufige Verfahren wie R-CNN beginnen hingegen mit sog. *Region Proposals*, d.h. der Algorithmus schlägt zunächst hunderte mögliche Bildausschnitte vor, die ein Objekt enthalten könnten und klassifiziert dann jeden einzeln.
