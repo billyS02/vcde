@@ -212,7 +212,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="sec-intro">2. YOLO: Intro</h2>
 <p>YOLO ist ein Open Source Projekt zur Echtzeit-Objekterkennung welches in seiner Originalfassung erstmalig 2015 von Joseph Redmon, Santosh Divvala, Ross Girshik und Ali Farhadi unter dem Titel <em>You Only Look Once: Unified, Real-Time Object Detection</em> veröffentlich wurde <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Jospeh Redmon 2015</a>)</span>.</p>
 <p>Die Autoren setzten in ihrer Forschungsarbeit auf einen Ansatz, der die Objekterkennung als ein einziges Regressionsproblem formuliert. Das bedeutet, dass das gesamte Bild <strong>genau einmal durch ein einziges</strong> Neuronales Netz geschickt wird und dieses dabei gleichzeitig alle erkannten Objekte mit ihren Positionen und Klasen ausgibt. Es gibt also keine zweiten Schritte oder separaten Klassifikatoren.</p>
-<p>Wir erinnern uns: Zweistufige Verfahren wie R-CNN beginnen hingegen mit sog. <em>Region Proposals</em>, d.h. der Algorithmus schlägt zunächst hunderte mögliche Bildausschnitte vor, die ein Objekt enthalten könnten und klassifiziert dann jeden einzeln. <strong>Faster R-CNN</strong> schafft als einer der schnellsten Varianten etwa 5 fps bis 17 fps auf einem Standard Backbone <span class="citation" data-cites="ren2015">(<a href="#ref-ren2015" role="doc-biblioref">Shaoqing Ren 2015</a>)</span>, was für ein fahrendes Auto schlicht zu wenig ist.</p>
+<p>Wir erinnern uns: Zweistufige Verfahren wie R-CNN beginnen hingegen mit sog. <em>Region Proposals</em>, d.h. der Algorithmus schlägt zunächst hunderte mögliche Bildausschnitte vor, die ein Objekt enthalten könnten und klassifiziert dann jeden einzeln. <strong>Faster R-CNN</strong> schafft als einer der schnellsten Varianten etwa 5 fps bis 17 fps auf einem Standard Backbone, was für ein fahrendes Auto schlicht zu wenig ist.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="./img/yolo_compare.png" class="img-fluid figure-img"></p>
@@ -327,9 +327,6 @@ Ross Girshick, Trevor Darrell, Jeff Donahue. 2014. <em>Rich Feature Hierarchies 
 </div>
 <div id="ref-sanchez2020" class="csl-entry" role="listitem">
 S. A. Sanchez, H. J. Romero und A. D. Morales. 2020. <span>“A Review: Comparison of Performance Metrics of Pretrained Models for Object Detection Using the TensorFlow Framework.”</span> <em>IOP Conference Series: Materials Science and Engineering</em>.
-</div>
-<div id="ref-ren2015" class="csl-entry" role="listitem">
-Shaoqing Ren, Ross Girshick und Jian Sun, Kaiming He. 2015. <span>“Faster r-CNN: Towards Real-Time Object Detection with Region Proposal Networks.”</span> <em>Advances in Neural Information Processing Systems</em>. <a href="https://arxiv.org/abs/1506.01497">https://arxiv.org/abs/1506.01497</a>.
 </div>
 </div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
