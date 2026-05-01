@@ -35,22 +35,27 @@ bibliography: references.bib
 
 ## Methodik {#sec-methodik}
 
-Die Echtzeit-Objekterkennung erfolgt in diesem Projekt über die frei verfügbaren Technologien **YOLO** und **OpenCV**. Zur Einführung und der darauffolgenden Implementierung dieser, beginnt dieses Projekt mit einer kurzen [<u>Einordnung</u>](#sec-einordnung) der **Objekterkennung** als Wiederholung, um dem Leser[^1] die **Vernetzung** des Kernthemas zu anderen Tehmen zu erleichtern. 
+Die Echtzeit-Objekterkennung erfolgt in diesem Projekt über die frei verfügbaren Technologien **YOLO** und **OpenCV**. 
+Zur Einführung und der darauffolgenden Implementierung dieser, beginnt dieses Projekt mit einer kurzen [Einordnung](#sec-einordnung) der **Objekterkennung** als Wiederholung, um dem Leser[^1] die **Vernetzung** des Kernthemas zu anderen Tehmen zu erleichtern. 
 
 \n
 
-Die Brücke zu YOLO wird über das gleichnamige Kapitel [<u>YOLO: Intro</u>](#sec-intro) geschlagen, wo dem Leser die Geschichte und die Natur der verwendeteten Technologie nahegelegt und mit anderen Standards verglichen werden.
+Die Brücke zu YOLO wird über das gleichnamige Kapitel [YOLO: Intro](#sec-intro) geschlagen, wo dem Leser die Geschichte und die Natur der verwendeteten Technologie nahegelegt und mit anderen Standards verglichen werden.
+
+\n
+
+In [YOLO: Implementierung](#sec-implementierung) erfolgt die sukzessive Bearbeitung der Problemstellung.
 Zugleich werden die **System Requierements** abgearbeitet (z.B. das Erstellen eines Virtual Environments oder das Installieren von notwendigen Bibliotheken), um die Schritt-für-Schritt **Reproduzierbarkeit** Seitens des Lesers zu gewährleisten.
 Dazugehörige Code-Snippets stehen im gesamten Verlauf dieser Webseite ebenso zur Verfügung und können direkt in die eigene Entwicklungsumgebung (VSCode, etc.) kopiert werden.
 
 \n
 
-Ist die sukzessive Implementierung im Kapitel [<u>YOLO: Implementierung</u>](#sec-implementierung) abgearbeitet worden, erfolgt eine **Demonstration** in Kapitel [<u>YOLO: Demo</u>](#sec-demo), in der eine Echtzeit-Objekterkennung anhand eines Videos aus dem Straßenverkehr getestet werden soll.
+Daraufhin erfolgt eine **Demonstration** in Kapitel [YOLO: Demo](#sec-demo), in der eine Echtzeit-Objekterkennung anhand eines Videos aus dem Straßenverkehr getestet werden soll.
 Zugleich erhält der Leser die Möglichkeit, die Implementierung mit eigenen Medien auszuprobieren und durch **interaktive Inhalte** die Implementierung zu manipulieren (z.B. das Anpassen von Parametern).
 
 \n
 
-Abgeschlossen wird das Thema mit dem Kapitel [<u>Ausblick</u>](#sec-ausblick), wo die **Grenzen und künftigen Entwicklungen** von YOLO diskutiert und für etwaige Anwendungen geeignetere Modelle vorgeschlagen werden.
+Abgeschlossen wird das Thema mit [Ausblick](#sec-ausblick), wo die **Grenzen und künftigen Entwicklungen** von YOLO diskutiert und für etwaige Anwendungen geeignetere Modelle vorgeschlagen werden.
 
 
 [^1]: Aus Gründen der Lesbarkeit wird im Verlauf der gesamten Webseite das generische Maskulinum verwendet.
