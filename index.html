@@ -339,7 +339,7 @@ Fast R-CNN hingegen erkennt fast dreimal so häufig Hintergrundbereiche fälschl
 <p>Die Bibliothek <code>ultralytics</code> enthält YOLOv8 inklusive aller Abhängigkeiten (u.a. PyTorch).<br>
 <code>opencv-python</code> wird für das Einlesen und Verarbeiten von Bild- und Videodaten sowie die Ansteuerung von Kamera und Peripherie verwendet.</p>
 <p><strong>Überprüfen der Installation:</strong></p>
-<div id="6485f2ba" class="cell" data-execution_count="1">
+<div id="33df5830" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ultralytics</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -362,7 +362,7 @@ OpenCV Version:      4.13.0</code></pre>
 <h3 class="anchored" data-anchor-id="objekterkennung-im-straßenverkehr">3.2 Objekterkennung im Straßenverkehr</h3>
 <p>Als Testmedium dienen verschiedene frei verfügbares Video aus dem Kontext <em>Straßenverkehr</em>. Diese werdem Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und die erkannten Objekte anschließend mit Bounding Boxes versehen.</p>
 <p><strong>Modell laden:</strong></p>
-<div id="6c4b3170" class="cell" data-execution_count="2">
+<div id="4eddb6cb" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> YOLO(<span class="st">"yolov8n.pt"</span>)</span>
@@ -371,7 +371,7 @@ OpenCV Version:      4.13.0</code></pre>
 </div>
 <p>YOLOv8 steht in verschiedenen Größen zur Verfügung, von <code>yolov8n.pt</code> (Nano, schneller) bis <code>yolov8x.pt</code> (Extra Large, genauer). Für dieses Projekt wird <code>yolov8s.pt</code> (Small) verwendet, da es eine gute Balance zwischen Geschwindigkeit und Genauigkeit bietet.</p>
 <p><strong>Verarbeitungsfunktion definieren:</strong></p>
-<div id="f91444f9" class="cell" data-execution_count="3">
+<div id="9b37aca2" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2, random, time</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Farbe pro Klasse definieren</span></span>
@@ -418,11 +418,11 @@ OpenCV Version:      4.13.0</code></pre>
 </div>
 <p><strong>Demonstration mit Video<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</strong></p>
 <p>Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab. Während eine dedizierte GPU (z.B. NVIDIA mit CUDA) problemlos 40–100+ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise 5–25 FPS realistisch.</p>
-<div id="2370acb4" class="cell" data-execution_count="4">
+<div id="4749486c" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-stdout">
 <pre><code>Verarbeitete Frames: 1501
-Gesamtzeit: 108.46s
-Durchschnittliche FPS: 13.8</code></pre>
+Gesamtzeit: 110.60s
+Durchschnittliche FPS: 13.6</code></pre>
 </div>
 </div>
 <div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="./img/autobahn_h264.mp4"></video></div>
@@ -845,7 +845,7 @@ function handleFile(file) {
   }
 }
 
-// ── Vorverarbeitung (Letterbox → 640×640) ───────────────────────────────────
+// ── Vorverarbeitung (Letterbox -> 640×640) ───────────────────────────────────
 function preprocess(source, sw, sh) {
   const MODEL = 640;
   const scale = Math.min(MODEL/sw, MODEL/sh);
@@ -885,7 +885,7 @@ function nms(boxes, thr=0.45) {
   return keep;
 }
 
-// ── Tensor → Boxen ───────────────────────────────────────────────────────────
+// ── Tensor -> Boxen ───────────────────────────────────────────────────────────
 function parseOutput(data, scale, px, py, W, H, minConf=0.05) {
   const N=8400, boxes=[];
   for(let i=0;i<N;i++){
@@ -1027,6 +1027,258 @@ function drawLoop() {
 </section>
 <section id="objekterkennung-kameralive-stream" class="level3">
 <h3 class="anchored" data-anchor-id="objekterkennung-kameralive-stream">4.3 Objekterkennung Kamera/Live-Stream</h3>
+<div id="yolo-cam" style="padding:1rem 0;">
+<!-- Steuerung -->
+<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:0.75rem;">
+<pre><code>&lt;button id="camStart" style="
+  background:#185FA5;color:#fff;border:none;border-radius:6px;
+  padding:0.45rem 1.1rem;font-size:14px;cursor:pointer;font-weight:600;"&gt;
+  ▶ Kamera starten
+&lt;/button&gt;
+&lt;button id="camStop" disabled style="
+  background:#e0e0e0;color:#888;border:none;border-radius:6px;
+  padding:0.45rem 1.1rem;font-size:14px;cursor:pointer;font-weight:600;"&gt;
+  ■ Stoppen
+&lt;/button&gt;</code></pre>
+</div>
+<!-- Status -->
+<div id="camStatus" style="font-size:13px;color:#888;margin-bottom:0.75rem;min-height:1.2em;">
+
+</div>
+<!-- Confidence Slider -->
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem;max-width:340px;">
+<pre><code>&lt;label style="font-size:14px;color:#555;white-space:nowrap;"&gt;Conf. &lt;strong&gt;C&lt;/strong&gt;≥&lt;/label&gt;
+&lt;input type="range" id="camConfSlider" min="0.05" max="0.95" step="0.05" value="0.40" style="flex:1;" disabled&gt;
+&lt;span id="camConfVal" style="font-size:15px;font-weight:600;min-width:3ch;"&gt;0.40&lt;/span&gt;</code></pre>
+</div>
+<!-- Kamera-Feed + Canvas übereinander -->
+<div id="camWrapper" style="position:relative;width:100%;display:none;">
+<pre><code>&lt;video id="camVideo" muted playsinline autoplay style="width:100%;border-radius:8px;display:block;"&gt;&lt;/video&gt;
+&lt;canvas id="camCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:8px;"&gt;&lt;/canvas&gt;</code></pre>
+</div>
+<!-- Legende -->
+<div style="margin-top:0.6rem;display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:#666;">
+<pre><code>&lt;span style="display:flex;align-items:center;gap:4px;"&gt;
+  &lt;span style="width:14px;height:3px;background:#E24B4A;display:inline-block;border-radius:1px;"&gt;&lt;/span&gt;Bounding Box
+&lt;/span&gt;
+&lt;span style="display:flex;align-items:center;gap:4px;"&gt;
+  &lt;span style="width:9px;height:9px;border-radius:50%;background:#E24B4A;display:inline-block;"&gt;&lt;/span&gt;Objektmittelpunkt
+&lt;/span&gt;
+&lt;span style="display:flex;align-items:center;gap:4px;"&gt;
+  &lt;span style="font-size:11px;color:#888;"&gt;⚠ GitHub Pages: ~2 FPS (kein WebGPU)&lt;/span&gt;
+&lt;/span&gt;</code></pre>
+</div>
+<!-- Detektionsliste -->
+<div id="camDetList" style="margin-top:0.75rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;">
+
+</div>
+</div>
+<script>
+(function () {
+
+const COCO = ['person','bicycle','car','motorcycle','airplane','bus','train',
+  'truck','boat','traffic light','fire hydrant','stop sign','parking meter',
+  'bench','bird','cat','dog','horse','sheep','cow','elephant','bear','zebra',
+  'giraffe','backpack','umbrella','handbag','tie','suitcase','frisbee','skis',
+  'snowboard','sports ball','kite','baseball bat','baseball glove','skateboard',
+  'surfboard','tennis racket','bottle','wine glass','cup','fork','knife','spoon',
+  'bowl','banana','apple','sandwich','orange','broccoli','carrot','hot dog',
+  'pizza','donut','cake','chair','couch','potted plant','bed','dining table',
+  'toilet','tv','laptop','mouse','remote','keyboard','cell phone','microwave',
+  'oven','toaster','sink','refrigerator','book','clock','vase','scissors',
+  'teddy bear','hair drier','toothbrush'];
+
+function clsColor(c) { return `hsl(${(c*47)%360},70%,45%)`; }
+
+const btnStart  = document.getElementById('camStart');
+const btnStop   = document.getElementById('camStop');
+const wrapper   = document.getElementById('camWrapper');
+const video     = document.getElementById('camVideo');
+const canvas    = document.getElementById('camCanvas');
+const ctx       = canvas.getContext('2d');
+const cSlider   = document.getElementById('camConfSlider');
+const cVal      = document.getElementById('camConfVal');
+const status    = document.getElementById('camStatus');
+const detList   = document.getElementById('camDetList');
+
+let loopActive  = false;
+let stream      = null;
+let lastBoxes   = [];
+let lastInferTime = performance.now();
+
+cSlider.addEventListener('input', () => {
+  cVal.textContent = parseFloat(cSlider.value).toFixed(2);
+});
+
+// ── Session ───────────────────────────────────────────────────────────────────
+async function ensureSession() {
+  if (window.__yoloSession) return window.__yoloSession;
+  status.textContent = 'STATUS: Lade YOLO-Modell …';
+  const s = await ort.InferenceSession.create('./models/yolov8n.onnx',
+    { executionProviders: ['webgpu', 'wasm'] });
+  window.__yoloSession = s;
+  return s;
+}
+
+// ── Vorverarbeitung (Letterbox -> 640×640) ────────────────────────────────────
+function preprocess(source, sw, sh) {
+  const MODEL = 640;
+  const scale = Math.min(MODEL/sw, MODEL/sh);
+  const nw = Math.round(sw*scale), nh = Math.round(sh*scale);
+  const px = Math.floor((MODEL-nw)/2), py = Math.floor((MODEL-nh)/2);
+  const off = document.createElement('canvas');
+  off.width = MODEL; off.height = MODEL;
+  const oc = off.getContext('2d');
+  oc.fillStyle = 'rgb(114,114,114)'; oc.fillRect(0,0,MODEL,MODEL);
+  oc.drawImage(source, px, py, nw, nh);
+  const pixels = oc.getImageData(0,0,MODEL,MODEL).data;
+  const input = new Float32Array(3*MODEL*MODEL);
+  for (let i=0;i<MODEL*MODEL;i++) {
+    input[i]              = pixels[i*4]  /255;
+    input[MODEL*MODEL+i]  = pixels[i*4+1]/255;
+    input[2*MODEL*MODEL+i]= pixels[i*4+2]/255;
+  }
+  return { input, scale, px, py };
+}
+
+// ── NMS ───────────────────────────────────────────────────────────────────────
+function iou(a,b) {
+  const x1=Math.max(a.x1,b.x1), y1=Math.max(a.y1,b.y1);
+  const x2=Math.min(a.x2,b.x2), y2=Math.min(a.y2,b.y2);
+  const inter=Math.max(0,x2-x1)*Math.max(0,y2-y1);
+  return inter/((a.x2-a.x1)*(a.y2-a.y1)+(b.x2-b.x1)*(b.y2-b.y1)-inter+1e-6);
+}
+function nms(boxes, thr=0.45) {
+  boxes.sort((a,b)=>b.conf-a.conf);
+  const keep=[], sup=new Set();
+  for(let i=0;i<boxes.length;i++){
+    if(sup.has(i)) continue;
+    keep.push(boxes[i]);
+    for(let j=i+1;j<boxes.length;j++)
+      if(!sup.has(j)&&boxes[i].cls===boxes[j].cls&&iou(boxes[i],boxes[j])>thr) sup.add(j);
+  }
+  return keep;
+}
+
+// ── Tensor -> Boxen ────────────────────────────────────────────────────────────
+function parseOutput(data, scale, px, py, W, H, minConf=0.05) {
+  const N=8400, boxes=[];
+  for(let i=0;i<N;i++){
+    let maxScore=0, maxCls=0;
+    for(let c=0;c<80;c++){ const s=data[(4+c)*N+i]; if(s>maxScore){maxScore=s;maxCls=c;} }
+    if(maxScore<minConf) continue;
+    const cx=data[0*N+i], cy=data[1*N+i], w=data[2*N+i], h=data[3*N+i];
+    boxes.push({
+      x1: Math.max(0,(cx-w/2-px)/scale),
+      y1: Math.max(0,(cy-h/2-py)/scale),
+      x2: Math.min(W,(cx+w/2-px)/scale),
+      y2: Math.min(H,(cy+h/2-py)/scale),
+      conf: maxScore, cls: maxCls
+    });
+  }
+  return boxes;
+}
+
+// ── Zeichnen ──────────────────────────────────────────────────────────────────
+function drawBoxes(filtered) {
+  filtered.forEach(b => {
+    const color = clsColor(b.cls);
+    ctx.strokeStyle=color; ctx.lineWidth=8;
+    ctx.strokeRect(b.x1, b.y1, b.x2-b.x1, b.y2-b.y1);
+    const lbl=`${COCO[b.cls]} ${(b.conf*100).toFixed(0)}%`;
+    ctx.font='bold 22px sans-serif';
+    const tw=ctx.measureText(lbl).width;
+    ctx.fillStyle=color; ctx.fillRect(b.x1-1, b.y1-21, tw+10, 21);
+    ctx.fillStyle='#fff'; ctx.fillText(lbl, b.x1+4, b.y1-5);
+    const mx=(b.x1+b.x2)/2, my=(b.y1+b.y2)/2;
+    ctx.fillStyle='#E24B4A'; ctx.beginPath(); ctx.arc(mx,my,5,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(mx,my,5,0,Math.PI*2); ctx.stroke();
+  });
+}
+
+function updateDetList(filtered, conf) {
+  detList.innerHTML = filtered.length === 0
+    ? `<div style="font-size:13px;color:#999;">Keine Objekte über Schwellwert ${conf.toFixed(2)} erkannt.</div>`
+    : filtered.map(b=>`
+        <div style="background:#f5f5f5;border-radius:6px;padding:0.5rem 0.75rem;border-left:3px solid ${clsColor(b.cls)};">
+          <div style="font-size:11px;color:#888;">${COCO[b.cls]} · ${(b.conf*100).toFixed(0)}% Conf.</div>
+          <div style="font-size:13px;font-weight:600;">Box: ${Math.round(b.x2-b.x1)}×${Math.round(b.y2-b.y1)} px</div>
+        </div>`).join('');
+}
+
+// ── Kamera starten ───────────────────────────────────────────────────────────
+btnStart.addEventListener('click', async () => {
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+    video.srcObject = stream;
+    await video.play();
+
+    wrapper.style.display = 'block';
+    btnStart.disabled = true;
+    btnStop.disabled  = false;
+    btnStop.style.cssText = btnStop.style.cssText.replace('background:#e0e0e0;color:#888','background:#c0392b;color:#fff');
+    cSlider.disabled = false;
+
+    const session = await ensureSession();
+    loopActive = true;
+    inferLoop(session);
+    drawLoop();
+  } catch(e) {
+    status.textContent = `STATUS: Kamera-Fehler — ${e.message}`;
+  }
+});
+
+// ── Kamera stoppen ────────────────────────────────────────────────────────────
+btnStop.addEventListener('click', () => {
+  loopActive = false;
+  if (stream) stream.getTracks().forEach(t => t.stop());
+  stream = null;
+  video.srcObject = null;
+  wrapper.style.display = 'none';
+  btnStart.disabled = false;
+  btnStop.disabled  = true;
+  btnStop.style.cssText = btnStop.style.cssText.replace('background:#c0392b;color:#fff','background:#e0e0e0;color:#888');
+  cSlider.disabled = true;
+  status.textContent = 'STATUS: Kamera gestoppt.';
+  detList.innerHTML = '';
+});
+
+// ── Inferenz-Loop (entkoppelt) ────────────────────────────────────────────────
+async function inferLoop(session) {
+  while (loopActive) {
+    const W = video.videoWidth, H = video.videoHeight;
+    if (W > 0) {
+      const conf = parseFloat(cSlider.value);
+      const { input, scale, px, py } = preprocess(video, W, H);
+      const tensor = new ort.Tensor('float32', input, [1,3,640,640]);
+      const feed = {}; feed[session.inputNames[0]] = tensor;
+      const out  = await session.run(feed);
+      const boxes = parseOutput(out[session.outputNames[0]].data, scale, px, py, W, H, conf);
+      lastBoxes = nms(boxes);
+      const now = performance.now();
+      const fps = (1000 / (now - lastInferTime)).toFixed(1);
+      lastInferTime = now;
+      status.textContent = `STATUS: ${lastBoxes.length} Objekt(e) erkannt | ${fps} FPS`;
+      updateDetList(lastBoxes, conf);
+    }
+    await new Promise(r => setTimeout(r, 200));
+  }
+}
+
+// ── Draw-Loop (60 fps) ────────────────────────────────────────────────────────
+function drawLoop() {
+  if (!loopActive) return;
+  const W = video.videoWidth, H = video.videoHeight;
+  if (W > 0) {
+    canvas.width = W; canvas.height = H;
+    ctx.clearRect(0, 0, W, H);
+    drawBoxes(lastBoxes);
+  }
+  requestAnimationFrame(drawLoop);
+}
+
+})();
+</script>
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 </section>
 </section>
@@ -1065,7 +1317,7 @@ Terven, Juan, and Diana Cordova-Esparza. 2023. <span>“A Comprehensive Review o
 
 <ol>
 <li id="fn1"><p>Aus Gründen der Lesbarkeit wird im Verlauf der gesamten Webseite das generische Maskulinum verwendet.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>Siehe Beispielvideo unter https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Siehe Beispielvideo unter <a href="https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4">GeeksForGeeks</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>Der vollständige Code inkl. Modell für diese Umsetzung ist im <a href="https://github.com/billyS02/vcde">GitHub-Repository</a> einsehbar.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
