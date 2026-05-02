@@ -288,18 +288,16 @@ def process_video(input__video_path, output_path):
 
 ```{python}
 #| echo: false
-
+import ffmpg
 import urllib.request, os
-from IPython.display import display, Video
 
 urllib.request.urlretrieve(
     "https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4",
     "sample.mp4"
 )
 process_video("sample.mp4", "output.mp4")
-os.system("/opt/homebrew/bin/ffmpeg -y -i output.mp4 -vcodec libx264 -acodec aac output_h264.mp4")
-display(Video("output_h264.mp4", embed=True))
 ```
+{{< video output_h264.mp4 >}}
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
