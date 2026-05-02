@@ -408,9 +408,9 @@ ort.InferenceSession.create('./models/yolov8n.onnx', {
   executionProviders: ['wasm']
 }).then(s => {
   session = s;
-  status.textContent = '✓ Modell geladen — Bild hochladen um zu starten.';
+  status.textContent = 'CHECK: Modell geladen — Bild hochladen um zu starten.';
 }).catch(e => {
-  status.textContent = '⚠ Modell nicht gefunden. Bitte zuerst yolov8n.onnx exportieren (s.o.).';
+  status.textContent = 'WARNING: Modell nicht gefunden. Bitte zuerst yolov8n.onnx exportieren.';
 });
 
 // ── Upload-Events ────────────────────────────────────────────────────────────
