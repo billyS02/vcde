@@ -289,14 +289,14 @@ display(Video("output.mp4", embed=True))
 
 \n
 **Testen unter verschiedenen Umgebungsbedingungen (Beleuchtung, Tageszeit, Szenario):**  
-*Hinweis: Hierfür wurde ein frei verfügbare Videos von www.pexels.com heruntergeladen und lokal eingebunden.*
+*Hinweis: Hierfür wurde ein frei verfügbares Videos von www.pexels.com heruntergeladen und lokal eingebunden.*
 
 ```{python}
 #| echo: false
 
 from IPython.display import display, Video
 
-process_video("./img/stree_pedestrians_night.mp4", "out_street.mp4")
+process_video("./img/test2.mp4", "out_street.mp4")
 display(Video("out_street.mp4", embed=True))
 ```
  
