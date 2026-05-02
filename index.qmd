@@ -275,19 +275,24 @@ def process_video(input_path, output_path):
 **Testen mit Standardvideo:**
 
 ```{python}
+#| echo: false
+
 import urllib.request
 from IPython.display import display, Video
 
 urllib.request.urlretrieve(
     "https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4",
-    "gfg_traffic.mp4"
+    "sample.mp4"
 )
-process_video("gfg_traffic.mp4", "out_traffic.mp4")
-display(Video("out_traffic.mp4", embed=True))
+process_video("sample.mp4", "output.mp4")
+display(Video("output.mp4", embed=True))
 ```
 
 **Testen unter verschiedenen Umgebungsbedingungen (Beleuchtung, Tageszeit, Szenario):**
+Hinweis: *Hierfür wurden frei verfügbare Videos von www.pexels.com heruntergeladen und über Google Cloude eingebunden.*
 
+```{python}
+#| echo: false
 
 
 ```
