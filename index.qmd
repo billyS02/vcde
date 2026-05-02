@@ -292,8 +292,13 @@ display(Video("output.mp4", embed=True))
 
 ## 4. YOLO: Eigentests {#sec-eigentests}
 
-Die folgenden drei Demos laufen direkt hier im Browser, ohne lokale Umgebung. 
+::: {.callout-note appearance="minimal"}
+**Hinweis:** Die folgenden Demos laufen direkt im Browser ohne lokale Installation. 
 Möglich macht das das zuvor exportierte Modell `yolov8n.onnx`, das über die Bibliohtek `onnxruntime-web` direkt im Browser ausgeführt wird [^2]. 
+Aufgrund technischer Einschränkungen des Hostings (GitHub Pages) ist die Inferenzgeschwindigkeit bei Video und Webcam auf ca. 2 FPS begrenzt. 
+Die Objekterkennung funktioniert korrekt, läuft jedoch nicht in Echtzeit. 
+Diese Demos dienen somit eher dem Verständnis des Lesers.
+:::
 
 [^2]: Der vollständige Code inkl. Modell für diese Umsetzung ist im [GitHub-Repository](https://github.com/billyS02/vcde) einsehbar.
 
@@ -538,7 +543,7 @@ function render() {
 
   // Grid
   const cw = W/S, ch = H/S;
-  ctx.strokeStyle = 'rgba(255,255,255,0.28)'; ctx.lineWidth = 0.8;
+  ctx.strokeStyle = 'rgba(255,255,255,0.28)'; ctx.lineWidth = 1.2;
   for (let i=0;i<=S;i++){
     ctx.beginPath();ctx.moveTo(i*cw,0);ctx.lineTo(i*cw,H);ctx.stroke();
     ctx.beginPath();ctx.moveTo(0,i*ch);ctx.lineTo(W,i*ch);ctx.stroke();
@@ -567,11 +572,11 @@ function render() {
   filtered.forEach(b => {
     const color = clsColor(b.cls);
     const bw = b.x2-b.x1, bh = b.y2-b.y1;
-    ctx.strokeStyle = color; ctx.lineWidth = 2.5;
+    ctx.strokeStyle = color; ctx.lineWidth = 4;
     ctx.strokeRect(b.x1, b.y1, bw, bh);
 
     const lbl = `${COCO[b.cls]} ${(b.conf*100).toFixed(0)}%`;
-    ctx.font = 'bold 13px sans-serif';
+    ctx.font = 'bold 16px sans-serif';
     const tw = ctx.measureText(lbl).width;
     ctx.fillStyle = color;
     ctx.fillRect(b.x1-1, b.y1-21, tw+10, 21);
@@ -581,7 +586,7 @@ function render() {
     const mx = (b.x1+b.x2)/2, my = (b.y1+b.y2)/2;
     ctx.fillStyle='#E24B4A';
     ctx.beginPath();ctx.arc(mx,my,5,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle='#fff';ctx.lineWidth=1.2;
+    ctx.strokeStyle='#fff';ctx.lineWidth=1.5;
     ctx.beginPath();ctx.arc(mx,my,5,0,Math.PI*2);ctx.stroke();
   });
 
@@ -791,16 +796,16 @@ function parseOutput(data, scale, px, py, W, H, minConf=0.05) {
 function drawBoxes(filtered) {
   filtered.forEach(b => {
     const color = clsColor(b.cls);
-    ctx.strokeStyle=color; ctx.lineWidth=2.5;
+    ctx.strokeStyle=color; ctx.lineWidth=4;
     ctx.strokeRect(b.x1, b.y1, b.x2-b.x1, b.y2-b.y1);
     const lbl=`${COCO[b.cls]} ${(b.conf*100).toFixed(0)}%`;
-    ctx.font='bold 13px sans-serif';
+    ctx.font='bold 16px sans-serif';
     const tw=ctx.measureText(lbl).width;
     ctx.fillStyle=color; ctx.fillRect(b.x1-1, b.y1-21, tw+10, 21);
     ctx.fillStyle='#fff'; ctx.fillText(lbl, b.x1+4, b.y1-5);
     const mx=(b.x1+b.x2)/2, my=(b.y1+b.y2)/2;
     ctx.fillStyle='#E24B4A'; ctx.beginPath(); ctx.arc(mx,my,5,0,Math.PI*2); ctx.fill();
-    ctx.strokeStyle='#fff'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(mx,my,5,0,Math.PI*2); ctx.stroke();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(mx,my,5,0,Math.PI*2); ctx.stroke();
   });
 }
 
