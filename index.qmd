@@ -238,9 +238,11 @@ import urllib.request
 from IPython.display import display, Video
 
 # (1): Video herunterladen
-url = "https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4"
-urllib.request.urlretrieve(url, "sample.mp4")
+# url = "https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4"
+# urllib.request.urlretrieve(url, "sample.mp4")
 
+url = "https://github.com/ultralytics/assets/releases/download/v0.0.0/people.mp4"
+urllib.request.urlretrieve(url, "sample.mp4")
 
 # (2): Farbe pro Klasse definieren und ersten Frame einlesen
 def get_color(cls_id):
