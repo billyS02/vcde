@@ -237,11 +237,6 @@ Für dieses Projekt wird `yolov8s.pt` (Small) verwendet, da es eine gute Balance
 **Verarbeitungsfunktion definieren:**
 
 ```{python}
-import os
-os.environ["OPENCV_LOG_LEVEL"] = "SILENT"
-```
-
-```{python}
 import cv2, random, time
 
 # Farbe pro Klasse definieren
@@ -287,34 +282,40 @@ def process_video(input_video_path, output_path):
     out.release()
 ```
 
-**Demonstration mit Standardvideo:**
+**Demonstration mit Video[^2]:**
 
 Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab. 
 Während eine dedizierte GPU (z.B. NVIDIA mit CUDA) problemlos 40–100+ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise 5–25 FPS realistisch. 
 
 ```{python}
 #| echo: false
-import urllib.request
+import urllib.request, os, sys
 
 urllib.request.urlretrieve(
     "https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4",
     "sample.mp4"
 )
+
+stderr = sys.stderr
+sys.stderr = open(os.devnull, 'w')
 process_video("sample.mp4", "output.mp4")
+sys.stderr = stderr
 ```
 {{< video ./img/autobahn_h264.mp4 >}}
+
+[^2]: Siehe Beispielvideo unter https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
 ## 4. YOLO: Eigentests {#sec-eigentests}
 
 **Hinweis:** Die folgenden Demos laufen direkt im Browser ohne lokale Installation. 
-Möglich macht das das zuvor exportierte Modell `yolov8n.onnx`, das über die Bibliohtek `onnxruntime-web` direkt im Browser ausgeführt wird [^2].  
+Möglich macht das das zuvor exportierte Modell `yolov8n.onnx`, das über die Bibliohtek `onnxruntime-web` direkt im Browser ausgeführt wird [^3].  
 Aufgrund technischer Einschränkungen des Hostings (GitHub Pages) ist die Inferenzgeschwindigkeit bei Video und Webcam auf ca. 2 FPS begrenzt. 
 Die Objekterkennung funktioniert korrekt, läuft jedoch nicht in Echtzeit.  
 Diese Demos dienen somit in der Linie dem tieferen Verständnis des Lesers.
 
-[^2]: Der vollständige Code inkl. Modell für diese Umsetzung ist im [GitHub-Repository](https://github.com/billyS02/vcde) einsehbar.
+[^3]: Der vollständige Code inkl. Modell für diese Umsetzung ist im [GitHub-Repository](https://github.com/billyS02/vcde) einsehbar.
 
 ### 4.1 Grid-Manipulation
 
