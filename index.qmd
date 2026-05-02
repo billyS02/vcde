@@ -204,38 +204,42 @@ Die Bibliothek `ultralytics` enthält YOLOv8 inklusive aller Abhängigkeiten (u.
 **Überprüfen der Installation:**
 
 ```{python}
-import cv2, random, subprocess, gdown
-from IPython.display import display, Video
-import urllib.request
+import ultralytics
+import cv2
 
-# (1): Videos bereitstellen
-# Beispiel Internetvideo
-urllib.request.urlretrieve(
-    "https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4",
-    "gfg_traffic.mp4"
-)
+print(f"Ultralytics Version: {ultralytics.__version__}")
+print(f"OpenCV Version:      {cv2.__version__}")
 
-# Beispiel heruntergeladene Video www.pexels.com
-gdown.download_folder(
-    "https://drive.google.com/drive/folders/1tZrkYmvcFfNlUtxXvQGnDkGbfO-OXhUC",
-    quiet=True, use_cookies=False
-)
+# Ggf. ist ein Neustart der Entwicklungsumgebung nötig.
+```
 
-videos = [
-    ("gfg_traffic.mp4",              "out_traffic.mp4",     "Straßenverkehr (Autobahn)"),
-    ("pedestrians_day.mp4",          "out_day.mp4",         "Fußgänger (Tag)"),
-    ("street_pedestrians.mp4",       "out_street.mp4",      "Straße mit Fußgängern"),
-    ("street_pedestrians_night.mp4", "out_night.mp4",       "Straße bei Nacht"),
-]
+### 3.2 Objekterkennung im Straßenverkehr
 
+Als Testmedium dient ein frei verfügbares Video aus dem Straßenverkehr.
+Dieses wird Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und dann die erkannten Objekte anschließend mit Bounding Boxes versehen.
 
-# (2): Farbe pro Klasse definieren
+**Modell laden:**
+
+```{python}
+from ultralytics import YOLO
+
+model = YOLO("yolov8s.pt")
+```
+
+YOLOv8 steht in verschiedenen Größen zur Verfügung, von `yolov8n.pt` (Nano, schneller) bis `yolov8x.pt` (Extra Large, genauer). 
+Für dieses Projekt wird `yolov8s.pt` (Small) verwendet, da es eine gute Balance zwischen Geschwindigkeit und Genauigkeit bietet.
+
+**Verarbeitungsfunktion definieren:**
+
+```{python}
+import cv2, random, subprocess
+
+# Farbe pro Klasse definieren
 def get_color(cls_id):
     random.seed(cls_id)
     return tuple(random.randint(0, 255) for _ in range(3))
 
-
-# (3): Verarbeitungsfunktion
+# Frame-für-Frame-Verarbeitung mit YOLO
 def process_video(input_path, output_path):
     cap    = cv2.VideoCapture(input_path)
     fps    = cap.get(cv2.CAP_PROP_FPS)
@@ -263,28 +267,41 @@ def process_video(input_path, output_path):
     cap.release()
     out.release()
 
+    # Re-enkodieren zu H.264 für Browser-Kompatibilität
     subprocess.run(
         ["ffmpeg", "-y", "-i", raw, "-vcodec", "libx264", "-crf", "23", output_path],
         check=True, capture_output=True
     )
+```
 
+**Testen mit Standardvideo:**
 
-# (4): Verarbeiten und anzeigen
-print("### Implementierungstest")
+```{python}
+#| echo: false
+import urllib.request, gdown
+from IPython.display import display, Video
+
+urllib.request.urlretrieve(
+    "https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4",
+    "gfg_traffic.mp4"
+)
 process_video("gfg_traffic.mp4", "out_traffic.mp4")
 display(Video("out_traffic.mp4", embed=True))
+```
 
-print("### Test unter verschiedenen Umgebungsbedingungen (Beleuchtung, Tageszeit, Szenario)")
-for input_path, output_path, title in videos[1:]:
-    print(f"**{title}**")
+**Testen unter verschiedenen Umgebungsbedingungen (Beleuchtung, Tageszeit, Szenario):**
+
+```{python}
+#| echo: false
+gdown.download_folder(
+    "https://drive.google.com/drive/folders/1tZrkYmvcFfNlUtxXvQGnDkGbfO-OXhUC",
+    quiet=True, use_cookies=False
+)
+
+for input_path, output_path, title in pexels_videos:
     process_video(input_path, output_path)
     display(Video(output_path, embed=True))
 ```
-
-
-
-
-
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
 ## 4. YOLO: Demo {#sec-demo}
