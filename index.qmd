@@ -244,8 +244,8 @@ def get_color(cls_id):
     return tuple(random.randint(0, 255) for _ in range(3))
 
 # Frame-für-Frame-Verarbeitung mit YOLO
-def process_video(input_path, output_path):
-    cap    = cv2.VideoCapture(input_path)
+def process_video(input__video_path, output_path):
+    cap    = cv2.VideoCapture(input__video_path)
     fps    = cap.get(cv2.CAP_PROP_FPS)
     width  = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -286,14 +286,31 @@ urllib.request.urlretrieve(
 process_video("sample.mp4", "output.mp4")
 display(Video("output.mp4", embed=True))
 ```
-
+\n
 **Testen unter verschiedenen Umgebungsbedingungen (Beleuchtung, Tageszeit, Szenario):**  
 Hinweis: *Hierfür wurden frei verfügbare Videos von www.pexels.com heruntergeladen und über Google Cloude eingebunden.*
 
 ```{python}
 #| echo: false
 
+import gdown
+from IPython.display import display, Video
 
+gdown.download_folder(
+    "https://drive.google.com/drive/folders/1tZrkYmvcFfNlUtxXvQGnDkGbfO-OXhUC",
+    quiet=True, use_cookies=False
+)
+
+pexels_videos = [
+    ("pedestrians_day.mp4",          "out_day.mp4"),
+    ("street_pedestrians.mp4",       "out_street.mp4"),
+    ("street_pedestrians_night.mp4", "out_night.mp4"),
+]
+
+for input_path, output_path in pexels_videos:
+    process_video(input_path, output_path)
+    display(Video(output_path, embed=True))
+```
 ```
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
