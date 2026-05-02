@@ -297,8 +297,8 @@ urllib.request.urlretrieve(
     "sample.mp4"
 )
 process_video("sample.mp4", "output.mp4")
-os.system("ffmpeg -y -i output.mp4 -vcodec libx264 -acodec aac output_h264.mp4")
-display(Video("output.mp4", embed=True))
+os.system("/opt/homebrew/bin/ffmpeg -y -i output.mp4 -vcodec libx264 -acodec aac output_h264.mp4")
+display(Video("output_h264.mp4", embed=True))
 ```
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
