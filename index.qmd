@@ -238,18 +238,12 @@ import urllib.request
 from IPython.display import display, Video
 
 
-# (1): Videos als Testemedium bereitstellen
-
-# Beispiel aus dem Internet
+# (1): Videos als Testmedium bereitstellen
 url = "https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4"
 urllib.request.urlretrieve(url, "sample.mp4")
 
-# Beispiel lokal heruntergeladen von www.pexels.com
 videos = [
-    ("media/gfg_traffic.mp4",               "output_gfg.mp4",           "Straßenverkehr (Autobahn)"),
-    ("media/pedestrians_day.mp4",           "output_pedestrians.mp4",   "Fußgänger (Tag)"),
-    ("media/street_pedestrians.mp4",        "output_street.mp4",        "Straße mit Fußgängern"),
-    ("media/street_pedestrians_night.mp4",  "output_night.mp4",         "Straße bei Nacht"),
+    ("sample.mp4", "output_traffic.mp4", "Straßenverkehr (Autobahn)"),
 ]
 
 
@@ -288,7 +282,7 @@ def process_video(input_path, output_path):
     out.release()
 
 
-# (4): Alle Videos verarbeiten und anzeigen
+# (4): Videos verarbeiten und anzeigen
 for input_path, output_path, title in videos:
     print(f"### {title}")
     process_video(input_path, output_path)
