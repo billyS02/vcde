@@ -217,8 +217,8 @@ print(f"OpenCV Version:      {cv2.__version__}")
 
 ### 3.2 Objekterkennung im Straßenverkehr
 
-Als Testmedium dient ein frei verfügbares Video aus dem Straßenverkehr.
-Dieses wird Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und dann die erkannten Objekte anschließend mit Bounding Boxes versehen.
+Als Testmedium dienen verschiedene frei verfügbares Video aus dem Kontext *Straßenverkehr*.
+Diese werdem Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und die erkannten Objekte anschließend mit Bounding Boxes versehen.
 
 **Modell laden:**
 
@@ -270,19 +270,12 @@ def process_video(input_path, output_path):
         out.write(frame)
     cap.release()
     out.release()
-
-    # Re-enkodieren zu H.264 für Browser-Kompatibilität
-    subprocess.run(
-        ["ffmpeg", "-y", "-i", raw, "-vcodec", "libx264", "-crf", "23", output_path],
-        check=True, capture_output=True
-    )
 ```
 
 **Testen mit Standardvideo:**
 
 ```{python}
-#| echo: false
-import urllib.request, gdown
+import urllib.request
 from IPython.display import display, Video
 
 urllib.request.urlretrieve(
@@ -295,22 +288,6 @@ display(Video("out_traffic.mp4", embed=True))
 
 **Testen unter verschiedenen Umgebungsbedingungen (Beleuchtung, Tageszeit, Szenario):**
 
-```{python}
-#| echo: false
-gdown.download_folder(
-    "https://drive.google.com/drive/folders/1tZrkYmvcFfNlUtxXvQGnDkGbfO-OXhUC",
-    quiet=True, use_cookies=False
-)
-
-pexels_videos = [
-    ("pedestrians_day.mp4",          "out_day.mp4",    "Fußgänger (Tag)"),
-    ("street_pedestrians.mp4",       "out_street.mp4", "Straße mit Fußgängern"),
-    ("street_pedestrians_night.mp4", "out_night.mp4",  "Straße bei Nacht"),
-]
-
-for input_path, output_path, title in pexels_videos:
-    process_video(input_path, output_path)
-    display(Video(output_path, embed=True))
 ```
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
