@@ -295,8 +295,10 @@ display(Video("output.mp4", embed=True))
 
 ```{python}
 #| eval: false
-#| echo: true
-# Einmalig lokal ausführen, exportiert dann das Modell für den Browser
+#| echo: false
+# Hinweis: Dieser Block muss einmalig lokal ausgeführt werden, bevor die interaktive Demo in Kapitel 4 genutzt werden kann.
+# Er exportiert das YOLOv8-Modell ins ONNX-Format, das der Browser direkt ausführen kann
+
 from ultralytics import YOLO
 import shutil, os
 
