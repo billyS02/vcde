@@ -286,32 +286,20 @@ urllib.request.urlretrieve(
 process_video("sample.mp4", "output.mp4")
 display(Video("output.mp4", embed=True))
 ```
+
 \n
 **Testen unter verschiedenen Umgebungsbedingungen (Beleuchtung, Tageszeit, Szenario):**  
-Hinweis: *Hierfür wurden frei verfügbare Videos von www.pexels.com heruntergeladen und über Google Cloude eingebunden.*
+*Hinweis: Hierfür wurde ein frei verfügbare Videos von www.pexels.com heruntergeladen und lokal eingebunden.*
 
 ```{python}
 #| echo: false
 
-import gdown
 from IPython.display import display, Video
 
-gdown.download_folder(
-    "https://drive.google.com/drive/folders/1tZrkYmvcFfNlUtxXvQGnDkGbfO-OXhUC",
-    quiet=True, use_cookies=False
-)
-
-pexels_videos = [
-    ("pedestrians_day.mp4",          "out_day.mp4"),
-    ("street_pedestrians.mp4",       "out_street.mp4"),
-    ("street_pedestrians_night.mp4", "out_night.mp4"),
-]
-
-for input_path, output_path in pexels_videos:
-    process_video(input_path, output_path)
-    display(Video(output_path, embed=True))
+process_video("street.mp4", "out_street.mp4")
+display(Video("out_street.mp4", embed=True))
 ```
-```
+
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
 ## 4. YOLO: Demo {#sec-demo}
