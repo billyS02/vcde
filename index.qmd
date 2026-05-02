@@ -207,10 +207,12 @@ Die Bibliothek `ultralytics` enthält YOLOv8 inklusive aller Abhängigkeiten (u.
 import ultralytics
 import cv2
 
+# Ggf. ist ein Neustart der Entwicklungsumgebung nötig.
+
 print(f"Ultralytics Version: {ultralytics.__version__}")
 print(f"OpenCV Version:      {cv2.__version__}")
 
-# Ggf. ist ein Neustart der Entwicklungsumgebung nötig.
+# OUTPUT:
 ```
 
 ### 3.2 Objekterkennung im Straßenverkehr
@@ -224,6 +226,8 @@ Dieses wird Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und d
 from ultralytics import YOLO
 
 model = YOLO("yolov8s.pt")
+
+# OUTPUT:
 ```
 
 YOLOv8 steht in verschiedenen Größen zur Verfügung, von `yolov8n.pt` (Nano, schneller) bis `yolov8x.pt` (Extra Large, genauer). 
@@ -297,6 +301,12 @@ gdown.download_folder(
     "https://drive.google.com/drive/folders/1tZrkYmvcFfNlUtxXvQGnDkGbfO-OXhUC",
     quiet=True, use_cookies=False
 )
+
+pexels_videos = [
+    ("pedestrians_day.mp4",          "out_day.mp4",    "Fußgänger (Tag)"),
+    ("street_pedestrians.mp4",       "out_street.mp4", "Straße mit Fußgängern"),
+    ("street_pedestrians_night.mp4", "out_night.mp4",  "Straße bei Nacht"),
+]
 
 for input_path, output_path, title in pexels_videos:
     process_video(input_path, output_path)
