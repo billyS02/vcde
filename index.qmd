@@ -326,7 +326,11 @@ print("Exportiert: models/yolov8n.onnx")
     border:2px dashed #bbb; border-radius:8px; padding:2rem;
     text-align:center; cursor:pointer; color:#888; font-size:15px;
     margin-bottom:1rem; transition:border-color 0.2s;">
-    <div style="font-size:2rem; margin-bottom:0.5rem;">📂</div>
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:0.5rem;">
+      <line x1="12" y1="16" x2="12" y2="4"/>
+      <polyline points="8 8 12 4 16 8"/>
+      <line x1="4" y1="20" x2="20" y2="20"/>
+    </svg>
     Bild hier ablegen oder <u>klicken zum Auswählen</u>
     <input type="file" id="fileInput" accept="image/*" style="display:none;">
   </div>
@@ -411,7 +415,7 @@ ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/di
 
 status.textContent = 'STATUS: Lade YOLO-Modell …';
 ort.InferenceSession.create('./models/yolov8n.onnx', {
-  executionProviders: ['wasm']
+  executionProviders: ['webgpu', 'wasm']
 }).then(s => {
   session = s;
   status.textContent = 'STATUS: Modell erfolgreich geladen. Bild hochladen um zu starten!';
@@ -612,7 +616,11 @@ cSlider.addEventListener('input', render);
     border:2px dashed #bbb; border-radius:8px; padding:2rem;
     text-align:center; cursor:pointer; color:#888; font-size:15px;
     margin-bottom:1rem; transition:border-color 0.2s;">
-    <div style="font-size:2rem; margin-bottom:0.5rem;">📂</div>
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:0.5rem;">
+      <line x1="12" y1="16" x2="12" y2="4"/>
+      <polyline points="8 8 12 4 16 8"/>
+      <line x1="4" y1="20" x2="20" y2="20"/>
+    </svg>
     Bild oder Video hier ablegen oder <u>klicken zum Auswählen</u>
     <input type="file" id="imgFileInput" accept="image/*,video/*" style="display:none;">
   </div>
@@ -690,7 +698,7 @@ async function ensureSession() {
   if (window.__yoloSession) return window.__yoloSession;
   status.textContent = 'STATUS: Lade YOLO-Modell …';
   const s = await ort.InferenceSession.create('./models/yolov8n.onnx',
-    { executionProviders: ['wasm'] });
+    { executionProviders: ['webgpu', 'wasm'] });
   window.__yoloSession = s;
   return s;
 }
@@ -863,6 +871,7 @@ async function startVideoLoop() {
 
 let lastBoxes = [];
 
+let lastInferTime = performance.now();
 async function inferLoop() {
   while (loopActive && !video.paused && !video.ended) {
     const W = video.videoWidth, H = video.videoHeight;
@@ -874,7 +883,10 @@ async function inferLoop() {
       const out = await session.run(feed);
       const boxes = parseOutput(out[session.outputNames[0]].data, scale, px, py, W, H, conf);
       lastBoxes = nms(boxes);
-      status.textContent = `STATUS: ${lastBoxes.length} Objekt(e) erkannt`;
+      const now = performance.now();
+      const fps = (1000 / (now - lastInferTime)).toFixed(1);
+      lastInferTime = now;
+      status.textContent = `STATUS: ${lastBoxes.length} Objekt(e) erkannt | ${fps} FPS`;
       updateDetList(lastBoxes, conf);
     }
     await new Promise(r => setTimeout(r, 200));  // ~5 Inferenzen/Sek.
