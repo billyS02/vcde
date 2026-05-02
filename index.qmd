@@ -291,7 +291,7 @@ display(Video("output.mp4", embed=True))
 
 ## 4. YOLO: Demo {#sec-demo}
 
-### 4.1 Eigentests User
+### 4.1 User-Test: Grid-Mechanismus
 
 ```{python}
 #| eval: false
@@ -308,7 +308,7 @@ shutil.move("yolov8n.onnx", "models/yolov8n.onnx")
 print("Exportiert: models/yolov8n.onnx")
 ```
 
-```{html}
+```{=html}
 <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/ort.min.js"></script>
 
 <div id="yolo-demo" style="padding:1rem 0;">
