@@ -232,9 +232,7 @@ model = YOLO("yolov8n.pt")
 ```
 
 YOLOv8 steht in verschiedenen Größen zur Verfügung, von `yolov8n.pt` (Nano, schneller) bis `yolov8x.pt` (Extra Large, genauer). 
-Für dieses Projekt wird `yolov8s.pt` (Small) verwendet, da es eine gute Balance zwischen Geschwindigkeit und Genauigkeit bietet.  
-Die erreichbare Verarbeitungsgeschwindigkeit hängt dabei stark von der verfügbaren Hardware ab. 
-Während eine dedizierte GPU (z.B. NVIDIA mit CUDA) problemlos 40–100+ FPS ermöglicht, sind auf einer Standard-CPU typischerweise 5–25 FPS realistisch. 
+Für dieses Projekt wird `yolov8s.pt` (Small) verwendet, da es eine gute Balance zwischen Geschwindigkeit und Genauigkeit bietet. 
 
 **Verarbeitungsfunktion definieren:**
 
@@ -286,10 +284,12 @@ def process_video(input__video_path, output_path):
 
 **Demonstration mit Standardvideo:**
 
+Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab. 
+Während eine dedizierte GPU (z.B. NVIDIA mit CUDA) problemlos 40–100+ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise 5–25 FPS realistisch. 
+
 ```{python}
 #| echo: false
-import ffmpg
-import urllib.request, os
+import urllib.request
 
 urllib.request.urlretrieve(
     "https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4",
