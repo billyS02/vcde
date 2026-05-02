@@ -339,7 +339,7 @@ Fast R-CNN hingegen erkennt fast dreimal so häufig Hintergrundbereiche fälschl
 <p>Die Bibliothek <code>ultralytics</code> enthält YOLOv8 inklusive aller Abhängigkeiten (u.a. PyTorch).<br>
 <code>opencv-python</code> wird für das Einlesen und Verarbeiten von Bild- und Videodaten sowie die Ansteuerung von Kamera und Peripherie verwendet.</p>
 <p><strong>Überprüfen der Installation:</strong></p>
-<div id="dd2867b8" class="cell" data-execution_count="1">
+<div id="6485f2ba" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ultralytics</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -362,7 +362,7 @@ OpenCV Version:      4.13.0</code></pre>
 <h3 class="anchored" data-anchor-id="objekterkennung-im-straßenverkehr">3.2 Objekterkennung im Straßenverkehr</h3>
 <p>Als Testmedium dienen verschiedene frei verfügbares Video aus dem Kontext <em>Straßenverkehr</em>. Diese werdem Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und die erkannten Objekte anschließend mit Bounding Boxes versehen.</p>
 <p><strong>Modell laden:</strong></p>
-<div id="b02d71a8" class="cell" data-execution_count="2">
+<div id="6c4b3170" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> YOLO(<span class="st">"yolov8n.pt"</span>)</span>
@@ -371,7 +371,7 @@ OpenCV Version:      4.13.0</code></pre>
 </div>
 <p>YOLOv8 steht in verschiedenen Größen zur Verfügung, von <code>yolov8n.pt</code> (Nano, schneller) bis <code>yolov8x.pt</code> (Extra Large, genauer). Für dieses Projekt wird <code>yolov8s.pt</code> (Small) verwendet, da es eine gute Balance zwischen Geschwindigkeit und Genauigkeit bietet.</p>
 <p><strong>Verarbeitungsfunktion definieren:</strong></p>
-<div id="191423f3" class="cell" data-execution_count="3">
+<div id="f91444f9" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2, random, time</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Farbe pro Klasse definieren</span></span>
@@ -418,15 +418,11 @@ OpenCV Version:      4.13.0</code></pre>
 </div>
 <p><strong>Demonstration mit Video<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</strong></p>
 <p>Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab. Während eine dedizierte GPU (z.B. NVIDIA mit CUDA) problemlos 40–100+ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise 5–25 FPS realistisch.</p>
-<div id="acd687e6" class="cell" data-execution_count="4">
-<div class="cell-output cell-output-stderr">
-<pre><code>OpenCV: FFMPEG: tag 0x5634504d/'MP4V' is not supported with codec id 12 and format 'mp4 / MP4 (MPEG-4 Part 14)'
-OpenCV: FFMPEG: fallback to use tag 0x7634706d/'mp4v'</code></pre>
-</div>
+<div id="2370acb4" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-stdout">
 <pre><code>Verarbeitete Frames: 1501
-Gesamtzeit: 112.06s
-Durchschnittliche FPS: 13.4</code></pre>
+Gesamtzeit: 108.46s
+Durchschnittliche FPS: 13.8</code></pre>
 </div>
 </div>
 <div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="./img/autobahn_h264.mp4"></video></div>
@@ -436,7 +432,7 @@ Durchschnittliche FPS: 13.4</code></pre>
 <section id="sec-eigentests" class="level2">
 <h2 class="anchored" data-anchor-id="sec-eigentests">4. YOLO: Eigentests</h2>
 <p><strong>Hinweis:</strong> Die folgenden Demos laufen direkt im Browser ohne lokale Installation. Möglich macht das das zuvor exportierte Modell <code>yolov8n.onnx</code>, das über die Bibliohtek <code>onnxruntime-web</code> direkt im Browser ausgeführt wird <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.<br>
-Aufgrund technischer Einschränkungen des Hostings (GitHub Pages) ist die Inferenzgeschwindigkeit bei Video und Webcam auf ca. 2 FPS begrenzt. Die Objekterkennung funktioniert korrekt, läuft jedoch nicht in Echtzeit.<br>
+Aufgrund technischer Einschränkungen des Hostings (GitHub Pages) ist die Inferenzgeschwindigkeit bei Video und Webcam auf ca. 2-5 FPS begrenzt. Die Objekterkennung funktioniert korrekt, läuft jedoch nicht in Echtzeit.<br>
 Diese Demos dienen somit in der Linie dem tieferen Verständnis des Lesers.</p>
 <section id="grid-manipulation" class="level3">
 <h3 class="anchored" data-anchor-id="grid-manipulation">4.1 Grid-Manipulation</h3>
