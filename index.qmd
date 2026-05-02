@@ -251,12 +251,15 @@ def process_video(input__video_path, output_path):
     width  = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     out    = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*"avc1"), fps, (width, height))
-
+    
+    frame_count = 0
+    start = time.time()
+    
     while True:
         ret, frame = cap.read()
         if not ret:
             break
-        results = model(frame, verbose=False)
+        results = model(frame, verbose=False)   # HIER WIRD DAS MODELL VERWENDET
         for result in results:
             for box in result.boxes:
                 if box.conf[0] > 0.4:
@@ -267,7 +270,14 @@ def process_video(input__video_path, output_path):
                     cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
                     cv2.putText(frame, label, (x1, max(y1 - 10, 20)),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
+        frame_count += 1
         out.write(frame)
+
+    elapsed = time.time() - start
+    print(f"Verarbeitete Frames: {frame_count}")
+    print(f"Gesamtzeit: {elapsed:.2f}s")
+    print(f"Durchschnittliche FPS: {frame_count/elapsed:.1f}")
+
     cap.release()
     out.release()
 ```
