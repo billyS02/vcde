@@ -235,7 +235,7 @@ Für dieses Projekt wird `yolov8s.pt` (Small) verwendet, da es eine gute Balance
 import cv2
 import random
 import urllib.request
-from IPython.display import display, Image as IPImage
+from IPython.display import display, Video
 
 # (1): Video herunterladen
 url = "https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4"
