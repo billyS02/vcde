@@ -340,7 +340,7 @@ Fast R-CNN hingegen erkennt fast dreimal so häufig Hintergrundbereiche fälschl
 <p>Die Bibliothek <code>ultralytics</code> enthält YOLOv8 inklusive aller Abhängigkeiten (u.a. PyTorch).<br>
 <code>opencv-python</code> wird für das Einlesen und Verarbeiten von Bild- und Videodaten sowie die Ansteuerung von Kamera und Peripherie verwendet.</p>
 <p><strong>Überprüfen der Installation:</strong></p>
-<div id="42f7edb1" class="cell" data-execution_count="1">
+<div id="e53fa40a" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ultralytics</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -363,19 +363,20 @@ OpenCV Version:      4.13.0</code></pre>
 <h3 class="anchored" data-anchor-id="objekterkennung-im-straßenverkehr">3.2 Objekterkennung im Straßenverkehr</h3>
 <p>Als Testmedium dienen verschiedene frei verfügbares Video aus dem Kontext <em>Straßenverkehr</em>. Diese werdem Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und die erkannten Objekte anschließend mit Bounding Boxes versehen.</p>
 <p><strong>Modell laden:</strong></p>
-<div id="9c1c34e2" class="cell" data-execution_count="2">
+<div id="fb1077a8" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> YOLO(<span class="st">"yolov8s.pt"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> YOLO(<span class="st">"yolov8n.pt"</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># OUTPUT:</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading https://github.com/ultralytics/assets/releases/download/v8.4.0/yolov8s.pt to 'yolov8s.pt': 100% ━━━━━━━━━━━━ 21.5MB 405.4MB/s 0.1s</code></pre>
+<pre><code>Downloading https://github.com/ultralytics/assets/releases/download/v8.4.0/yolov8n.pt to 'yolov8n.pt': 100% ━━━━━━━━━━━━ 6.2MB 102.7MB/s 0.1s</code></pre>
 </div>
 </div>
-<p>YOLOv8 steht in verschiedenen Größen zur Verfügung, von <code>yolov8n.pt</code> (Nano, schneller) bis <code>yolov8x.pt</code> (Extra Large, genauer). Für dieses Projekt wird <code>yolov8s.pt</code> (Small) verwendet, da es eine gute Balance zwischen Geschwindigkeit und Genauigkeit bietet.</p>
+<p>YOLOv8 steht in verschiedenen Größen zur Verfügung, von <code>yolov8n.pt</code> (Nano, schneller) bis <code>yolov8x.pt</code> (Extra Large, genauer). Für dieses Projekt wird <code>yolov8s.pt</code> (Small) verwendet, da es eine gute Balance zwischen Geschwindigkeit und Genauigkeit bietet.<br>
+Die erreichbare Verarbeitungsgeschwindigkeit hängt dabei stark von der verfügbaren Hardware ab. Während eine dedizierte GPU (z.B. NVIDIA mit CUDA) problemlos 40–100+ FPS ermöglicht, sind auf einer Standard-CPU typischerweise 5–25 FPS realistisch.</p>
 <p><strong>Verarbeitungsfunktion definieren:</strong></p>
-<div id="945b8deb" class="cell" data-execution_count="3">
+<div id="b6770ba4" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2, random, time</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Farbe pro Klasse definieren</span></span>
@@ -389,7 +390,7 @@ OpenCV Version:      4.13.0</code></pre>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    fps    <span class="op">=</span> cap.get(cv2.CAP_PROP_FPS)</span>
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    width  <span class="op">=</span> <span class="bu">int</span>(cap.get(cv2.CAP_PROP_FRAME_WIDTH))</span>
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    height <span class="op">=</span> <span class="bu">int</span>(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    out    <span class="op">=</span> cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(<span class="op">*</span><span class="st">"avc1"</span>), fps, (width, height))</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    out    <span class="op">=</span> cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(<span class="op">*</span><span class="st">"mpv4"</span>), fps, (width, height))</span>
 <span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    frame_count <span class="op">=</span> <span class="dv">0</span></span>
 <span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    start <span class="op">=</span> time.time()</span>
@@ -421,17 +422,17 @@ OpenCV Version:      4.13.0</code></pre>
 <span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>    out.release()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>Demonstration mit Standardvideo:</strong></p>
-<div id="19c8a4c0" class="cell" data-execution_count="4">
+<div id="95324ca3" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-stderr">
-<pre><code>[h264_v4l2m2m @ 0x55e7d7a65b80] Could not find a valid device
-[h264_v4l2m2m @ 0x55e7d7a65b80] can't configure encoder
-[ERROR:0@3.529] global cap_ffmpeg_impl.hpp:3514 open Could not open codec h264_v4l2m2m, error: Unspecified error (-22)
-[ERROR:0@3.529] global cap_ffmpeg_impl.hpp:3531 open VIDEOIO/FFMPEG: Failed to initialize VideoWriter</code></pre>
+<pre><code>OpenCV: FFMPEG: tag 0x3476706d/'mpv4' is not found (format 'mp4 / MP4 (MPEG-4 Part 14)')'</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Verarbeitete Frames: 1501
-Gesamtzeit: 256.62s
-Durchschnittliche FPS: 5.8</code></pre>
+Gesamtzeit: 103.33s
+Durchschnittliche FPS: 14.5</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>sh: 1: ffmpeg: not found</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <video controls="">
