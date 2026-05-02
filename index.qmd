@@ -137,7 +137,7 @@ Die wichtigsten Meilensteine sind wohl:
 - **YOLOv2 (2016):** Einführung von *Anchor Boxes*, die typische Objektformen vorwegnehmen und die Erkennung kleiner Objekte verbessern.
 - **YOLOv3 (2018):** Erkennung auf *drei Skalen* gleichzeitig; besonders hilfreich für Objekte unterschiedlicher Größe im selben Bild.
 - **YOLOv4/v5 (2020):** Community-getriebene Weiterentwicklungen mit zahlreichen Trainingstricks; YOLOv5 vollzog den Wechsel zu PyTorch und vereinfachte den Export auf Edge-Geräte erheblich [@terven2023, Kapitel 9].
-- **<u>YOLOv8</u> (2023):** Die aktuell verbreitetste Version. Kernneuerung ist die *anchor-free* Architektur: Statt vordefinierten Acnhor Boxes lernt das Modell Boxpositionen direkt, was den Trainingsprozess vereinfacht und die Genauigkeit steigert. Zudem wurde ein *decoupled head* eingeführt, der Klassifizierung und Lokalisation in getrennten Zweigen berechnet [@jocher2023].
+- **<u>YOLOv8</u> (2023):** Die aktuell verbreitetste Version. Kernerneuerung ist die *anchor-free* Architektur: Statt vordefinierten Acnhor Boxes lernt das Modell Boxpositionen direkt, was den Trainingsprozess vereinfacht und die Genauigkeit steigert. Zudem wurde ein *decoupled head* eingeführt, der Klassifizierung und Lokalisation in getrennten Zweigen berechnet [@jocher2023].
 
 
 ### 2.3 Herausforderungen
@@ -171,11 +171,47 @@ Fast R-CNN hingegen erkennt fast dreimal so häufig Hintergrundbereiche fälschl
 
 ## 3. YOLO: Implementierung {#sec-implementierung}
 
+Die Implementierung erfolgt in Python unter Verwendung von **YOLOv8** (über Ultralytics) und **OpenCV**.
+Der gesamte Code ist so dokumentiert, dass er Schritt für Schritt reproduziert werden kann.
 
+### 3.1 System Requierements
 
+Zur Reproduzierbarkeit wird eine Python-Umgebung benötigt.
+Um etwaige Abhängigkeiten sauber zu wissen, empfiehlt sich der Einsatz eines Virtual Environments, um den Workspace zu isolieren.
 
+**Erstellen und aktivieren der virtuellen Umgebung:**
 
+```bash
+# Erstellen
+python -m venv .venv
 
+# Aktivieren (macOS/Linux)
+source .venv/bin/activate
+
+# Aktivieren (Windows)
+.venv\Scripts\activate
+```
+
+**Installieren der benötigten Bibliotheken:**
+
+```bash
+pip install ultralytics opencv-python     # alternativ über homebrew
+```
+
+Die Bibliothek `ultralytics` enthält YOLOv8 inklusive aller Abhängigkeiten (u.a. PyTorch).  
+`opencv-python` wird für das Einlesen und Verarbeiten von Bild- und Videodaten sowie die Ansteuerung von Kamera und Peripherie verwendet.
+
+**Überprüfung der Installation:**
+
+```{python}
+import ultralytics
+import cv2
+
+print(f"Ultralytics Version: {ultralytics.__version__}")
+print(f"OpenCV Version:      {cv2.__version__}")
+
+# Ggf. ist ein Neustart der Entwicklungsumgebung nötig.
+```
 
 
 
