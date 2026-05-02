@@ -45,7 +45,7 @@ Die Brücke zu YOLO wird über das gleichnamige Kapitel [YOLO: Intro](#sec-intro
 
 In [YOLO: Implementierung](#sec-implementierung) erfolgt die sukzessive Bearbeitung der Problemstellung.
 Zugleich werden die **System Requierements** abgearbeitet (z.B. das Erstellen eines Virtual Environments oder das Installieren von notwendigen Bibliotheken), um die Schritt-für-Schritt **Reproduzierbarkeit** Seitens des Lesers zu gewährleisten.
-Dazugehörige Code-Snippets stehen im gesamten Verlauf dieser Webseite ebenso zur Verfügung und können direkt in die eigene Entwicklungsumgebung (VSCode, etc.) kopiert werden.  
+Dazugehörige Code-Snippets stehen im gesamten Verlauf dieser Webseite ebenso zur Verfügung und können direkt in die eigene Entwicklungsumgebung (VSCode, etc.) kopiert werden. 
 Die Implementierung wird anhand eines frei verfügbaren Videos aus dem Straßenverkehr demonstriert und getestet.
 
 \n
@@ -250,7 +250,7 @@ def process_video(input__video_path, output_path):
     fps    = cap.get(cv2.CAP_PROP_FPS)
     width  = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    out    = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*"mp4v"), fps, (width, height))
+    out    = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*"avc1"), fps, (width, height))
 
     while True:
         ret, frame = cap.read()
@@ -292,13 +292,11 @@ display(Video("output.mp4", embed=True))
 
 ## 4. YOLO: Eigentests {#sec-eigentests}
 
-::: {.callout-note appearance="minimal"}
 **Hinweis:** Die folgenden Demos laufen direkt im Browser ohne lokale Installation. 
-Möglich macht das das zuvor exportierte Modell `yolov8n.onnx`, das über die Bibliohtek `onnxruntime-web` direkt im Browser ausgeführt wird [^2]. 
+Möglich macht das das zuvor exportierte Modell `yolov8n.onnx`, das über die Bibliohtek `onnxruntime-web` direkt im Browser ausgeführt wird [^2].  
 Aufgrund technischer Einschränkungen des Hostings (GitHub Pages) ist die Inferenzgeschwindigkeit bei Video und Webcam auf ca. 2 FPS begrenzt. 
-Die Objekterkennung funktioniert korrekt, läuft jedoch nicht in Echtzeit. 
-Diese Demos dienen somit eher dem Verständnis des Lesers.
-:::
+Die Objekterkennung funktioniert korrekt, läuft jedoch nicht in Echtzeit.  
+Diese Demos dienen somit in der Linie dem tieferen Verständnis des Lesers.
 
 [^2]: Der vollständige Code inkl. Modell für diese Umsetzung ist im [GitHub-Repository](https://github.com/billyS02/vcde) einsehbar.
 
@@ -796,16 +794,16 @@ function parseOutput(data, scale, px, py, W, H, minConf=0.05) {
 function drawBoxes(filtered) {
   filtered.forEach(b => {
     const color = clsColor(b.cls);
-    ctx.strokeStyle=color; ctx.lineWidth=4;
+    ctx.strokeStyle=color; ctx.lineWidth=8;
     ctx.strokeRect(b.x1, b.y1, b.x2-b.x1, b.y2-b.y1);
     const lbl=`${COCO[b.cls]} ${(b.conf*100).toFixed(0)}%`;
-    ctx.font='bold 16px sans-serif';
+    ctx.font='bold 22px sans-serif';
     const tw=ctx.measureText(lbl).width;
     ctx.fillStyle=color; ctx.fillRect(b.x1-1, b.y1-21, tw+10, 21);
     ctx.fillStyle='#fff'; ctx.fillText(lbl, b.x1+4, b.y1-5);
     const mx=(b.x1+b.x2)/2, my=(b.y1+b.y2)/2;
     ctx.fillStyle='#E24B4A'; ctx.beginPath(); ctx.arc(mx,my,5,0,Math.PI*2); ctx.fill();
-    ctx.strokeStyle='#fff'; ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(mx,my,5,0,Math.PI*2); ctx.stroke();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(mx,my,5,0,Math.PI*2); ctx.stroke();
   });
 }
 
