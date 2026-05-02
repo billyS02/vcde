@@ -296,10 +296,17 @@ urllib.request.urlretrieve(
     "sample.mp4"
 )
 
-stderr = sys.stderr
-sys.stderr = open(os.devnull, 'w')
+# C-Level stderr unterdrücken
+devnull = os.open(os.devnull, os.O_WRONLY)
+old_stderr = os.dup(2)
+os.dup2(devnull, 2)
+
 process_video("sample.mp4", "output.mp4")
-sys.stderr = stderr
+
+# Wiederherstellen
+os.dup2(old_stderr, 2)
+os.close(devnull)
+os.close(old_stderr)
 ```
 {{< video ./img/autobahn_h264.mp4 >}}
 
@@ -311,7 +318,7 @@ sys.stderr = stderr
 
 **Hinweis:** Die folgenden Demos laufen direkt im Browser ohne lokale Installation. 
 Möglich macht das das zuvor exportierte Modell `yolov8n.onnx`, das über die Bibliohtek `onnxruntime-web` direkt im Browser ausgeführt wird [^3].  
-Aufgrund technischer Einschränkungen des Hostings (GitHub Pages) ist die Inferenzgeschwindigkeit bei Video und Webcam auf ca. 2 FPS begrenzt. 
+Aufgrund technischer Einschränkungen des Hostings (GitHub Pages) ist die Inferenzgeschwindigkeit bei Video und Webcam auf ca. 2-5 FPS begrenzt. 
 Die Objekterkennung funktioniert korrekt, läuft jedoch nicht in Echtzeit.  
 Diese Demos dienen somit in der Linie dem tieferen Verständnis des Lesers.
 
