@@ -50,7 +50,7 @@ Dazugehörige Code-Snippets stehen im gesamten Verlauf dieser Webseite ebenso zu
 \n
 
 Daraufhin erfolgt eine **Demonstration** in Kapitel [YOLO: Demo](#sec-demo), in der eine Echtzeit-Objekterkennung anhand eines Videos aus dem Straßenverkehr getestet werden soll.
-Zugleich erhält der Leser die Möglichkeit, die Implementierung mit eigenen Medien auszuprobieren und durch **interaktive Inhalte** die Implementierung zu manipulieren (z.B. das Anpassen von Parametern).
+Zugleich erhält der Leser die Möglichkeit, die Implementierung mit eigenen Medien auszuprobieren (z.B. Live-Videostream über die eigene Kamera) und durch **interaktive Inhalte** die Implementierung zu manipulieren (z.B. das Anpassen von Parametern).
 
 \n
 
