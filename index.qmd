@@ -285,7 +285,7 @@ def process_video(input_video_path, output_path):
 **Demonstration mit Video[^2]:**
 
 Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab. 
-Während eine dedizierte GPU (z.B. NVIDIA mit CUDA) problemlos 40–100+ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise 5–25 FPS realistisch. 
+Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos 40–100+ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise 5–25 FPS realistisch. 
 
 ```{python}
 #| echo: false
@@ -320,7 +320,7 @@ os.close(old_stderr)
 Möglich macht das das zuvor exportierte Modell `yolov8n.onnx`, das über die Bibliohtek `onnxruntime-web` direkt im Browser ausgeführt wird [^3].  
 Aufgrund technischer Einschränkungen des Hostings (GitHub Pages) ist die Inferenzgeschwindigkeit bei Video und Webcam auf ca. 2-5 FPS begrenzt. 
 Die Objekterkennung funktioniert korrekt, läuft jedoch nicht in Echtzeit.  
-Diese Demos dienen somit in der Linie dem tieferen Verständnis des Lesers.
+Diese Demos dienen somit in erster Linie dem **tieferen Verständnis** des Lesers.
 
 [^3]: Der vollständige Code inkl. Modell für diese Umsetzung ist im [GitHub-Repository](https://github.com/billyS02/vcde) einsehbar.
 
@@ -938,6 +938,7 @@ function drawLoop() {
 
 ### 4.3 Objekterkennung Kamera/Live-Stream
 
+```{=html}
 <div id="yolo-cam" style="padding:1rem 0;">
 
   <!-- Steuerung -->
@@ -1193,6 +1194,7 @@ function drawLoop() {
 
 })();
 </script>
+```
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
