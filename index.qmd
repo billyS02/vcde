@@ -204,46 +204,28 @@ Die Bibliothek `ultralytics` enthält YOLOv8 inklusive aller Abhängigkeiten (u.
 **Überprüfen der Installation:**
 
 ```{python}
-import ultralytics
-import cv2
-
-print(f"Ultralytics Version: {ultralytics.__version__}")
-print(f"OpenCV Version:      {cv2.__version__}")
-
-# Ggf. ist ein Neustart der Entwicklungsumgebung nötig.
-```
-
-### 3.2 Objekterkennung im Straßenverkehr
-
-Als Testmedium dient ein frei verfügbares Video aus dem Straßenverkehr.
-Dieses wird Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und dann die erkannten Objekte anschließend mit Bounding Boxes versehen.
-
-**Modell laden:**
-
-```{python}
-from ultralytics import YOLO
-
-model = YOLO("yolov8s.pt")
-```
-
-YOLOv8 steht in verschiedenen Größen zur Verfügung, von `yolov8n.pt` (Nano, schneller) bis `yolov8x.pt` (Extra Large, genauer). 
-Für dieses Projekt wird `yolov8s.pt` (Small) verwendet, da es eine gute Balance zwischen Geschwindigkeit und Genauigkeit bietet.
-
-**Video einlesen und Frame verarbeiten:**
-
-```{python}
-import cv2
-import random
-import urllib.request
+import cv2, random, subprocess, gdown
 from IPython.display import display, Video
+import urllib.request
 
+# (1): Videos bereitstellen
+# Beispiel Internetvideo
+urllib.request.urlretrieve(
+    "https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4",
+    "gfg_traffic.mp4"
+)
 
-# (1): Videos als Testmedium bereitstellen
-url = "https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4"
-urllib.request.urlretrieve(url, "sample.mp4")
+# Beispiel heruntergeladene Video www.pexels.com
+gdown.download_folder(
+    "https://drive.google.com/drive/folders/1tZrkYmvcFfNlUtxXvQGnDkGbfO-OXhUC",
+    quiet=True, use_cookies=False
+)
 
 videos = [
-    ("sample.mp4", "output_traffic.mp4", "Straßenverkehr (Autobahn)"),
+    ("gfg_traffic.mp4",              "out_traffic.mp4",     "Straßenverkehr (Autobahn)"),
+    ("pedestrians_day.mp4",          "out_day.mp4",         "Fußgänger (Tag)"),
+    ("street_pedestrians.mp4",       "out_street.mp4",      "Straße mit Fußgängern"),
+    ("street_pedestrians_night.mp4", "out_night.mp4",       "Straße bei Nacht"),
 ]
 
 
@@ -253,13 +235,14 @@ def get_color(cls_id):
     return tuple(random.randint(0, 255) for _ in range(3))
 
 
-# (3): Verarbeitungsfunktion für ein Video
+# (3): Verarbeitungsfunktion
 def process_video(input_path, output_path):
-    cap = cv2.VideoCapture(input_path)
+    cap    = cv2.VideoCapture(input_path)
     fps    = cap.get(cv2.CAP_PROP_FPS)
     width  = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    out = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*"mp4v"), fps, (width, height))
+    raw    = output_path.replace(".mp4", "_raw.mp4")
+    out    = cv2.VideoWriter(raw, cv2.VideoWriter_fourcc(*"mp4v"), fps, (width, height))
 
     while True:
         ret, frame = cap.read()
@@ -277,17 +260,30 @@ def process_video(input_path, output_path):
                     cv2.putText(frame, label, (x1, max(y1 - 10, 20)),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
         out.write(frame)
-
     cap.release()
     out.release()
 
+    subprocess.run(
+        ["ffmpeg", "-y", "-i", raw, "-vcodec", "libx264", "-crf", "23", output_path],
+        check=True, capture_output=True
+    )
 
-# (4): Videos verarbeiten und anzeigen
-for input_path, output_path, title in videos:
-    print(f"### {title}")
+
+# (4): Verarbeiten und anzeigen
+print("### Implementierungstest")
+process_video("gfg_traffic.mp4", "out_traffic.mp4")
+display(Video("out_traffic.mp4", embed=True))
+
+print("### Test unter verschiedenen Umgebungsbedingungen (Beleuchtung, Tageszeit, Szenario)")
+for input_path, output_path, title in videos[1:]:
+    print(f"**{title}**")
     process_video(input_path, output_path)
     display(Video(output_path, embed=True))
 ```
+
+
+
+
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
