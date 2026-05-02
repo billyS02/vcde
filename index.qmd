@@ -237,7 +237,7 @@ Für dieses Projekt wird `yolov8s.pt` (Small) verwendet, da es eine gute Balance
 **Verarbeitungsfunktion definieren:**
 
 ```{python}
-import cv2, random
+import cv2, random, time
 
 # Farbe pro Klasse definieren
 def get_color(cls_id):
