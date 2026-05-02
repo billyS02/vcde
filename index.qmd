@@ -289,7 +289,7 @@ def process_video(input__video_path, output_path):
 ```{python}
 #| echo: false
 
-import urllib.request, subprocess
+import urllib.request, os
 from IPython.display import display, Video
 
 urllib.request.urlretrieve(
@@ -297,7 +297,7 @@ urllib.request.urlretrieve(
     "sample.mp4"
 )
 process_video("sample.mp4", "output.mp4")
-subprocess.run(["ffmpeg", "-y", "-i", "output.mp4", "-vcodec", "libx264", "-acodec", "aac", "output_h264.mp4"])
+os.system("ffmpeg -y -i output.mp4 -vcodec libx264 -acodec aac output_h264.mp4")
 display(Video("output.mp4", embed=True))
 ```
 
