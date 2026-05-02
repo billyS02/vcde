@@ -183,19 +183,19 @@ Um etwaige Abhängigkeiten sauber zu wissen, empfiehlt sich der Einsatz eines Vi
 
 ```bash
 # Erstellen
-python -m venv .venv
+# python -m venv .venv
 
 # Aktivieren (macOS/Linux)
-source .venv/bin/activate
+# source .venv/bin/activate
 
-# Aktivieren (Windows)
-.venv\Scripts\activate
+# Alternativ auf Windows
+# .venv\Scripts\activate
 ```
 
 **Installieren der benötigten Bibliotheken:**
 
 ```bash
-pip install ultralytics opencv-python     # alternativ über homebrew
+# pip install ultralytics opencv-python     # alternativ über homebrew
 ```
 
 Die Bibliothek `ultralytics` enthält YOLOv8 inklusive aller Abhängigkeiten (u.a. PyTorch).  
