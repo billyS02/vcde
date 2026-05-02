@@ -45,7 +45,7 @@ Die Brücke zu YOLO wird über das gleichnamige Kapitel [YOLO: Intro](#sec-intro
 
 In [YOLO: Implementierung](#sec-implementierung) erfolgt die sukzessive Bearbeitung der Problemstellung.
 Zugleich werden die **System Requierements** abgearbeitet (z.B. das Erstellen eines Virtual Environments oder das Installieren von notwendigen Bibliotheken), um die Schritt-für-Schritt **Reproduzierbarkeit** Seitens des Lesers zu gewährleisten.
-Dazugehörige Code-Snippets stehen im gesamten Verlauf dieser Webseite ebenso zur Verfügung und können direkt in die eigene Entwicklungsumgebung (VSCode, etc.) kopiert werden.
+Dazugehörige Code-Snippets stehen im gesamten Verlauf dieser Webseite ebenso zur Verfügung und können direkt in die eigene Entwicklungsumgebung (VSCode, etc.) kopiert werden.  
 Die Implementierung wird anhand eines frei verfügbaren Videos aus dem Straßenverkehr demonstriert und getestet.
 
 \n
@@ -409,7 +409,7 @@ let rawBoxes   = [];     // alle Boxen über minConf=0.05
 // ── Modell laden ────────────────────────────────────────────────────────────
 ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/';
 
-status.textContent = 'Lade YOLO-Modell …';
+status.textContent = 'STATUS: Lade YOLO-Modell …';
 ort.InferenceSession.create('./models/yolov8n.onnx', {
   executionProviders: ['wasm']
 }).then(s => {
@@ -486,7 +486,7 @@ function nms(boxes, iouThr=0.45) {
 // ── Inferenz ─────────────────────────────────────────────────────────────────
 async function runInference() {
   if (!session || !currentImg) return;
-  status.textContent = 'Inferenz läuft …';
+  status.textContent = 'STATUS: Inferenz läuft …';
   canvas.style.display = 'none';
 
   const { input, scale, px, py } = preprocess(currentImg);
@@ -688,7 +688,7 @@ cSlider.addEventListener('input', () => {
 // ── Modell ──────────────────────────────────────────────────────────────────
 async function ensureSession() {
   if (window.__yoloSession) return window.__yoloSession;
-  status.textContent = 'Lade YOLO-Modell …';
+  status.textContent = 'STATUS: Lade YOLO-Modell …';
   const s = await ort.InferenceSession.create('./models/yolov8n.onnx',
     { executionProviders: ['wasm'] });
   window.__yoloSession = s;
@@ -808,7 +808,7 @@ function updateDetList(filtered, conf) {
 
 // ── BILD-Modus ────────────────────────────────────────────────────────────────
 async function runImageInference(img) {
-  status.textContent = 'Inferenz läuft …';
+  status.textContent = 'STATUS: Inferenz läuft …';
   wrapper.style.display = 'none';
   session = await ensureSession();
 
@@ -828,7 +828,7 @@ async function runImageInference(img) {
   wrapper.style.display = 'block';
 
   cSlider.disabled = false;
-  status.textContent = `${rawBoxes.filter(b=>b.conf>=0.05).length} Kandidaten gefunden.`;
+  status.textContent = `STATUS: ${rawBoxes.filter(b=>b.conf>=0.05).length} Kandidaten gefunden.`;
   renderStatic(img);
 }
 
@@ -849,7 +849,6 @@ function renderStatic(img) {
 // ── VIDEO-Modus ───────────────────────────────────────────────────────────────
 async function startVideoLoop() {
   session = await ensureSession();
-  // Video-Element sichtbar, Canvas als Overlay
   video.style.display = 'block';
   canvas.style.position = 'absolute';
   canvas.style.width = '100%';
@@ -858,31 +857,40 @@ async function startVideoLoop() {
   cSlider.disabled = false;
   await video.play();
   loopActive = true;
-  requestAnimationFrame(videoLoop);
+  inferLoop();               // Inferenz-Loop (langsam, entkoppelt)
+  drawLoop();                // Draw-Loop (schnell, 60fps)
 }
 
-async function videoLoop() {
-  if (!loopActive || video.paused || video.ended) {
-    status.textContent = 'Video beendet.';
-    return;
+let lastBoxes = [];
+
+async function inferLoop() {
+  while (loopActive && !video.paused && !video.ended) {
+    const W = video.videoWidth, H = video.videoHeight;
+    if (W > 0) {
+      const conf = parseFloat(cSlider.value);
+      const { input, scale, px, py } = preprocess(video, W, H);
+      const tensor = new ort.Tensor('float32', input, [1,3,640,640]);
+      const feed = {}; feed[session.inputNames[0]] = tensor;
+      const out = await session.run(feed);
+      const boxes = parseOutput(out[session.outputNames[0]].data, scale, px, py, W, H, conf);
+      lastBoxes = nms(boxes);
+      status.textContent = `STATUS: ${lastBoxes.length} Objekt(e) erkannt`;
+      updateDetList(lastBoxes, conf);
+    }
+    await new Promise(r => setTimeout(r, 200));  // ~5 Inferenzen/Sek.
   }
+  status.textContent = 'STATUS: Video beendet.';
+}
+
+function drawLoop() {
+  if (!loopActive || video.ended) return;
   const W = video.videoWidth, H = video.videoHeight;
-  canvas.width = W; canvas.height = H;
-
-  const conf = parseFloat(cSlider.value);
-  const { input, scale, px, py } = preprocess(video, W, H);
-  const tensor = new ort.Tensor('float32', input, [1,3,640,640]);
-  const feed = {}; feed[session.inputNames[0]] = tensor;
-  const out  = await session.run(feed);
-  const boxes = parseOutput(out[session.outputNames[0]].data, scale, px, py, W, H, conf);
-  const filtered = nms(boxes);
-
-  ctx.clearRect(0,0,W,H);
-  drawBoxes(filtered);
-  status.textContent = `${filtered.length} Objekt(e) erkannt`;
-  updateDetList(filtered, conf);
-
-  requestAnimationFrame(videoLoop);
+  if (W > 0) {
+    canvas.width = W; canvas.height = H;
+    ctx.clearRect(0, 0, W, H);
+    drawBoxes(lastBoxes);
+  }
+  requestAnimationFrame(drawLoop);
 }
 
 })();
