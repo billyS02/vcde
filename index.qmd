@@ -226,13 +226,15 @@ Diese werdem Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und 
 ```{python}
 from ultralytics import YOLO
 
-model = YOLO("yolov8s.pt")
+model = YOLO("yolov8n.pt")
 
 # OUTPUT:
 ```
 
 YOLOv8 steht in verschiedenen Größen zur Verfügung, von `yolov8n.pt` (Nano, schneller) bis `yolov8x.pt` (Extra Large, genauer). 
-Für dieses Projekt wird `yolov8s.pt` (Small) verwendet, da es eine gute Balance zwischen Geschwindigkeit und Genauigkeit bietet.
+Für dieses Projekt wird `yolov8s.pt` (Small) verwendet, da es eine gute Balance zwischen Geschwindigkeit und Genauigkeit bietet.  
+Die erreichbare Verarbeitungsgeschwindigkeit hängt dabei stark von der verfügbaren Hardware ab. 
+Während eine dedizierte GPU (z.B. NVIDIA mit CUDA) problemlos 40–100+ FPS ermöglicht, sind auf einer Standard-CPU typischerweise 5–25 FPS realistisch. 
 
 **Verarbeitungsfunktion definieren:**
 
@@ -287,7 +289,7 @@ def process_video(input__video_path, output_path):
 ```{python}
 #| echo: false
 
-import urllib.request
+import urllib.request, subprocess
 from IPython.display import display, Video
 
 urllib.request.urlretrieve(
