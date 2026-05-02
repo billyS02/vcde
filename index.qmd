@@ -287,26 +287,312 @@ process_video("sample.mp4", "output.mp4")
 display(Video("output.mp4", embed=True))
 ```
 
-\n
-**Testen unter verschiedenen Umgebungsbedingungen (Beleuchtung, Tageszeit, Szenario):**  
-*Hinweis: Hierfür wurde ein frei verfügbares Videos von www.pexels.com heruntergeladen und lokal eingebunden.*
-
-```{python}
-#| echo: false
-
-from IPython.display import display, Video
-
-process_video("./img/test2.mp4", "out_street.mp4")
-display(Video("out_street.mp4", embed=False))
-```
- 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
 ## 4. YOLO: Demo {#sec-demo}
 
+### 4.1 Eigentests User
 
+```{python}
+#| eval: false
+#| echo: true
+# Einmalig lokal ausführen, exportiert dann das Modell für den Browser
+from ultralytics import YOLO
+import shutil, os
 
+model = YOLO("yolov8n.pt")
+model.export(format="onnx", imgsz=640, opset=12)
 
+os.makedirs("models", exist_ok=True)
+shutil.move("yolov8n.onnx", "models/yolov8n.onnx")
+print("Exportiert: models/yolov8n.onnx")
+```
+
+```{html}
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/ort.min.js"></script>
+
+<div id="yolo-demo" style="padding:1rem 0;">
+
+  <!-- Upload-Zone -->
+  <div id="uploadZone" style="
+    border:2px dashed #bbb; border-radius:8px; padding:2rem;
+    text-align:center; cursor:pointer; color:#888; font-size:15px;
+    margin-bottom:1rem; transition:border-color 0.2s;">
+    <div style="font-size:2rem; margin-bottom:0.5rem;">📂</div>
+    Bild hier ablegen oder <u>klicken zum Auswählen</u>
+    <input type="file" id="fileInput" accept="image/*" style="display:none;">
+  </div>
+
+  <!-- Status -->
+  <div id="statusMsg" style="font-size:13px;color:#888;margin-bottom:0.75rem;min-height:1.2em;"></div>
+
+  <!-- Slider-Controls -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:0.75rem;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <label style="font-size:14px;color:#555;white-space:nowrap;">Grid <strong>S</strong> =</label>
+      <input type="range" id="sSlider" min="3" max="13" step="2" value="7" style="flex:1;" disabled>
+      <span id="sVal" style="font-size:15px;font-weight:600;min-width:2ch;">7</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <label style="font-size:14px;color:#555;white-space:nowrap;">Conf. ≥</label>
+      <input type="range" id="confSlider" min="0.05" max="0.95" step="0.05" value="0.40" style="flex:1;" disabled>
+      <span id="confVal" style="font-size:15px;font-weight:600;min-width:3ch;">0.40</span>
+    </div>
+  </div>
+
+  <!-- Canvas -->
+  <canvas id="demoCanvas" style="width:100%;display:none;border-radius:8px;border:1px solid #ddd;"></canvas>
+
+  <!-- Legenden -->
+  <div style="margin-top:0.6rem;display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:#666;">
+    <span style="display:flex;align-items:center;gap:4px;">
+      <span style="width:12px;height:12px;background:rgba(24,95,165,0.22);border:1.5px solid #185FA5;display:inline-block;border-radius:2px;"></span>Verantwortliche Zelle
+    </span>
+    <span style="display:flex;align-items:center;gap:4px;">
+      <span style="width:14px;height:3px;background:#E24B4A;display:inline-block;border-radius:1px;"></span>Bounding Box
+    </span>
+    <span style="display:flex;align-items:center;gap:4px;">
+      <span style="width:9px;height:9px;border-radius:50%;background:#E24B4A;display:inline-block;"></span>Objektmittelpunkt
+    </span>
+  </div>
+
+  <!-- Erkennungsliste -->
+  <div id="detList" style="margin-top:0.75rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;"></div>
+</div>
+
+<script>
+(function () {
+
+// ── COCO-Klassen ────────────────────────────────────────────────────────────
+const COCO = ['person','bicycle','car','motorcycle','airplane','bus','train',
+  'truck','boat','traffic light','fire hydrant','stop sign','parking meter',
+  'bench','bird','cat','dog','horse','sheep','cow','elephant','bear','zebra',
+  'giraffe','backpack','umbrella','handbag','tie','suitcase','frisbee','skis',
+  'snowboard','sports ball','kite','baseball bat','baseball glove','skateboard',
+  'surfboard','tennis racket','bottle','wine glass','cup','fork','knife','spoon',
+  'bowl','banana','apple','sandwich','orange','broccoli','carrot','hot dog',
+  'pizza','donut','cake','chair','couch','potted plant','bed','dining table',
+  'toilet','tv','laptop','mouse','remote','keyboard','cell phone','microwave',
+  'oven','toaster','sink','refrigerator','book','clock','vase','scissors',
+  'teddy bear','hair drier','toothbrush'];
+
+// Farbe je Klasse (deterministisch)
+function clsColor(c) {
+  const h = (c * 47) % 360;
+  return `hsl(${h},70%,45%)`;
+}
+
+// ── Elemente ────────────────────────────────────────────────────────────────
+const zone     = document.getElementById('uploadZone');
+const fileIn   = document.getElementById('fileInput');
+const canvas   = document.getElementById('demoCanvas');
+const ctx      = canvas.getContext('2d');
+const sSlider  = document.getElementById('sSlider');
+const cSlider  = document.getElementById('confSlider');
+const sVal     = document.getElementById('sVal');
+const cVal     = document.getElementById('confVal');
+const status   = document.getElementById('statusMsg');
+const detList  = document.getElementById('detList');
+
+let session    = null;
+let currentImg = null;   // HTMLImageElement
+let rawBoxes   = [];     // alle Boxen über minConf=0.05
+
+// ── Modell laden ────────────────────────────────────────────────────────────
+ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/';
+
+status.textContent = 'Lade YOLO-Modell …';
+ort.InferenceSession.create('./models/yolov8n.onnx', {
+  executionProviders: ['wasm']
+}).then(s => {
+  session = s;
+  status.textContent = '✓ Modell geladen — Bild hochladen um zu starten.';
+}).catch(e => {
+  status.textContent = '⚠ Modell nicht gefunden. Bitte zuerst yolov8n.onnx exportieren (s.o.).';
+});
+
+// ── Upload-Events ────────────────────────────────────────────────────────────
+zone.addEventListener('click', () => fileIn.click());
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.borderColor='#185FA5'; });
+zone.addEventListener('dragleave', () => { zone.style.borderColor='#bbb'; });
+zone.addEventListener('drop', e => {
+  e.preventDefault(); zone.style.borderColor='#bbb';
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+fileIn.addEventListener('change', () => { if (fileIn.files[0]) loadFile(fileIn.files[0]); });
+
+function loadFile(file) {
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => { currentImg = img; runInference(); };
+  img.src = url;
+}
+
+// ── Vorverarbeitung (Letterbox → 640×640) ───────────────────────────────────
+function preprocess(img) {
+  const MODEL = 640;
+  const scale = Math.min(MODEL / img.width, MODEL / img.height);
+  const nw = Math.round(img.width  * scale);
+  const nh = Math.round(img.height * scale);
+  const px = Math.floor((MODEL - nw) / 2);
+  const py = Math.floor((MODEL - nh) / 2);
+
+  const off = document.createElement('canvas');
+  off.width = MODEL; off.height = MODEL;
+  const oc = off.getContext('2d');
+  oc.fillStyle = 'rgb(114,114,114)';
+  oc.fillRect(0, 0, MODEL, MODEL);
+  oc.drawImage(img, px, py, nw, nh);
+
+  const pixels = oc.getImageData(0, 0, MODEL, MODEL).data;
+  const input  = new Float32Array(3 * MODEL * MODEL);
+  for (let i = 0; i < MODEL * MODEL; i++) {
+    input[i]               = pixels[i * 4]     / 255;  // R
+    input[MODEL*MODEL + i] = pixels[i * 4 + 1] / 255;  // G
+    input[2*MODEL*MODEL+i] = pixels[i * 4 + 2] / 255;  // B
+  }
+  return { input, scale, px, py };
+}
+
+// ── NMS ─────────────────────────────────────────────────────────────────────
+function iou(a, b) {
+  const x1 = Math.max(a.x1,b.x1), y1 = Math.max(a.y1,b.y1);
+  const x2 = Math.min(a.x2,b.x2), y2 = Math.min(a.y2,b.y2);
+  const inter = Math.max(0,x2-x1) * Math.max(0,y2-y1);
+  return inter / ((a.x2-a.x1)*(a.y2-a.y1) + (b.x2-b.x1)*(b.y2-b.y1) - inter + 1e-6);
+}
+function nms(boxes, iouThr=0.45) {
+  boxes.sort((a,b) => b.conf - a.conf);
+  const keep = [], sup = new Set();
+  for (let i = 0; i < boxes.length; i++) {
+    if (sup.has(i)) continue;
+    keep.push(boxes[i]);
+    for (let j = i+1; j < boxes.length; j++) {
+      if (!sup.has(j) && boxes[i].cls===boxes[j].cls && iou(boxes[i],boxes[j])>iouThr)
+        sup.add(j);
+    }
+  }
+  return keep;
+}
+
+// ── Inferenz ─────────────────────────────────────────────────────────────────
+async function runInference() {
+  if (!session || !currentImg) return;
+  status.textContent = 'Inferenz läuft …';
+  canvas.style.display = 'none';
+
+  const { input, scale, px, py } = preprocess(currentImg);
+  const tensor = new ort.Tensor('float32', input, [1, 3, 640, 640]);
+  const feed = {}; feed[session.inputNames[0]] = tensor;
+  const out  = await session.run(feed);
+  const data = out[session.outputNames[0]].data;  // [1, 84, 8400]
+
+  const N = 8400;
+  rawBoxes = [];
+  for (let i = 0; i < N; i++) {
+    let maxScore = 0, maxCls = 0;
+    for (let c = 0; c < 80; c++) {
+      const s = data[(4 + c) * N + i];
+      if (s > maxScore) { maxScore = s; maxCls = c; }
+    }
+    if (maxScore < 0.05) continue;  // sehr niedrige Schwelle – für Slider-Flexibilität
+    const cx = data[0*N+i], cy = data[1*N+i], w = data[2*N+i], h = data[3*N+i];
+    const x1 = Math.max(0, (cx - w/2 - px) / scale);
+    const y1 = Math.max(0, (cy - h/2 - py) / scale);
+    const x2 = Math.min(currentImg.width,  (cx + w/2 - px) / scale);
+    const y2 = Math.min(currentImg.height, (cy + h/2 - py) / scale);
+    rawBoxes.push({ x1, y1, x2, y2, conf: maxScore, cls: maxCls });
+  }
+  status.textContent = '';
+  sSlider.disabled = false;
+  cSlider.disabled = false;
+  render();
+}
+
+// ── Zeichnen ─────────────────────────────────────────────────────────────────
+function render() {
+  if (!currentImg) return;
+  const S    = parseInt(sSlider.value);
+  const conf = parseFloat(cSlider.value);
+  sVal.textContent  = S;
+  cVal.textContent  = conf.toFixed(2);
+
+  canvas.width  = currentImg.width;
+  canvas.height = currentImg.height;
+  canvas.style.display = 'block';
+  const W = canvas.width, H = canvas.height;
+
+  ctx.drawImage(currentImg, 0, 0);
+
+  // Grid
+  const cw = W/S, ch = H/S;
+  ctx.strokeStyle = 'rgba(255,255,255,0.28)'; ctx.lineWidth = 0.8;
+  for (let i=0;i<=S;i++){
+    ctx.beginPath();ctx.moveTo(i*cw,0);ctx.lineTo(i*cw,H);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,i*ch);ctx.lineTo(W,i*ch);ctx.stroke();
+  }
+
+  // Gefilterte + NMS-Boxen
+  const filtered = nms(rawBoxes.filter(b => b.conf >= conf));
+
+  // Verantwortliche Zellen hervorheben
+  const seen = new Set();
+  filtered.forEach(b => {
+    const cx = (b.x1+b.x2)/2, cy = (b.y1+b.y2)/2;
+    const col = Math.min(Math.floor(cx/cw), S-1);
+    const row = Math.min(Math.floor(cy/ch), S-1);
+    const key = `${row}-${col}`;
+    if (!seen.has(key)) {
+      ctx.fillStyle = 'rgba(24,95,165,0.20)';
+      ctx.fillRect(col*cw, row*ch, cw, ch);
+      ctx.strokeStyle = '#185FA5'; ctx.lineWidth = 1.5;
+      ctx.strokeRect(col*cw, row*ch, cw, ch);
+      seen.add(key);
+    }
+  });
+
+  // Bounding Boxes
+  filtered.forEach(b => {
+    const color = clsColor(b.cls);
+    const bw = b.x2-b.x1, bh = b.y2-b.y1;
+    ctx.strokeStyle = color; ctx.lineWidth = 2.5;
+    ctx.strokeRect(b.x1, b.y1, bw, bh);
+
+    const lbl = `${COCO[b.cls]} ${(b.conf*100).toFixed(0)}%`;
+    ctx.font = 'bold 13px sans-serif';
+    const tw = ctx.measureText(lbl).width;
+    ctx.fillStyle = color;
+    ctx.fillRect(b.x1-1, b.y1-21, tw+10, 21);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(lbl, b.x1+4, b.y1-5);
+
+    const mx = (b.x1+b.x2)/2, my = (b.y1+b.y2)/2;
+    ctx.fillStyle='#E24B4A';
+    ctx.beginPath();ctx.arc(mx,my,5,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#fff';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.arc(mx,my,5,0,Math.PI*2);ctx.stroke();
+  });
+
+  // Detektionsliste
+  detList.innerHTML = filtered.length === 0
+    ? `<div style="font-size:13px;color:#999;">Keine Objekte über Schwellwert ${conf.toFixed(2)} erkannt.</div>`
+    : filtered.map(b => {
+        const cx = (b.x1+b.x2)/2, cy = (b.y1+b.y2)/2;
+        const col = Math.min(Math.floor(cx/cw),S-1);
+        const row = Math.min(Math.floor(cy/ch),S-1);
+        return `<div style="background:#f5f5f5;border-radius:6px;padding:0.5rem 0.75rem;border-left:3px solid ${clsColor(b.cls)};">
+          <div style="font-size:11px;color:#888;">${COCO[b.cls]} · ${(b.conf*100).toFixed(0)}% Conf.</div>
+          <div style="font-size:13px;font-weight:600;">Zelle (${row}, ${col})</div>
+        </div>`;
+      }).join('');
+}
+
+sSlider.addEventListener('input', render);
+cSlider.addEventListener('input', render);
+
+})();
+</script>
+```
 
 
 
@@ -315,6 +601,6 @@ display(Video("out_street.mp4", embed=False))
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
-## Diskussion & Fazit {#sec-fazit}
+## Fazit {#sec-fazit}
 
 [Dieses Kapitel am Ende verfassen. Dient als Zusammenfassung von Kapitel *1. Einordnung* bishin zu Kapitel *5. Ausblick*].
