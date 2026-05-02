@@ -1,2 +1,4 @@
 project:
   type: website
+  resources:
+    - models/yolov8.onnx

@@ -291,13 +291,13 @@ display(Video("output.mp4", embed=True))
 
 ## 4. YOLO: Demo {#sec-demo}
 
-### 4.1 User-Test: Grid-Mechanismus
+### 4.1 Eigentest: Grid-Mechanismus
 
 ```{python}
 #| eval: false
 #| echo: false
 # Hinweis: Dieser Block muss einmalig lokal ausgeführt werden, bevor die interaktive Demo in Kapitel 4 genutzt werden kann.
-# Er exportiert das YOLOv8-Modell ins ONNX-Format, das der Browser direkt ausführen kann
+# Er exportiert das YOLOv8-Modell ins ONNX-Format, das der Browser direkt ausführen kann.
 
 from ultralytics import YOLO
 import shutil, os
@@ -336,7 +336,7 @@ print("Exportiert: models/yolov8n.onnx")
       <span id="sVal" style="font-size:15px;font-weight:600;min-width:2ch;">7</span>
     </div>
     <div style="display:flex;align-items:center;gap:10px;">
-      <label style="font-size:14px;color:#555;white-space:nowrap;">Conf. ≥</label>
+      <label style="font-size:14px;color:#555;white-space:nowrap;">Conf. C≥</label>
       <input type="range" id="confSlider" min="0.05" max="0.95" step="0.05" value="0.40" style="flex:1;" disabled>
       <span id="confVal" style="font-size:15px;font-weight:600;min-width:3ch;">0.40</span>
     </div>
@@ -430,7 +430,7 @@ function loadFile(file) {
   img.src = url;
 }
 
-// ── Vorverarbeitung (Letterbox → 640×640) ───────────────────────────────────
+// ── Vorverarbeitung (Letterbox -> 640×640) ───────────────────────────────────
 function preprocess(img) {
   const MODEL = 640;
   const scale = Math.min(MODEL / img.width, MODEL / img.height);
@@ -596,8 +596,10 @@ cSlider.addEventListener('input', render);
 </script>
 ```
 
+### 4.2 Eigentest: Objekterkennung Bild/Video
 
 
+### 4.3 Eigentest: Objekterkennung Live-Stream
 
 
 
