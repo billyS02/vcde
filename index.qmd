@@ -296,7 +296,7 @@ display(Video("output.mp4", embed=True))
 
 from IPython.display import display, Video
 
-process_video("street.mp4", "out_street.mp4")
+process_video("./img/stree_pedestrians_night.mp4", "out_street.mp4")
 display(Video("out_street.mp4", embed=True))
 ```
 
