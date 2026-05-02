@@ -11,18 +11,18 @@ bibliography: references.bib
 
 ::: {.callout-note appearance="minimal"}
 **Inhalte**  
-[Abstract](#sec-abstract)  
+[Zusammenfassung](#sec-zsm)  
 [Methodik](#sec-methodik)  
 [1. Einordnung](#sec-einordnung)  
 [2. YOLO: Intro](#sec-intro)  
 [3. YOLO: Implementierung](#sec-implementierung)  
-[4. YOLO: Demo](#sec-demo)  
+[4. YOLO: Eigentests](#sec-eigentests)  
 [Fazit](#sec-fazit)
 :::
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
-## Abstract {#sec-abstract} 
+## *Zusammenfassung* {#sec-zsm} 
 
 [Diesen Absatz am Ende schreiben. Erwähnt werden sollten:  
     - Hintergründe für das Thema  
@@ -46,11 +46,12 @@ Die Brücke zu YOLO wird über das gleichnamige Kapitel [YOLO: Intro](#sec-intro
 In [YOLO: Implementierung](#sec-implementierung) erfolgt die sukzessive Bearbeitung der Problemstellung.
 Zugleich werden die **System Requierements** abgearbeitet (z.B. das Erstellen eines Virtual Environments oder das Installieren von notwendigen Bibliotheken), um die Schritt-für-Schritt **Reproduzierbarkeit** Seitens des Lesers zu gewährleisten.
 Dazugehörige Code-Snippets stehen im gesamten Verlauf dieser Webseite ebenso zur Verfügung und können direkt in die eigene Entwicklungsumgebung (VSCode, etc.) kopiert werden.
+Die Implementierung wird anhand eines frei verfügbaren Videos aus dem Straßenverkehr demonstriert und getestet.
 
 \n
 
-Daraufhin erfolgt eine **Demonstration** in Kapitel [YOLO: Demo](#sec-demo), in der eine Echtzeit-Objekterkennung anhand eines Videos aus dem Straßenverkehr getestet werden soll.
-Zugleich erhält der Leser die Möglichkeit, die Implementierung mit eigenen Medien auszuprobieren (z.B. Live-Videostream über die eigene Kamera) und durch **interaktive Inhalte** die Implementierung zu manipulieren (z.B. das Anpassen von Parametern).
+Daraufhin folgen in Kapitel [YOLO: Eigentests](#sec-eigentests) drei **interaktive Demos**, die direkt hier im Browser laufen, ohne lokale Installation.
+Der Leser kann eigene Bilder hochladen, den Grid-Mechanismus und Confidence-Schwellwert live anpassen sowie einen Echtzeit-Videostream über die eigene Kamera testen.
 
 \n
 
@@ -271,7 +272,7 @@ def process_video(input__video_path, output_path):
     out.release()
 ```
 
-**Testen mit Standardvideo:**
+**Demonstration mit Standardvideo:**
 
 ```{python}
 #| echo: false
@@ -289,9 +290,14 @@ display(Video("output.mp4", embed=True))
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
-## 4. YOLO: Demo {#sec-demo}
+## 4. YOLO: Eigentests {#sec-eigentests}
 
-### 4.1 Eigentest: Grid-Mechanismus
+Die folgenden drei Demos laufen direkt hier im Browser, ohne lokale Umgebung. 
+Möglich macht das das zuvor exportierte `yolov8n.onnx`-Modell, das über die Bibliothek `onnxruntime-web` direkt im Browser ausgeführt wird [^2]. 
+
+[^2]: Der vollständige Code inkl. Modell ist im [GitHub-Repository](https://github.com/billyS02/vcde) einsehbar.
+
+### 4.1 Grid-Manipulation
 
 ```{python}
 #| eval: false
@@ -336,7 +342,7 @@ print("Exportiert: models/yolov8n.onnx")
       <span id="sVal" style="font-size:15px;font-weight:600;min-width:2ch;">7</span>
     </div>
     <div style="display:flex;align-items:center;gap:10px;">
-      <label style="font-size:14px;color:#555;white-space:nowrap;">Conf. C≥</label>
+      <label style="font-size:14px;color:#555;white-space:nowrap;">Conf. <strong>C</strong>≥</label>
       <input type="range" id="confSlider" min="0.05" max="0.95" step="0.05" value="0.40" style="flex:1;" disabled>
       <span id="confVal" style="font-size:15px;font-weight:600;min-width:3ch;">0.40</span>
     </div>
@@ -408,9 +414,9 @@ ort.InferenceSession.create('./models/yolov8n.onnx', {
   executionProviders: ['wasm']
 }).then(s => {
   session = s;
-  status.textContent = 'CHECK: Modell geladen — Bild hochladen um zu starten.';
+  status.textContent = 'STATUS: Modell erfolgreich geladen. Bild hochladen um zu starten!';
 }).catch(e => {
-  status.textContent = 'WARNING: Modell nicht gefunden. Bitte zuerst yolov8n.onnx exportieren.';
+  status.textContent = 'STATUS: Modell nicht gefunden. Zuerst yolov8n.onnx exportieren!';
 });
 
 // ── Upload-Events ────────────────────────────────────────────────────────────
@@ -596,10 +602,12 @@ cSlider.addEventListener('input', render);
 </script>
 ```
 
-### 4.2 Eigentest: Objekterkennung Bild/Video
+### 4.2 Objekterkennung Bild/Video
 
 
-### 4.3 Eigentest: Objekterkennung Live-Stream
+
+
+### 4.3 Objekterkennung Kamera/Live-Stream
 
 
 
