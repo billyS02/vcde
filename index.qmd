@@ -236,7 +236,7 @@ Für dieses Projekt wird `yolov8s.pt` (Small) verwendet, da es eine gute Balance
 **Verarbeitungsfunktion definieren:**
 
 ```{python}
-import cv2, random, subprocess
+import cv2, random
 
 # Farbe pro Klasse definieren
 def get_color(cls_id):
@@ -287,6 +287,8 @@ display(Video("out_traffic.mp4", embed=True))
 ```
 
 **Testen unter verschiedenen Umgebungsbedingungen (Beleuchtung, Tageszeit, Szenario):**
+
+
 
 ```
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
