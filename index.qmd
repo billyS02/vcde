@@ -258,7 +258,8 @@ def process_video(input_video_path, output_path):
     while True:
         ret, frame = cap.read()
         if not ret:
-            break   # Ende des Videos erreicht
+            # Ende des Videos erreicht
+            break
 
         # Aktuellen Frame durch YOLO schicken; gibt Bounding Boxes, Klassen und Confidence zurück
         results = model(frame, verbose=False)
@@ -316,7 +317,7 @@ os.dup2(old_stderr, 2)
 os.close(devnull)
 os.close(old_stderr)
 ```
-{{< video ./img/autobahn_h264.mp4 >}}   // Es musste auf ein h264-Format ausgewichen werden, damit das Video auf Safari und Google-Chrome angezeigt werden kann
+{{< video ./img/autobahn_h264.mp4 >}}   <!-- Es musste auf ein h264-Format ausgewichen werden, damit das Video auf Safari und Google-Chrome angezeigt werden kann -->
 
 [^3]: Siehe Beispielvideo von [GeeksForGeeks](https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4).
 
@@ -326,8 +327,8 @@ os.close(old_stderr)
 
 **Hinweis:** Die folgenden Demos laufen direkt im Browser ohne lokale Installation. 
 Möglich macht das das zuvor exportierte Modell `yolov8n.onnx`, das über die Bibliohtek `onnxruntime-web` direkt im Browser ausgeführt wird [^4].  
-Aufgrund technischer Einschränkungen des Hostings (GitHub Pages) ist die Inferenzgeschwindigkeit bei Video und Webcam auf ca. 2-5 FPS begrenzt. 
-Die Objekterkennung funktioniert korrekt, läuft jedoch nicht in Echtzeit.  
+Aufgrund technischer Einschränkungen des Hostings (GitHub Pages) ist die Inferenzgeschwindigkeit bei Video und Webcam auf geringere FPS begrenzt. 
+Die Objekterkennung funktioniert korrekt, läuft jedoch nicht in optimaler Echtzeit.  
 Diese Demos dienen somit in erster Linie dem **tieferen Verständnis** des Lesers.
 
 [^4]: Der vollständige Code inkl. Modell für diese Umsetzung ist im [GitHub-Repository](https://github.com/billyS02/vcde) einsehbar.
