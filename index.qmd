@@ -1,6 +1,6 @@
 ---
 title: "Echtzeit-Objekterkennung mit YOLO"
-subtitle: "**Eine Implementierung am Beispiel des Autonomen Fahrens**"
+subtitle: "**Am Beispiel des Autonomen Fahrens**"
 author: "Bledar Sllamniku (Digital Engineering, B.Sc.)"
 format:
   html:
@@ -131,19 +131,19 @@ Mit $S = 7$, $B = 2$ und $C = 20$ ergibt sich ein Ausgabe-Tensor der Größe $7 
 
 Das YOLO-Netz besteht aus zwei klar getrenten Phasen, die auf ImageNet[^2] trainiert wurden:
 
-1. **Feature-Extractor**  
+- **Feature-Extractor**  
 
 24 Convolutional Layer verarbeiten das Eingabebild ($448x448$ Pixel) schrittweise. 
-Fünf zwischengeschaltene MaxPooling-Schichten halbieren dabei jeweils die räumliche Auflösung, während die Kanaltiefe gleichzeitig wächst (von ursprünglichen $3$ für RGB auf schließlich $1024$). 
-Das Bild wird also räumlich von $448x448$ auf $7x7$ komprimiert, während das Netz durch die mehr Kanäle auch zunehmend mehr abstrakte Merkmale extrahieren kann, d.h. von bloßen Kanten und Ecken hin zu ganzen Objektformen. 
+Vier zwischengeschaltene MaxPooling-Schichten halbieren dabei jeweils die räumliche Auflösung, während die Kanaltiefe gleichzeitig wächst (von ursprünglichen $3$ für RGB auf schließlich $1024$). 
+Das Bild wird also räumlich von $448x448$ auf $7x7$ komprimiert, während das Netz durch die mehr Kanäle auch zunehmend mehr abstrakte Merkmale extrahieren kann, d.h. von bloßen Kanten und Ecken hin zu ganzen Objektformen.  
 Zwiscchen den 3x3-Convolutional-Layern schalten die Autoren sogenannte 1x1-Convolutional-Layer ein, die die Kanaltiefe vorübergehend reduzieren. 
 Eine bewerte Methode, um den Rechenaufwand zu reduzieren (*Echtzeitverhalten*), ohne wesentliche Genauigkeit zu verlieren [@redmon2015, Kapitel 2.1].  
 
-2. **Predicition Head**  
+- **Predicition Head**  
 
 Die nun im Format $7x7x1024$ vorliegenden Maps mit den extrahierten Features werden abgeflacht (*flattened*) und durch zwei vollverbundene Schichten geleitet. 
-Dabei zunächst auf $4096$ Neuronen und dann direkt auf den finalen Ausgabetensor der Größe $7x7x1024$. 
-Dieser Tensor entspricht genau dem in Abschnitt 2.1 beschriebenen Grid mit Anzahl Zellen $S = 7$, Anzahl Boxen $B = 2$ und Anzahl Klassen $C = 20$. 
+Dabei zunächst auf $4096$ Neuronen und dann direkt auf den finalen Ausgabetensor der Größe $7x7x30$. 
+Dieser Tensor entspricht genau dem in Abschnitt 2.1 beschriebenen Grid mit Anzahl Zellen $S = 7$, Anzahl Boxen $B = 2$ und Anzahl Klassen $C = 20$.  
 Das Raster im $7x7$ Format ergibt sich also natürlich aus der Netzarchitektur selbst [@redmon2015, Abbildung 3]. 
 
 [^2]: ImageNet ist ein riesiger Bilddatensatz mit über 14 Millionen annotierten Bildern aus über 20.000 Klassen, der als Standard-Benchmark für das Vortraining von Bilderkennungsnetzen gilt. YOLO nutzt jedoch beim Vortraining nur die ILSVRC-Untermenge mit 1000 Klassen und ca. 1,2 Millionen Bildern [œredmon2015, Kapitel 2.2].
