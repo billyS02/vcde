@@ -216,11 +216,8 @@ window.Quarto = {
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 <section id="sec-zsm" class="level2">
 <h2 class="anchored" data-anchor-id="sec-zsm"><em>Zusammenfassung</em></h2>
-<p>[Diesen Absatz am Ende schreiben. Erwähnt werden sollten:<br>
-- Hintergründe für das Thema<br>
-- Zusammenfassung YOLO<br>
-- Ergebnisse YOLO<br>
-- Zusammenfassung Diskussion/Ausblick]</p>
+<p>Echtzeit-Objekterkennung ist im Kontext des autonomen Fahrens nicht nur eine akademische, sondern eine sicherheitskritische Anforderung. Klassische zweistufige Verfahren wie R-CNN sind zwar präzise, scheitern jedoch an der nötigen Geschwindigkeit. YOLO begegnet diesem Problem, indem es die Erkennung als ein einziges Regressionsproblem formuliert, d.h. Grid-System, Bounding Boxes und Confidence Score werden in einem einzigen Durchgang durch ein 24-schichtiges Convolutional-Netz berechnet und im <span class="math inline">\(7 \times 7 \times 30\)</span> Ausgabetensor kodiert. Mit YOLOv8 ist dieses Prinzip heute mit wenigen Zeilen Python praktisch einsetzbar und liefert auf Standard-Hardware bereits echtzeitfähige Ergebnisse.<br>
+Dennoch ist YOLO keine universelle Lösung: Verdeckung, kleine Objekte und schwierige Umgebungsbedingungen bleiben Herausforderungen, die je nach Einsatzszenario eine sorgfältige Modellwahl erfordern</p>
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 </section>
 <section id="sec-methodik" class="level2">
@@ -295,13 +292,13 @@ Die Autoren evaluierten ihr Modell auf <strong>PASCAL VOC</strong>, einem standa
 <ul>
 <li><strong>Feature-Extractor</strong></li>
 </ul>
-<p>24 Convolutional Layer verarbeiten das Eingabebild (<span class="math inline">\(448x448\)</span> Pixel) schrittweise. Vier zwischengeschaltene MaxPooling-Schichten halbieren dabei jeweils die räumliche Auflösung, während die Kanaltiefe gleichzeitig wächst (von ursprünglichen <span class="math inline">\(3\)</span> für RGB auf schließlich <span class="math inline">\(1024\)</span>). Das Bild wird also räumlich von <span class="math inline">\(448x448\)</span> auf <span class="math inline">\(7x7\)</span> komprimiert, während das Netz durch die mehr Kanäle auch zunehmend mehr abstrakte Merkmale extrahieren kann, d.h. von bloßen Kanten und Ecken hin zu ganzen Objektformen.<br>
+<p>24 Convolutional Layer verarbeiten das Eingabebild (<span class="math inline">\(448 \times 448\)</span> Pixel) schrittweise. Vier zwischengeschaltete MaxPooling-Schichten sowie ein abschließender Conv-Layer mit Stride 2 halbieren die räumliche Auflösung, während die Kanaltiefe gleichzeitig wächst (von ursprünglichen <span class="math inline">\(3\)</span> für RGB auf schließlich <span class="math inline">\(1024\)</span>). Das Bild wird also räumlich von <span class="math inline">\(448 \times 448\)</span> auf <span class="math inline">\(7 \times 7\)</span> komprimiert, während das Netz durch die mehr Kanäle auch zunehmend mehr abstrakte Merkmale extrahieren kann, d.h. von bloßen Kanten und Ecken hin zu ganzen Objektformen.<br>
 Zwiscchen den 3x3-Convolutional-Layern schalten die Autoren sogenannte 1x1-Convolutional-Layer ein, die die Kanaltiefe vorübergehend reduzieren. Eine bewerte Methode, um den Rechenaufwand zu reduzieren (<em>Echtzeitverhalten</em>), ohne wesentliche Genauigkeit zu verlieren <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>, Kapitel 2.1)</span>.</p>
 <ul>
 <li><strong>Predicition Head</strong></li>
 </ul>
-<p>Die nun im Format <span class="math inline">\(7x7x1024\)</span> vorliegenden Maps mit den extrahierten Features werden abgeflacht (<em>flattened</em>) und durch zwei vollverbundene Schichten geleitet. Dabei zunächst auf <span class="math inline">\(4096\)</span> Neuronen und dann direkt auf den finalen Ausgabetensor der Größe <span class="math inline">\(7x7x30\)</span>. Dieser Tensor entspricht genau dem in Abschnitt 2.1 beschriebenen Grid mit Anzahl Zellen <span class="math inline">\(S = 7\)</span>, Anzahl Boxen <span class="math inline">\(B = 2\)</span> und Anzahl Klassen <span class="math inline">\(C = 20\)</span>.<br>
-Das Raster im <span class="math inline">\(7x7\)</span> Format ergibt sich also natürlich aus der Netzarchitektur selbst <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>, Abbildung 3)</span>.</p>
+<p>Die nun im Format <span class="math inline">\(7 \times 7 \times 1024\)</span> vorliegenden Maps mit den extrahierten Features werden abgeflacht (<em>flattened</em>) und durch zwei vollverbundene Schichten geleitet. Dabei zunächst auf <span class="math inline">\(4096\)</span> Neuronen und dann direkt auf den finalen Ausgabetensor der Größe <span class="math inline">\(7 \times 7 \times 30\)</span>. Dieser Tensor entspricht genau dem in Abschnitt 2.1 beschriebenen Grid mit Anzahl Zellen <span class="math inline">\(S = 7\)</span>, Anzahl Boxen <span class="math inline">\(B = 2\)</span> und Anzahl Klassen <span class="math inline">\(C = 20\)</span>.<br>
+Das Raster im <span class="math inline">\(7 \times 7\)</span> Format ergibt sich also natürlich aus der Netzarchitektur selbst <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>, Abbildung 3)</span>.</p>
 </section>
 <section id="yolo-versionen" class="level3">
 <h3 class="anchored" data-anchor-id="yolo-versionen">2.3 YOLO-Versionen</h3>
@@ -343,7 +340,7 @@ Das Raster im <span class="math inline">\(7x7\)</span> Format ergibt sich also n
 <p>Die Bibliothek <code>ultralytics</code> enthält YOLOv8 inklusive aller Abhängigkeiten (u.a. PyTorch).<br>
 <code>opencv-python</code> wird für das Einlesen und Verarbeiten von Bild- und Videodaten sowie die Ansteuerung von Kamera und Peripherie verwendet.</p>
 <p><strong>Überprüfen der Installation:</strong></p>
-<div id="38bd440f" class="cell" data-execution_count="1">
+<div id="e84d4283" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ultralytics</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -366,7 +363,7 @@ OpenCV Version:      4.13.0</code></pre>
 <h3 class="anchored" data-anchor-id="objekterkennung-im-straßenverkehr">3.2 Objekterkennung im Straßenverkehr</h3>
 <p>Als Testmedium dienen verschiedene frei verfügbares Video aus dem Kontext <em>Straßenverkehr</em>. Diese werdem Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und die erkannten Objekte anschließend mit Bounding Boxes versehen.</p>
 <p><strong>Modell laden:</strong></p>
-<div id="f37697d9" class="cell" data-execution_count="2">
+<div id="e3c97764" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> YOLO(<span class="st">"yolov8n.pt"</span>)</span>
@@ -375,61 +372,67 @@ OpenCV Version:      4.13.0</code></pre>
 </div>
 <p>YOLOv8 steht in verschiedenen Größen zur Verfügung, von <code>yolov8n.pt</code> (Nano, schneller) bis <code>yolov8x.pt</code> (Extra Large, genauer). Für dieses Projekt wird <code>yolov8s.pt</code> (Small) verwendet, da es eine gute Balance zwischen Geschwindigkeit und Genauigkeit bietet.</p>
 <p><strong>Verarbeitungsfunktion definieren:</strong></p>
-<div id="5c3e3efe" class="cell" data-execution_count="3">
+<div id="33602ad0" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2, random, time</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Farbe pro Klasse definieren</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Jeder Klasse wird eine eindeutige reproduzierbare Farbe zugewiesen (z.B. "Auto" immer blau)</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_color(cls_id):</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    random.seed(cls_id)</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">tuple</span>(random.randint(<span class="dv">0</span>, <span class="dv">255</span>) <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>))</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Frame-für-Frame-Verarbeitung mit YOLO</span></span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> process_video(input_video_path, output_path):</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    cap    <span class="op">=</span> cv2.VideoCapture(input_video_path)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    fps    <span class="op">=</span> cap.get(cv2.CAP_PROP_FPS)</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    width  <span class="op">=</span> <span class="bu">int</span>(cap.get(cv2.CAP_PROP_FRAME_WIDTH))</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    height <span class="op">=</span> <span class="bu">int</span>(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    out    <span class="op">=</span> cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(<span class="op">*</span><span class="st">"MP4V"</span>), fps, (width, height))</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    frame_count <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    start <span class="op">=</span> time.time()</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        ret, frame <span class="op">=</span> cap.read()</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> ret:</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>        results <span class="op">=</span> model(frame, verbose<span class="op">=</span><span class="va">False</span>)   <span class="co"># HIER WIRD DAS MODELL VERWENDET</span></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> result <span class="kw">in</span> results:</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> box <span class="kw">in</span> result.boxes:</span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> box.conf[<span class="dv">0</span>] <span class="op">&gt;</span> <span class="fl">0.4</span>:</span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>                    x1, y1, x2, y2 <span class="op">=</span> <span class="bu">map</span>(<span class="bu">int</span>, box.xyxy[<span class="dv">0</span>])</span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>                    cls   <span class="op">=</span> <span class="bu">int</span>(box.cls[<span class="dv">0</span>])</span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>                    label <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>result<span class="sc">.</span>names[cls]<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span><span class="bu">float</span>(box.conf[<span class="dv">0</span>])<span class="sc">:.2f}</span><span class="ss">"</span></span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>                    color <span class="op">=</span> get_color(cls)</span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>                    cv2.rectangle(frame, (x1, y1), (x2, y2), color, <span class="dv">2</span>)</span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>                    cv2.putText(frame, label, (x1, <span class="bu">max</span>(y1 <span class="op">-</span> <span class="dv">10</span>, <span class="dv">20</span>)),</span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>                                cv2.FONT_HERSHEY_SIMPLEX, <span class="fl">0.6</span>, color, <span class="dv">2</span>)</span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>        frame_count <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>        out.write(frame)</span>
-<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>    elapsed <span class="op">=</span> time.time() <span class="op">-</span> start</span>
-<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Verarbeitete Frames: </span><span class="sc">{</span>frame_count<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Gesamtzeit: </span><span class="sc">{</span>elapsed<span class="sc">:.2f}</span><span class="ss">s"</span>)</span>
-<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Durchschnittliche FPS: </span><span class="sc">{</span>frame_count<span class="op">/</span>elapsed<span class="sc">:.1f}</span><span class="ss">"</span>)</span>
-<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    cap.release()</span>
-<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>    out.release()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Video einlesen und Metadaten (FPS, Auflösung) auslesen</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    cap    <span class="op">=</span> cv2.VideoCapture(input_video_path)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    fps    <span class="op">=</span> cap.get(cv2.CAP_PROP_FPS)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    width  <span class="op">=</span> <span class="bu">int</span>(cap.get(cv2.CAP_PROP_FRAME_WIDTH))</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    height <span class="op">=</span> <span class="bu">int</span>(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Ausgabedatei mit gleicher Auflösung und FPS wie Eingabe vorbereiten</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    out    <span class="op">=</span> cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(<span class="op">*</span><span class="st">"MP4V"</span>), fps, (width, height))</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Optional: Laufzeitstatistik initalsieren</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># frame_count = 0</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># start = time.time()</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>        ret, frame <span class="op">=</span> cap.read()</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> ret:</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span>   <span class="co"># Ende des Videos erreicht</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Aktuellen Frame durch YOLO schicken; gibt Bounding Boxes, Klassen und Confidence zurück</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>        results <span class="op">=</span> model(frame, verbose<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> result <span class="kw">in</span> results:</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Nur Boxen mit Confidence &gt; 40% anzeigen (niedrigere Werte sind meist Fehler)</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> box <span class="kw">in</span> result.boxes:</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> box.conf[<span class="dv">0</span>] <span class="op">&gt;</span> <span class="fl">0.4</span>:</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>                    x1, y1, x2, y2 <span class="op">=</span> <span class="bu">map</span>(<span class="bu">int</span>, box.xyxy[<span class="dv">0</span>])                    <span class="co"># Eckpunkte der Bounding Box</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>                    cls   <span class="op">=</span> <span class="bu">int</span>(box.cls[<span class="dv">0</span>])                                   <span class="co"># Klassen-ID (z.B. 2 = Auto)</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>                    label <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>result<span class="sc">.</span>names[cls]<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span><span class="bu">float</span>(box.conf[<span class="dv">0</span>])<span class="sc">:.2f}</span><span class="ss">"</span>   <span class="co"># Beispiel "car 0.87"</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>                    color <span class="op">=</span> get_color(cls)</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>                    <span class="co"># Bounding Box und Label in den Frame zeichnen</span></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>                    cv2.rectangle(frame, (x1, y1), (x2, y2), color, <span class="dv">2</span>)</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>                    cv2.putText(frame, label, (x1, <span class="bu">max</span>(y1 <span class="op">-</span> <span class="dv">10</span>, <span class="dv">20</span>)),</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>                                cv2.FONT_HERSHEY_SIMPLEX, <span class="fl">0.6</span>, color, <span class="dv">2</span>)</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Verarbeiteten Frame in Ausgabevideo schreiben</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>        out.write(frame)</span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Optional: Laufzeitstatistik ausgeben</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>    <span class="co"># elapsed = time.time() - start</span></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(f"Verarbeitete Frames: {frame_count}")</span></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(f"Gesamtzeit: {elapsed:.2f}s")</span></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(f"Durchschnittliche FPS: {frame_count/elapsed:.1f}")</span></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>    cap.release()</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>    out.release()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>Demonstration mit Video<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>:</strong></p>
 <p>Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab. Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos 40–100+ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise 5–25 FPS realistisch.</p>
-<div id="5ab34b60" class="cell" data-execution_count="4">
-<div class="cell-output cell-output-stdout">
-<pre><code>Verarbeitete Frames: 1501
-Gesamtzeit: 111.72s
-Durchschnittliche FPS: 13.4</code></pre>
-</div>
-</div>
-<div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="./img/autobahn_h264.mp4"></video></div>
+<div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="./img/autobahn.mp4"></video></div>
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 </section>
 </section>
@@ -1070,9 +1073,6 @@ function drawLoop() {
     </span>
     <span style="display:flex;align-items:center;gap:4px;">
       <span style="width:9px;height:9px;border-radius:50%;background:#E24B4A;display:inline-block;"></span>Objektmittelpunkt
-    </span>
-    <span style="display:flex;align-items:center;gap:4px;">
-      <span style="font-size:11px;color:#888;">⚠ GitHub Pages: ~2 FPS (kein WebGPU)</span>
     </span>
   </div>
 
