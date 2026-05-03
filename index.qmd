@@ -291,7 +291,7 @@ def process_video(input_video_path, output_path):
     out.release()
 ```
 
-**Demonstration mit Video[^3]:**
+**Demonstration mit Video**[^3]**:**
 
 Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab. 
 Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos 40–100+ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise 5–25 FPS realistisch. 
@@ -319,7 +319,7 @@ os.close(old_stderr)
 ```
 {{< video ./img/autobahn_h264.mp4 >}}   <!-- Es musste auf ein h264-Format ausgewichen werden, damit das Video auf Safari und Google-Chrome angezeigt werden kann -->
 
-[^3]: Siehe Beispielvideo von [GeeksForGeeks](https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4).
+[^3]: Beispiel-Eingabevideo bei [GeeksForGeeks](https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4) erreichbar.
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
