@@ -146,7 +146,7 @@ Dabei zunächst auf $4096$ Neuronen und dann direkt auf den finalen Ausgabetenso
 Dieser Tensor entspricht genau dem in Abschnitt 2.1 beschriebenen Grid mit Anzahl Zellen $S = 7$, Anzahl Boxen $B = 2$ und Anzahl Klassen $C = 20$.  
 Das Raster im $7x7$ Format ergibt sich also natürlich aus der Netzarchitektur selbst [@redmon2015, Abbildung 3]. 
 
-[^2]: ImageNet ist ein riesiger Bilddatensatz mit über 14 Millionen annotierten Bildern aus über 20.000 Klassen, der als Standard-Benchmark für das Vortraining von Bilderkennungsnetzen gilt. YOLO nutzt jedoch beim Vortraining nur die ILSVRC-Untermenge mit 1000 Klassen und ca. 1,2 Millionen Bildern [œredmon2015, Kapitel 2.2].
+[^2]: ImageNet ist ein riesiger Bilddatensatz mit über 14 Millionen annotierten Bildern aus über 20.000 Klassen, der als Standard-Benchmark für das Vortraining von Bilderkennungsnetzen gilt. YOLO nutzt jedoch beim Vortraining nur die ILSVRC-Untermenge mit 1000 Klassen und ca. 1,2 Millionen Bildern [@redmon2015, Kapitel 2.2].
 
 ### 2.3 YOLO-Versionen
 
@@ -1195,8 +1195,8 @@ function drawLoop() {
 
 ## Fazit {#sec-fazit}
 
-[Dieseen Abschnitt am Ende verfassen. Dient als Zusammenfassung von Kapitel *1. Einordnung* bishin zu Kapitel *5. Ausblick*].
-
+YOLO löst das in [Abschnitt 1]{#sec-einordnung} beschriebene Problem der Echtzeit-Objekterkennung konsequent. Statt ein Bild in mehreren Schritten zu verarbeiten, formuliert es die Erkennung als ein einziges Regressionsproblem: Einmal durch das Netz, ein Ausgabetensor, alle Ergebnisse. 
+Die Implementierung mit YOLOv8 in [Abschnitt 3]{#sec-implementierung} zeigt, dass dieses Prinzip heute mit wenigen Zeilen Python produktiv einsetzbar ist, und die interaktiven Demos in [Abschnitt 4]{#sec-eigentests} machen die zugrundeliegenden Konzepte direkt erfahrbar. 
 
 So leistungsfähig YOLO auch ist gibt es Szenarien, in denen das System an seine Grenzen stößt. 
 Diese zu kennen sind wichtig, um die Ergebnisse im Demo-Kapitel korrekt einordnen zu können.
