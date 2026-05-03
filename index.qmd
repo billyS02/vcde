@@ -39,7 +39,7 @@ Zur Einführung und der darauffolgenden Implementierung dieser, beginnt dieses P
 
 \n
 
-Die Brücke zu YOLO wird über das gleichnamige Kapitel [YOLO: Intro](#sec-intro) geschlagen, wo dem Leser die Geschichte und die Natur der verwendeteten Technologie nahegelegt und mit anderen Standards verglichen werden.
+Die Brücke zu YOLO wird über den gleichnamigen Abschnitt [YOLO: Intro](#sec-intro) geschlagen, wo dem Leser die Geschichte und die Natur der verwendeteten Technologie nahegelegt und mit anderen Standards verglichen werden.
 
 \n
 
@@ -50,7 +50,7 @@ Die Implementierung wird anhand eines frei verfügbaren Videos aus dem Straßenv
 
 \n
 
-Daraufhin folgen in Kapitel [YOLO: Eigentests](#sec-eigentests) drei **interaktive Demos**, die direkt hier im Browser laufen, ohne lokale Installation.
+Daraufhin folgen im Abschnitt [YOLO: Eigentests](#sec-eigentests) drei **interaktive Demos**, die direkt hier im Browser laufen, ohne lokale Installation.
 Der Leser kann eigene Bilder hochladen, den Grid-Mechanismus und Confidence-Schwellwert live anpassen sowie einen Echtzeit-Videostream über die eigene Kamera testen.
 
 \n
@@ -102,7 +102,7 @@ Wir erinnern uns: Zweistufige Verfahren wie R-CNN beginnen hingegen mit sog. *Re
 Das sog. **Grid-System** macht die Verarbeitung eines ganzen Bildes in einem einzigen Netz erst möglich.
 Das Eingabebild wird dabei in ein gleichmäßiges Raster $S \times S$ aufgeteilt und wie eine Schablone über das Bild gelegt.
 Jede dieser Rasterzellen übernimmt dann die Verantwortung für genau den Bildbereich, den sie abdeckt.
-Konkret gilt: Fällt der Mittelpunkt eines Objekts in eine bestimme Zelle, ist genau diese für die Erkennung dieses Objektes verantworklich [@redmon2015, Abschnitt 2].
+Konkret gilt: Fällt der Mittelpunkt eines Objekts in eine bestimme Zelle, ist genau diese für die Erkennung dieses Objektes verantworklich [@redmon2015, Kapitel 2].
 
 ![Das Bild wird in ein $S \times S$ Grid aufgeteilt. Jede Zelle sagt $B$ Bounding Boxes mit Confidence und $C$ Klassenwahrscheinlichkeiten voraus. Alles kodiert in einem einzigen Tesnor: $S \times S \times (B \cdot 5 + C)$. [@redmon2015, Abbildung 2]](./img/yolo_SSGrid.png){fig-align="center"}  
 
@@ -1195,7 +1195,7 @@ function drawLoop() {
 
 ## Fazit {#sec-fazit}
 
-[Dieses Kapitel am Ende verfassen. Dient als Zusammenfassung von Kapitel *1. Einordnung* bishin zu Kapitel *5. Ausblick*].
+[Dieseen Abschnitt am Ende verfassen. Dient als Zusammenfassung von Kapitel *1. Einordnung* bishin zu Kapitel *5. Ausblick*].
 
 
 So leistungsfähig YOLO auch ist gibt es Szenarien, in denen das System an seine Grenzen stößt. 
@@ -1203,7 +1203,7 @@ Diese zu kennen sind wichtig, um die Ergebnisse im Demo-Kapitel korrekt einordne
 
 **Occlusion (Verdeckung):** Da jede Rasterzelle nur eine Klasse vorhersagen kann, hat YOLO Schwierigkeiten, wenn mehrere Objekte derselben Klasse eng beieinanderliegen oder sich gar überlappen. 
 Zum Beispiel eine Menschenmenge oder dicht aufgefahrene Fahrzeuge. 
-Verdeckte Objekte werden oft auch gar nicht oder als falsche Klasse erkannt [@redmon2015, Abschnitt 2.4; @terven2023, Seite 29].
+Verdeckte Objekte werden oft auch gar nicht oder als falsche Klasse erkannt [@redmon2015, Kapitel 2.4; @terven2023, Seite 29].
 
 **Kleine Objekte:** Das Grid-System ist von Natur aus eine Vergröberung des Bildes. 
 Sehr kleine Objekte, die vielleicht nur in einer einzigen Zelle liegen, gehen dabei leicht unter. 
