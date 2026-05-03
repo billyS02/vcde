@@ -55,7 +55,7 @@ Der Leser kann eigene Bilder hochladen, den Grid-Mechanismus und Confidence-Schw
 
 \n
 
-Abgeschlossen wird das Thema mit [Fazit](#sec-fazit), wo die **Ergebnisse und künftigen Entwicklungen** von YOLO diskutiert und für etwaige Anwendungen geeignetere Modelle vorgeschlagen werden.
+Abgeschlossen wird das Thema mit [Fazit](#sec-fazit), wo die **Ergebnisse und Herausforderungen** von YOLO diskutiert werden.
 
 
 [^1]: Aus Gründen der Lesbarkeit wird im Verlauf der gesamten Webseite das generische Maskulinum verwendet.
@@ -325,10 +325,10 @@ os.close(old_stderr)
 
 ## 4. YOLO: Eigentests {#sec-eigentests}
 
-**Hinweis:** Die folgenden Demos laufen direkt im Browser ohne lokale Installation. 
+Die folgenden Demos laufen direkt im Browser ohne lokale Installation. 
 Möglich macht das das zuvor exportierte Modell `yolov8n.onnx`, das über die Bibliohtek `onnxruntime-web` direkt im Browser ausgeführt wird [^4].  
 Aufgrund technischer Einschränkungen des Hostings (GitHub Pages) ist die Inferenzgeschwindigkeit bei Video und Webcam auf geringere FPS begrenzt. 
-Die Objekterkennung funktioniert korrekt, läuft jedoch nicht in optimaler Echtzeit.  
+Die Objekterkennung funktioniert korrekt, läuft jedoch nicht in optimaler Echtzeit. 
 Diese Demos dienen somit in erster Linie dem **tieferen Verständnis** des Lesers.
 
 [^4]: Der vollständige Code inkl. Modell für diese Umsetzung ist im [GitHub-Repository](https://github.com/billyS02/vcde) einsehbar.
@@ -449,7 +449,7 @@ let rawBoxes   = [];     // alle Boxen über minConf=0.05
 // ── Modell laden ────────────────────────────────────────────────────────────
 ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/';
 
-status.textContent = 'STATUS: Lade YOLO-Modell …';
+status.textContent = 'STATUS: Lade YOLO-Modell (bitte noch keine Medien hochladen) …';
 ort.InferenceSession.create('./models/yolov8n.onnx', {
   executionProviders: ['webgpu', 'wasm']
 }).then(s => {
