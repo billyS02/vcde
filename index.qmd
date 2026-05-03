@@ -25,7 +25,7 @@ bibliography: references.bib
 ## *Zusammenfassung* {#sec-zsm} 
 
 Echtzeit-Objekterkennung ist im Kontext des autonomen Fahrens nicht nur eine akademische, sondern eine sicherheitskritische Anforderung. 
-Klassische zweistufige Verfahren wie R-CNN sind zwar präzise, scheitern jedoch an der nötigen Geschwindigkeit. 
+Klassische zweistufige Verfahren wie R-CNN sind zwar präzise, scheitern jedoch an der nötigen Geschwindigkeit.  
 YOLO begegnet diesem Problem, indem es die Erkennung als ein einziges Regressionsproblem formuliert, d.h. Grid-System, Bounding Boxes und Confidence Score werden in einem einzigen Durchgang durch ein 24-schichtiges Convolutional-Netz berechnet und im $7 \times 7 \times 30$ Ausgabetensor kodiert. 
 Mit YOLOv8 ist dieses Prinzip heute mit wenigen Zeilen Python praktisch einsetzbar und liefert auf Standard-Hardware bereits echtzeitfähige Ergebnisse.  
 Dennoch ist YOLO keine universelle Lösung: Verdeckung, kleine Objekte und schwierige Umgebungsbedingungen bleiben Herausforderungen, die je nach Einsatzszenario eine sorgfältige Modellwahl erfordern
@@ -221,7 +221,7 @@ Diese werdem Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und 
 ```{python}
 from ultralytics import YOLO
 
-model = YOLO("yolov8n.pt")
+model = YOLO("yolov8s.pt")
 
 # OUTPUT:
 ```
@@ -316,7 +316,7 @@ os.dup2(old_stderr, 2)
 os.close(devnull)
 os.close(old_stderr)
 ```
-{{< video ./img/autobahn.mp4 >}}
+{{< video ./img/autobahn_h264.mp4 >}}   // Es musste auf ein h264-Format ausgewichen werden, damit das Video auf Safari und Google-Chrome angezeigt werden kann
 
 [^3]: Siehe Beispielvideo von [GeeksForGeeks](https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4).
 
