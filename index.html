@@ -226,9 +226,9 @@ window.Quarto = {
 <section id="sec-methodik" class="level2">
 <h2 class="anchored" data-anchor-id="sec-methodik">Methodik</h2>
 <p>Die Echtzeit-Objekterkennung erfolgt in diesem Projekt über die frei verfügbaren Technologien <strong>YOLO</strong> und <strong>OpenCV</strong>. Zur Einführung und der darauffolgenden Implementierung dieser, beginnt dieses Projekt mit einer kurzen <a href="#sec-einordnung">Einordnung</a> der <strong>Objekterkennung</strong> als Wiederholung, um dem Leser<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> die <strong>Vernetzung</strong> des Kernthemas zu anderen Tehmen zu erleichtern.</p>
-<p>Die Brücke zu YOLO wird über das gleichnamige Kapitel <a href="#sec-intro">YOLO: Intro</a> geschlagen, wo dem Leser die Geschichte und die Natur der verwendeteten Technologie nahegelegt und mit anderen Standards verglichen werden.</p>
+<p>Die Brücke zu YOLO wird über den gleichnamigen Abschnitt <a href="#sec-intro">YOLO: Intro</a> geschlagen, wo dem Leser die Geschichte und die Natur der verwendeteten Technologie nahegelegt und mit anderen Standards verglichen werden.</p>
 <p>In <a href="#sec-implementierung">YOLO: Implementierung</a> erfolgt die sukzessive Bearbeitung der Problemstellung. Zugleich werden die <strong>System Requierements</strong> abgearbeitet (z.B. das Erstellen eines Virtual Environments oder das Installieren von notwendigen Bibliotheken), um die Schritt-für-Schritt <strong>Reproduzierbarkeit</strong> Seitens des Lesers zu gewährleisten. Dazugehörige Code-Snippets stehen im gesamten Verlauf dieser Webseite ebenso zur Verfügung und können direkt in die eigene Entwicklungsumgebung (VSCode, etc.) kopiert werden. Die Implementierung wird anhand eines frei verfügbaren Videos aus dem Straßenverkehr demonstriert und getestet.</p>
-<p>Daraufhin folgen in Kapitel <a href="#sec-eigentests">YOLO: Eigentests</a> drei <strong>interaktive Demos</strong>, die direkt hier im Browser laufen, ohne lokale Installation. Der Leser kann eigene Bilder hochladen, den Grid-Mechanismus und Confidence-Schwellwert live anpassen sowie einen Echtzeit-Videostream über die eigene Kamera testen.</p>
+<p>Daraufhin folgen im Abschnitt <a href="#sec-eigentests">YOLO: Eigentests</a> drei <strong>interaktive Demos</strong>, die direkt hier im Browser laufen, ohne lokale Installation. Der Leser kann eigene Bilder hochladen, den Grid-Mechanismus und Confidence-Schwellwert live anpassen sowie einen Echtzeit-Videostream über die eigene Kamera testen.</p>
 <p>Abgeschlossen wird das Thema mit <a href="#sec-fazit">Fazit</a>, wo die <strong>Ergebnisse und künftigen Entwicklungen</strong> von YOLO diskutiert und für etwaige Anwendungen geeignetere Modelle vorgeschlagen werden.</p>
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 </section>
@@ -258,7 +258,7 @@ window.Quarto = {
 </div>
 <section id="ablauf" class="level3">
 <h3 class="anchored" data-anchor-id="ablauf">2.1 Ablauf</h3>
-<p>Das sog. <strong>Grid-System</strong> macht die Verarbeitung eines ganzen Bildes in einem einzigen Netz erst möglich. Das Eingabebild wird dabei in ein gleichmäßiges Raster <span class="math inline">\(S \times S\)</span> aufgeteilt und wie eine Schablone über das Bild gelegt. Jede dieser Rasterzellen übernimmt dann die Verantwortung für genau den Bildbereich, den sie abdeckt. Konkret gilt: Fällt der Mittelpunkt eines Objekts in eine bestimme Zelle, ist genau diese für die Erkennung dieses Objektes verantworklich <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>, Abschnitt 2)</span>.</p>
+<p>Das sog. <strong>Grid-System</strong> macht die Verarbeitung eines ganzen Bildes in einem einzigen Netz erst möglich. Das Eingabebild wird dabei in ein gleichmäßiges Raster <span class="math inline">\(S \times S\)</span> aufgeteilt und wie eine Schablone über das Bild gelegt. Jede dieser Rasterzellen übernimmt dann die Verantwortung für genau den Bildbereich, den sie abdeckt. Konkret gilt: Fällt der Mittelpunkt eines Objekts in eine bestimme Zelle, ist genau diese für die Erkennung dieses Objektes verantworklich <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>, Kapitel 2)</span>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="./img/yolo_SSGrid.png" class="img-fluid figure-img"></p>
@@ -283,8 +283,26 @@ window.Quarto = {
 <p>Das <strong>Gesamtmodell</strong> fasst alle Vorhersagen aller Zellen in einer einzigen verschachtelten Zahlenstruktur zusammen (<em>Tensor</em>, vereinfacht gesagt ein mehrdimensionales Array). Seine Dimension ist <span class="math inline">\(S \times S \times (B \cdot 5 + C)\)</span>, d.h. jede der <span class="math inline">\(S \times S\)</span> Zellen werden <span class="math inline">\(B\)</span> Boxen mit je 5 Werten sowie <span class="math inline">\(C\)</span> Klassenwahrscheinlichkeiten gespeichert.<br>
 Die Autoren evaluierten ihr Modell auf <strong>PASCAL VOC</strong>, einem standardisierten Benchmark-Datensatz für Objekterkennung mit 20 vordefinierten Klassen (u.a. Auto, Person, Hund), der in der Computer-Vision-Forschung als gemeinsame Vergleichsbasis weit verbreitet ist. Mit <span class="math inline">\(S = 7\)</span>, <span class="math inline">\(B = 2\)</span> und <span class="math inline">\(C = 20\)</span> ergibt sich ein Ausgabe-Tensor der Größe <span class="math inline">\(7 \times 7 \times 30\)</span>.</p>
 </section>
+<section id="architektur" class="level3">
+<h3 class="anchored" data-anchor-id="architektur">2.2 Architektur</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./img/yolo_arch.png" class="img-fluid figure-img"></p>
+<figcaption>Die grundlegende Architektur des Modells, wie es 2015 veröffentlicht wurde. <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>, Abbildung 3)</span></figcaption>
+</figure>
+</div>
+<p>Das YOLO-Netz besteht aus zwei klar getrenten Phasen, die auf ImageNet<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> trainiert wurden:</p>
+<ol type="1">
+<li><strong>Feature-Extractor</strong></li>
+</ol>
+<p>24 Convolutional Layer verarbeiten das Eingabebild (<span class="math inline">\(448x448\)</span> Pixel) schrittweise. Fünf zwischengeschaltene MaxPooling-Schichten halbieren dabei jeweils die räumliche Auflösung, während die Kanaltiefe gleichzeitig wächst (von ursprünglichen <span class="math inline">\(3\)</span> für RGB auf schließlich <span class="math inline">\(1024\)</span>). Das Bild wird also räumlich von <span class="math inline">\(448x448\)</span> auf <span class="math inline">\(7x7\)</span> komprimiert, während das Netz durch die mehr Kanäle auch zunehmend mehr abstrakte Merkmale extrahieren kann, d.h. von bloßen Kanten und Ecken hin zu ganzen Objektformen. Zwiscchen den 3x3-Convolutional-Layern schalten die Autoren sogenannte 1x1-Convolutional-Layer ein, die die Kanaltiefe vorübergehend reduzieren. Eine bewerte Methode, um den Rechenaufwand zu reduzieren (<em>Echtzeitverhalten</em>), ohne wesentliche Genauigkeit zu verlieren <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>, Kapitel 2.1)</span>.</p>
+<ol start="2" type="1">
+<li><strong>Predicition Head</strong></li>
+</ol>
+<p>Die nun im Format <span class="math inline">\(7x7x1024\)</span> vorliegenden Maps mit den extrahierten Features werden abgeflacht (<em>flattened</em>) und durch zwei vollverbundene Schichten geleitet. Dabei zunächst auf <span class="math inline">\(4096\)</span> Neuronen und dann direkt auf den finalen Ausgabetensor der Größe <span class="math inline">\(7x7x1024\)</span>. Dieser Tensor entspricht genau dem in Abschnitt 2.1 beschriebenen Grid mit Anzahl Zellen <span class="math inline">\(S = 7\)</span>, Anzahl Boxen <span class="math inline">\(B = 2\)</span> und Anzahl Klassen <span class="math inline">\(C = 20\)</span>. Das Raster im <span class="math inline">\(7x7\)</span> Format ergibt sich also natürlich aus der Netzarchitektur selbst <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>, Abbildung 3)</span>.</p>
+</section>
 <section id="yolo-versionen" class="level3">
-<h3 class="anchored" data-anchor-id="yolo-versionen">2.2 YOLO-Versionen</h3>
+<h3 class="anchored" data-anchor-id="yolo-versionen">2.3 YOLO-Versionen</h3>
 <p>Seit der Erstveröffentlichung 2015 wurde YOLO stetig weiterentwickelt. Jede Version adressierte konkrete Schwächen der Vorgängerversion: Scheinbar mal in Richtung Geschwindigkeit, mal in Richtung Genauigkeit und mal in Richtung einfacherer Nutzbarkeit.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -300,15 +318,6 @@ Die Autoren evaluierten ihr Modell auf <strong>PASCAL VOC</strong>, einem standa
 <li><strong>YOLOv4/v5 (2020):</strong> Community-getriebene Weiterentwicklungen mit zahlreichen Trainingstricks; YOLOv5 vollzog den Wechsel zu PyTorch und vereinfachte den Export auf Edge-Geräte erheblich <span class="citation" data-cites="terven2023">(<a href="#ref-terven2023" role="doc-biblioref">Terven and Cordova-Esparza 2023</a>, Kapitel 9)</span>.</li>
 <li><strong><u>YOLOv8</u> (2023):</strong> Die aktuell verbreitetste Version. Kernerneuerung ist die <em>anchor-free</em> Architektur: Statt vordefinierten Acnhor Boxes lernt das Modell Boxpositionen direkt, was den Trainingsprozess vereinfacht und die Genauigkeit steigert. Zudem wurde ein <em>decoupled head</em> eingeführt, der Klassifizierung und Lokalisation in getrennten Zweigen berechnet <span class="citation" data-cites="jocher2023">(<a href="#ref-jocher2023" role="doc-biblioref">Jocher et al. 2023</a>)</span>.</li>
 </ul>
-</section>
-<section id="architektur" class="level3">
-<h3 class="anchored" data-anchor-id="architektur">2.3 Architektur</h3>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./img/yolo_arch.png" class="img-fluid figure-img"></p>
-<figcaption>XYZ. <span class="citation" data-cites="ABC">(<a href="#ref-ABC" role="doc-biblioref"><strong>ABC?</strong></a>, Abbildung X)</span></figcaption>
-</figure>
-</div>
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 </section>
 </section>
@@ -332,7 +341,7 @@ Die Autoren evaluierten ihr Modell auf <strong>PASCAL VOC</strong>, einem standa
 <p>Die Bibliothek <code>ultralytics</code> enthält YOLOv8 inklusive aller Abhängigkeiten (u.a. PyTorch).<br>
 <code>opencv-python</code> wird für das Einlesen und Verarbeiten von Bild- und Videodaten sowie die Ansteuerung von Kamera und Peripherie verwendet.</p>
 <p><strong>Überprüfen der Installation:</strong></p>
-<div id="ab68afa1" class="cell" data-execution_count="1">
+<div id="c0d1baef" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ultralytics</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -355,7 +364,7 @@ OpenCV Version:      4.13.0</code></pre>
 <h3 class="anchored" data-anchor-id="objekterkennung-im-straßenverkehr">3.2 Objekterkennung im Straßenverkehr</h3>
 <p>Als Testmedium dienen verschiedene frei verfügbares Video aus dem Kontext <em>Straßenverkehr</em>. Diese werdem Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und die erkannten Objekte anschließend mit Bounding Boxes versehen.</p>
 <p><strong>Modell laden:</strong></p>
-<div id="c2bec9f5" class="cell" data-execution_count="2">
+<div id="f73e9321" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> YOLO(<span class="st">"yolov8n.pt"</span>)</span>
@@ -364,7 +373,7 @@ OpenCV Version:      4.13.0</code></pre>
 </div>
 <p>YOLOv8 steht in verschiedenen Größen zur Verfügung, von <code>yolov8n.pt</code> (Nano, schneller) bis <code>yolov8x.pt</code> (Extra Large, genauer). Für dieses Projekt wird <code>yolov8s.pt</code> (Small) verwendet, da es eine gute Balance zwischen Geschwindigkeit und Genauigkeit bietet.</p>
 <p><strong>Verarbeitungsfunktion definieren:</strong></p>
-<div id="02281311" class="cell" data-execution_count="3">
+<div id="9ecc6cb0" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2, random, time</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Farbe pro Klasse definieren</span></span>
@@ -409,13 +418,13 @@ OpenCV Version:      4.13.0</code></pre>
 <span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    cap.release()</span>
 <span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>    out.release()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p><strong>Demonstration mit Video<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</strong></p>
+<p><strong>Demonstration mit Video<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>:</strong></p>
 <p>Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab. Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos 40–100+ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise 5–25 FPS realistisch.</p>
-<div id="49ddc3e3" class="cell" data-execution_count="4">
+<div id="221d97de" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-stdout">
 <pre><code>Verarbeitete Frames: 1501
-Gesamtzeit: 103.83s
-Durchschnittliche FPS: 14.5</code></pre>
+Gesamtzeit: 114.52s
+Durchschnittliche FPS: 13.1</code></pre>
 </div>
 </div>
 <div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="./img/autobahn_h264.mp4"></video></div>
@@ -424,7 +433,7 @@ Durchschnittliche FPS: 14.5</code></pre>
 </section>
 <section id="sec-eigentests" class="level2">
 <h2 class="anchored" data-anchor-id="sec-eigentests">4. YOLO: Eigentests</h2>
-<p><strong>Hinweis:</strong> Die folgenden Demos laufen direkt im Browser ohne lokale Installation. Möglich macht das das zuvor exportierte Modell <code>yolov8n.onnx</code>, das über die Bibliohtek <code>onnxruntime-web</code> direkt im Browser ausgeführt wird <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.<br>
+<p><strong>Hinweis:</strong> Die folgenden Demos laufen direkt im Browser ohne lokale Installation. Möglich macht das das zuvor exportierte Modell <code>yolov8n.onnx</code>, das über die Bibliohtek <code>onnxruntime-web</code> direkt im Browser ausgeführt wird <a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.<br>
 Aufgrund technischer Einschränkungen des Hostings (GitHub Pages) ist die Inferenzgeschwindigkeit bei Video und Webcam auf ca. 2-5 FPS begrenzt. Die Objekterkennung funktioniert korrekt, läuft jedoch nicht in Echtzeit.<br>
 Diese Demos dienen somit in erster Linie dem <strong>tieferen Verständnis</strong> des Lesers.</p>
 <section id="grid-manipulation" class="level3">
@@ -1280,9 +1289,9 @@ function drawLoop() {
 </section>
 <section id="sec-fazit" class="level2">
 <h2 class="anchored" data-anchor-id="sec-fazit">Fazit</h2>
-<p>[Dieses Kapitel am Ende verfassen. Dient als Zusammenfassung von Kapitel <em>1. Einordnung</em> bishin zu Kapitel <em>5. Ausblick</em>].</p>
+<p>[Dieseen Abschnitt am Ende verfassen. Dient als Zusammenfassung von Kapitel <em>1. Einordnung</em> bishin zu Kapitel <em>5. Ausblick</em>].</p>
 <p>So leistungsfähig YOLO auch ist gibt es Szenarien, in denen das System an seine Grenzen stößt. Diese zu kennen sind wichtig, um die Ergebnisse im Demo-Kapitel korrekt einordnen zu können.</p>
-<p><strong>Occlusion (Verdeckung):</strong> Da jede Rasterzelle nur eine Klasse vorhersagen kann, hat YOLO Schwierigkeiten, wenn mehrere Objekte derselben Klasse eng beieinanderliegen oder sich gar überlappen. Zum Beispiel eine Menschenmenge oder dicht aufgefahrene Fahrzeuge. Verdeckte Objekte werden oft auch gar nicht oder als falsche Klasse erkannt <span class="citation" data-cites="redmon2015 terven2023">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>, Abschnitt 2.4; <a href="#ref-terven2023" role="doc-biblioref">Terven and Cordova-Esparza 2023</a>, Seite 29)</span>.</p>
+<p><strong>Occlusion (Verdeckung):</strong> Da jede Rasterzelle nur eine Klasse vorhersagen kann, hat YOLO Schwierigkeiten, wenn mehrere Objekte derselben Klasse eng beieinanderliegen oder sich gar überlappen. Zum Beispiel eine Menschenmenge oder dicht aufgefahrene Fahrzeuge. Verdeckte Objekte werden oft auch gar nicht oder als falsche Klasse erkannt <span class="citation" data-cites="redmon2015 terven2023">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>, Kapitel 2.4; <a href="#ref-terven2023" role="doc-biblioref">Terven and Cordova-Esparza 2023</a>, Seite 29)</span>.</p>
 <p><strong>Kleine Objekte:</strong> Das Grid-System ist von Natur aus eine Vergröberung des Bildes. Sehr kleine Objekte, die vielleicht nur in einer einzigen Zelle liegen, gehen dabei leicht unter. Die Originalautoren räumen dieses Problem selbst ein <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>, Kapitel 2.4)</span>.</p>
 <p><strong>FPS vs.&nbsp;Genauigkeit:</strong> YOLO existiert in verschiedenen Größen (z.B. yolov8n bis yolov8x). Kleinere Varianten sind schneller, aber ungenauer. Größere präziser, aber langsamer. Welche Variante sinnvoll ist, hängt stets vom Einsatszenario ab. Ein Roboter in einer kontrollierten Umgebung hat selbstverständlich andere Anforderungen als ein Fahrzeug im Straßenverkehr.</p>
 <p><strong>Umgebungsbedingungen:</strong> Schlechte Lichtverhältnisse, Regen oder dicht gedrängter Verkehr können die Erkennungsrate erheblich senken, besonders im Kontext des autonomen Fahrens eine nicht zu unterschätzende Einschränkung.</p>
@@ -1326,8 +1335,9 @@ Terven, Juan, and Diana Cordova-Esparza. 2023. <span>“A Comprehensive Review o
 
 <ol>
 <li id="fn1"><p>Aus Gründen der Lesbarkeit wird im Verlauf der gesamten Webseite das generische Maskulinum verwendet.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>Siehe Beispielvideo unter <a href="https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4">GeeksForGeeks</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>Der vollständige Code inkl. Modell für diese Umsetzung ist im <a href="https://github.com/billyS02/vcde">GitHub-Repository</a> einsehbar.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>ImageNet ist ein riesiger Bilddatensatz mit über 14 Millionen annotierten Bildern aus über 20.000 Klassen, der als Standard-Benchmark für das Vortraining von Bilderkennungsnetzen gilt. YOLO nutzt jedoch beim Vortraining nur die ILSVRC-Untermenge mit 1000 Klassen und ca. 1,2 Millionen Bildern [œredmon2015, Kapitel 2.2].<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Siehe Beispielvideo von <a href="https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4">GeeksForGeeks</a>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Der vollständige Code inkl. Modell für diese Umsetzung ist im <a href="https://github.com/billyS02/vcde">GitHub-Repository</a> einsehbar.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
