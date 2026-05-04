@@ -496,7 +496,7 @@ function preprocess(img) {
 
   const off = document.createElement('canvas');
   off.width = MODEL; off.height = MODEL;
-  const oc = off.getContext('2d');
+  const oc = off.getContext('2d', { willReadFrequently: true });
   oc.fillStyle = 'rgb(114,114,114)';
   oc.fillRect(0, 0, MODEL, MODEL);
   oc.drawImage(img, px, py, nw, nh);
@@ -781,7 +781,7 @@ function preprocess(source, sw, sh) {
   const px = Math.floor((MODEL-nw)/2), py = Math.floor((MODEL-nh)/2);
   const off = document.createElement('canvas');
   off.width = MODEL; off.height = MODEL;
-  const oc = off.getContext('2d');
+  const oc = off.getContext('2d', { willReadFrequently: true });
   oc.fillStyle = 'rgb(114,114,114)'; oc.fillRect(0,0,MODEL,MODEL);
   oc.drawImage(source, px, py, nw, nh);
   const pixels = oc.getImageData(0,0,MODEL,MODEL).data;
@@ -1051,7 +1051,7 @@ async function ensureSession() {
 // ── Vorverarbeitung (Letterbox -> 640×640) ────────────────────────────────────
 const _offCanvas = document.createElement('canvas');
 _offCanvas.width = 640; _offCanvas.height = 640;
-const _offCtx = _offCanvas.getContext('2d');
+const _offCtx = _offCanvas.getContext('2d', { willReadFrequently: true });
 
 function preprocess(source, sw, sh) {
   const MODEL = 640;
