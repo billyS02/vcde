@@ -253,8 +253,8 @@ def process_video(input_video_path, output_path):
     out    = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*"MP4V"), fps, (width, height))
     
     # Optional: Laufzeitstatistik (hier Initialisierung)
-    # frame_count = 0
-    # total_infer_ms = 0.0
+    frame_count = 0
+    total_infer_ms = 0.0
 
     while True:
         ret, frame = cap.read()
@@ -263,10 +263,10 @@ def process_video(input_video_path, output_path):
             break
         
         # Optional: Laufzeitstatistik (hier aktuelles Frame)
-        # t0 = time.perf_counter()
+        t0 = time.perf_counter()
         results = model(frame, verbose=False)
-        # total_infer_ms += (time.perf_counter() - t0) * 1000
-        # frame_count += 1
+        total_infer_ms += (time.perf_counter() - t0) * 1000
+        frame_count += 1
 
         # Aktuellen Frame durch YOLO schicken; gibt Bounding Boxes, Klassen und Confidence zurück
         for result in results:
@@ -289,11 +289,11 @@ def process_video(input_video_path, output_path):
         out.write(frame)
 
     # Optional: Laufzeitstatistik (hier finale Berechnung und Ausgabe)
-    # avg_ms  = total_infer_ms / frame_count if frame_count else 0
-    # avg_fps = 1000 / avg_ms if avg_ms else 0
-    # print(f"Verarbeitete Frames:                {frame_count}")
-    # print(f"Durchschn. Inferenzzeit pro Frame:  {avg_ms:.1f} ms")
-    # print(f"Durchschn. Inferenz-FPS:            {avg_fps:.1f}")
+    avg_ms  = total_infer_ms / frame_count if frame_count else 0
+    avg_fps = 1000 / avg_ms if avg_ms else 0
+    print(f"Verarbeitete Frames:                {frame_count}")
+    print(f"Durchschn. Inferenzzeit pro Frame:  {avg_ms:.1f} ms")
+    print(f"Durchschn. Inferenz-FPS:            {avg_fps:.1f}")
 
     cap.release()
     out.release()
@@ -303,6 +303,7 @@ def process_video(input_video_path, output_path):
 
 Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab. 
 Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos 40–100+ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise 5–25 FPS realistisch. 
+Die Browser-Demos in Abschnitt 4 erreichen mit WebGPU-Beschleunigung in Chrome ~23 FPS (Video) bzw. ~25 FPS (Webcam für Live-Stream), mehr dazu später.
 
 ```{python}
 #| echo: false
@@ -335,9 +336,10 @@ os.close(old_stderr)
 
 Die folgenden Demos laufen direkt im Browser ohne lokale Installation. 
 Möglich macht das das zuvor exportierte Modell `yolov8n.onnx`, das über die Bibliohtek `onnxruntime-web` direkt im Browser ausgeführt wird [^4].  
-Aufgrund technischer Einschränkungen des Hostings (GitHub Pages) ist die Inferenzgeschwindigkeit bei Video und Webcam auf geringere FPS begrenzt. 
-Die Objekterkennung funktioniert korrekt, läuft jedoch nicht in optimaler Echtzeit. 
-Diese Demos dienen somit in erster Linie dem **tieferen Verständnis** des Lesers.
+Die Inferenz läuft über WebGPU-Beschleunigung direkt im Browser und erreicht in Chrome ~23 FPS (Video) bzw. ~25 FPS (Webcam). 
+Damit überschreitet sie die in Abschnitt 1 definierte Echtzeit-Schwelle von mind. 24 FPS.  
+Safari bietet eine schwächere **WebGPU-Implementierung** (~10–12 FPS), ohne WebGPU-Support fällt das System nämlich auf single-threaded WebAssembly zurück (~4 FPS), d.h. WASM (native CPU). 
+Für optimale Performance wird also Google Chrome oder auch Edge empfohlen.
 
 [^4]: Der vollständige Code inkl. Modell für diese Umsetzung ist im [GitHub-Repository](https://github.com/billyS02/vcde) einsehbar.
 
