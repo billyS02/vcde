@@ -342,7 +342,7 @@ Das Raster im <span class="math inline">\(7 \times 7\)</span> Format ergibt sich
 <p>Die Bibliothek <code>ultralytics</code> enthält YOLOv8 inklusive aller Abhängigkeiten (u.a. PyTorch).<br>
 <code>opencv-python</code> wird für das Einlesen und Verarbeiten von Bild- und Videodaten sowie die Ansteuerung von Kamera und Peripherie verwendet.</p>
 <p><strong>Überprüfen der Installation:</strong></p>
-<div id="3688ee94" class="cell" data-execution_count="1">
+<div id="dd4129e9" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ultralytics</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -365,19 +365,19 @@ OpenCV Version:      4.13.0</code></pre>
 <h3 class="anchored" data-anchor-id="objekterkennung-im-straßenverkehr">3.2 Objekterkennung im Straßenverkehr</h3>
 <p>Als Testmedium dienen verschiedene frei verfügbares Video aus dem Kontext <em>Straßenverkehr</em>. Diese werdem Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und die erkannten Objekte anschließend mit Bounding Boxes versehen.</p>
 <p><strong>Modell laden:</strong></p>
-<div id="e95e2405" class="cell" data-execution_count="2">
+<div id="91737d8c" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> YOLO(<span class="st">"yolov8s.pt"</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># OUTPUT:</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading https://github.com/ultralytics/assets/releases/download/v8.4.0/yolov8s.pt to 'yolov8s.pt': 100% ━━━━━━━━━━━━ 21.5MB 238.0MB/s 0.1s</code></pre>
+<pre><code>Downloading https://github.com/ultralytics/assets/releases/download/v8.4.0/yolov8s.pt to 'yolov8s.pt': 100% ━━━━━━━━━━━━ 21.5MB 360.6MB/s 0.1s</code></pre>
 </div>
 </div>
 <p>YOLOv8 steht in verschiedenen Größen zur Verfügung, von <code>yolov8n.pt</code> (Nano, schneller) bis <code>yolov8x.pt</code> (Extra Large, genauer). Für dieses Projekt wird <code>yolov8s.pt</code> (Small) verwendet, da es eine gute Balance zwischen Geschwindigkeit und Genauigkeit bietet.</p>
 <p><strong>Verarbeitungsfunktion definieren:</strong></p>
-<div id="0f6c0ab9" class="cell" data-execution_count="3">
+<div id="873df71c" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2, random, time</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Jeder Klasse wird eine eindeutige reproduzierbare Farbe zugewiesen (z.B. "Auto" immer blau)</span></span>
@@ -397,7 +397,7 @@ OpenCV Version:      4.13.0</code></pre>
 <span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Ausgabedatei mit gleicher Auflösung und FPS wie Eingabe vorbereiten</span></span>
 <span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    out    <span class="op">=</span> cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(<span class="op">*</span><span class="st">"MP4V"</span>), fps, (width, height))</span>
 <span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Optional: Laufzeitstatistik, Initalsierung</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Optional: Laufzeitstatistik (hier Initialisierung)</span></span>
 <span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># frame_count = 0</span></span>
 <span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># total_infer_ms = 0.0</span></span>
 <span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
@@ -407,7 +407,7 @@ OpenCV Version:      4.13.0</code></pre>
 <span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Ende des Videos erreicht</span></span>
 <span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
 <span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Optional: Laufzeitstatistik, weiter definieren</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Optional: Laufzeitstatistik (hier aktuelles Frame)</span></span>
 <span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>        <span class="co"># t0 = time.perf_counter()</span></span>
 <span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>        results <span class="op">=</span> model(frame, verbose<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>        <span class="co"># total_infer_ms += (time.perf_counter() - t0) * 1000</span></span>
@@ -433,7 +433,7 @@ OpenCV Version:      4.13.0</code></pre>
 <span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Verarbeiteten Frame in Ausgabevideo schreiben</span></span>
 <span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>        out.write(frame)</span>
 <span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Optional: Laufzeitstatistik, Berechnung und Ausgabe</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Optional: Laufzeitstatistik (hier finale Berechnung und Ausgabe)</span></span>
 <span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>    <span class="co"># avg_ms  = total_infer_ms / frame_count if frame_count else 0</span></span>
 <span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>    <span class="co"># avg_fps = 1000 / avg_ms if avg_ms else 0</span></span>
 <span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(f"Verarbeitete Frames:                {frame_count}")</span></span>
@@ -553,7 +553,8 @@ ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/di
 
 status.textContent = 'STATUS: Lade YOLO-Modell (bitte noch keine Medien hochladen) …';
 ort.InferenceSession.create('./models/yolov8n.onnx', {
-  executionProviders: ['webgpu', 'wasm']
+  executionProviders: ['webgpu', 'wasm'],
+  graphOptimizationLevel: 'all',
 }).then(s => {
   session = s;
   status.textContent = 'STATUS: Modell erfolgreich geladen. Bild hochladen um zu starten!';
@@ -1139,17 +1140,18 @@ async function ensureSession() {
 }
 
 // ── Vorverarbeitung (Letterbox -> 640×640) ────────────────────────────────────
+const _offCanvas = document.createElement('canvas');
+_offCanvas.width = 640; _offCanvas.height = 640;
+const _offCtx = _offCanvas.getContext('2d');
+
 function preprocess(source, sw, sh) {
   const MODEL = 640;
   const scale = Math.min(MODEL/sw, MODEL/sh);
   const nw = Math.round(sw*scale), nh = Math.round(sh*scale);
   const px = Math.floor((MODEL-nw)/2), py = Math.floor((MODEL-nh)/2);
-  const off = document.createElement('canvas');
-  off.width = MODEL; off.height = MODEL;
-  const oc = off.getContext('2d');
-  oc.fillStyle = 'rgb(114,114,114)'; oc.fillRect(0,0,MODEL,MODEL);
-  oc.drawImage(source, px, py, nw, nh);
-  const pixels = oc.getImageData(0,0,MODEL,MODEL).data;
+  _offCtx.fillStyle = 'rgb(114,114,114)'; _offCtx.fillRect(0,0,MODEL,MODEL);
+  _offCtx.drawImage(source, px, py, nw, nh);
+  const pixels = _offCtx.getImageData(0,0,MODEL,MODEL).data;
   const input = new Float32Array(3*MODEL*MODEL);
   for (let i=0;i<MODEL*MODEL;i++) {
     input[i]              = pixels[i*4]  /255;
@@ -1279,8 +1281,9 @@ async function inferLoop(session) {
       lastBoxes = nms(boxes);
       status.textContent = `STATUS: ${lastBoxes.length} Objekt(e) erkannt | ${fps} FPS`;
       updateDetList(lastBoxes, conf);
+    } else {
+      await new Promise(r => setTimeout(r, 16)); // nur warten wenn kein Frame da
     }
-    await new Promise(r => setTimeout(r, 200));
   }
 }
 
