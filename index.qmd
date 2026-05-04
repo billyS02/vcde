@@ -459,7 +459,8 @@ ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/di
 
 status.textContent = 'STATUS: Lade YOLO-Modell (bitte noch keine Medien hochladen) …';
 ort.InferenceSession.create('./models/yolov8n.onnx', {
-  executionProviders: ['webgpu', 'wasm']
+  executionProviders: ['webgpu', 'wasm'],
+  graphOptimizationLevel: 'all',
 }).then(s => {
   session = s;
   status.textContent = 'STATUS: Modell erfolgreich geladen. Bild hochladen um zu starten!';
@@ -1049,17 +1050,18 @@ async function ensureSession() {
 }
 
 // ── Vorverarbeitung (Letterbox -> 640×640) ────────────────────────────────────
+const _offCanvas = document.createElement('canvas');
+_offCanvas.width = 640; _offCanvas.height = 640;
+const _offCtx = _offCanvas.getContext('2d');
+
 function preprocess(source, sw, sh) {
   const MODEL = 640;
   const scale = Math.min(MODEL/sw, MODEL/sh);
   const nw = Math.round(sw*scale), nh = Math.round(sh*scale);
   const px = Math.floor((MODEL-nw)/2), py = Math.floor((MODEL-nh)/2);
-  const off = document.createElement('canvas');
-  off.width = MODEL; off.height = MODEL;
-  const oc = off.getContext('2d');
-  oc.fillStyle = 'rgb(114,114,114)'; oc.fillRect(0,0,MODEL,MODEL);
-  oc.drawImage(source, px, py, nw, nh);
-  const pixels = oc.getImageData(0,0,MODEL,MODEL).data;
+  _offCtx.fillStyle = 'rgb(114,114,114)'; _offCtx.fillRect(0,0,MODEL,MODEL);
+  _offCtx.drawImage(source, px, py, nw, nh);
+  const pixels = _offCtx.getImageData(0,0,MODEL,MODEL).data;
   const input = new Float32Array(3*MODEL*MODEL);
   for (let i=0;i<MODEL*MODEL;i++) {
     input[i]              = pixels[i*4]  /255;
@@ -1189,8 +1191,9 @@ async function inferLoop(session) {
       lastBoxes = nms(boxes);
       status.textContent = `STATUS: ${lastBoxes.length} Objekt(e) erkannt | ${fps} FPS`;
       updateDetList(lastBoxes, conf);
+    } else {
+      await new Promise(r => setTimeout(r, 16)); // nur warten wenn kein Frame da
     }
-    await new Promise(r => setTimeout(r, 200));
   }
 }
 
