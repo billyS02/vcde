@@ -342,7 +342,7 @@ Das Raster im <span class="math inline">\(7 \times 7\)</span> Format ergibt sich
 <p>Die Bibliothek <code>ultralytics</code> enthält YOLOv8 inklusive aller Abhängigkeiten (u.a. PyTorch).<br>
 <code>opencv-python</code> wird für das Einlesen und Verarbeiten von Bild- und Videodaten sowie die Ansteuerung von Kamera und Peripherie verwendet.</p>
 <p><strong>Überprüfen der Installation:</strong></p>
-<div id="e46528a5" class="cell" data-execution_count="1">
+<div id="1142523e" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ultralytics</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -365,19 +365,19 @@ OpenCV Version:      4.13.0</code></pre>
 <h3 class="anchored" data-anchor-id="objekterkennung-im-straßenverkehr">3.2 Objekterkennung im Straßenverkehr</h3>
 <p>Als Testmedium dienen verschiedene frei verfügbares Video aus dem Kontext <em>Straßenverkehr</em>. Diese werdem Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und die erkannten Objekte anschließend mit Bounding Boxes versehen.</p>
 <p><strong>Modell laden:</strong></p>
-<div id="378d873e" class="cell" data-execution_count="2">
+<div id="04bf9b2b" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> YOLO(<span class="st">"yolov8s.pt"</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># OUTPUT:</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading https://github.com/ultralytics/assets/releases/download/v8.4.0/yolov8s.pt to 'yolov8s.pt': 100% ━━━━━━━━━━━━ 21.5MB 400.2MB/s 0.1s</code></pre>
+<pre><code>Downloading https://github.com/ultralytics/assets/releases/download/v8.4.0/yolov8s.pt to 'yolov8s.pt': 100% ━━━━━━━━━━━━ 21.5MB 76.6MB/s 0.3s</code></pre>
 </div>
 </div>
 <p>YOLOv8 steht in verschiedenen Größen zur Verfügung, von <code>yolov8n.pt</code> (Nano, schneller) bis <code>yolov8x.pt</code> (Extra Large, genauer). Für dieses Projekt wird <code>yolov8s.pt</code> (Small) verwendet, da es eine gute Balance zwischen Geschwindigkeit und Genauigkeit bietet.</p>
 <p><strong>Verarbeitungsfunktion definieren:</strong></p>
-<div id="49485ceb" class="cell" data-execution_count="3">
+<div id="37d20353" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2, random, time</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Jeder Klasse wird eine eindeutige reproduzierbare Farbe zugewiesen (z.B. "Auto" immer blau)</span></span>
@@ -398,8 +398,8 @@ OpenCV Version:      4.13.0</code></pre>
 <span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    out    <span class="op">=</span> cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(<span class="op">*</span><span class="st">"MP4V"</span>), fps, (width, height))</span>
 <span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Optional: Laufzeitstatistik (hier Initialisierung)</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># frame_count = 0</span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># total_infer_ms = 0.0</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    frame_count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    total_infer_ms <span class="op">=</span> <span class="fl">0.0</span></span>
 <span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
 <span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>        ret, frame <span class="op">=</span> cap.read()</span>
@@ -408,10 +408,10 @@ OpenCV Version:      4.13.0</code></pre>
 <span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
 <span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>        </span>
 <span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Optional: Laufzeitstatistik (hier aktuelles Frame)</span></span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>        <span class="co"># t0 = time.perf_counter()</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>        t0 <span class="op">=</span> time.perf_counter()</span>
 <span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>        results <span class="op">=</span> model(frame, verbose<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>        <span class="co"># total_infer_ms += (time.perf_counter() - t0) * 1000</span></span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>        <span class="co"># frame_count += 1</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>        total_infer_ms <span class="op">+=</span> (time.perf_counter() <span class="op">-</span> t0) <span class="op">*</span> <span class="dv">1000</span></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>        frame_count <span class="op">+=</span> <span class="dv">1</span></span>
 <span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Aktuellen Frame durch YOLO schicken; gibt Bounding Boxes, Klassen und Confidence zurück</span></span>
 <span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> result <span class="kw">in</span> results:</span>
@@ -434,17 +434,24 @@ OpenCV Version:      4.13.0</code></pre>
 <span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>        out.write(frame)</span>
 <span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Optional: Laufzeitstatistik (hier finale Berechnung und Ausgabe)</span></span>
-<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>    <span class="co"># avg_ms  = total_infer_ms / frame_count if frame_count else 0</span></span>
-<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>    <span class="co"># avg_fps = 1000 / avg_ms if avg_ms else 0</span></span>
-<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(f"Verarbeitete Frames:                {frame_count}")</span></span>
-<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(f"Durchschn. Inferenzzeit pro Frame:  {avg_ms:.1f} ms")</span></span>
-<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(f"Durchschn. Inferenz-FPS:            {avg_fps:.1f}")</span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>    avg_ms  <span class="op">=</span> total_infer_ms <span class="op">/</span> frame_count <span class="cf">if</span> frame_count <span class="cf">else</span> <span class="dv">0</span></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>    avg_fps <span class="op">=</span> <span class="dv">1000</span> <span class="op">/</span> avg_ms <span class="cf">if</span> avg_ms <span class="cf">else</span> <span class="dv">0</span></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Verarbeitete Frames:                </span><span class="sc">{</span>frame_count<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Durchschn. Inferenzzeit pro Frame:  </span><span class="sc">{</span>avg_ms<span class="sc">:.1f}</span><span class="ss"> ms"</span>)</span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Durchschn. Inferenz-FPS:            </span><span class="sc">{</span>avg_fps<span class="sc">:.1f}</span><span class="ss">"</span>)</span>
 <span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>    cap.release()</span>
 <span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>    out.release()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>Demonstration mit Video</strong><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a><strong>:</strong></p>
-<p>Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab. Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos 40–100+ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise 5–25 FPS realistisch.</p>
+<p>Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab. Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos 40–100+ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise 5–25 FPS realistisch. Die Browser-Demos in Abschnitt 4 erreichen mit WebGPU-Beschleunigung in Chrome ~23 FPS (Video) bzw. ~25 FPS (Webcam für Live-Stream), mehr dazu später.</p>
+<div id="abf82587" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-stdout">
+<pre><code>Verarbeitete Frames:                1501
+Durchschn. Inferenzzeit pro Frame:  161.8 ms
+Durchschn. Inferenz-FPS:            6.2</code></pre>
+</div>
+</div>
 <p></p><div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="./img/autobahn_h264.mp4"></video></div> <!-- Es musste auf ein h264-Format ausgewichen werden, damit das Video auf Safari und Google-Chrome angezeigt werden kann --><p></p>
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 </section>
@@ -452,7 +459,8 @@ OpenCV Version:      4.13.0</code></pre>
 <section id="sec-eigentests" class="level2">
 <h2 class="anchored" data-anchor-id="sec-eigentests">4. YOLO: Eigentests</h2>
 <p>Die folgenden Demos laufen direkt im Browser ohne lokale Installation. Möglich macht das das zuvor exportierte Modell <code>yolov8n.onnx</code>, das über die Bibliohtek <code>onnxruntime-web</code> direkt im Browser ausgeführt wird <a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.<br>
-Aufgrund technischer Einschränkungen des Hostings (GitHub Pages) ist die Inferenzgeschwindigkeit bei Video und Webcam auf geringere FPS begrenzt. Die Objekterkennung funktioniert korrekt, läuft jedoch nicht in optimaler Echtzeit. Diese Demos dienen somit in erster Linie dem <strong>tieferen Verständnis</strong> des Lesers.</p>
+Die Inferenz läuft über WebGPU-Beschleunigung direkt im Browser und erreicht in Chrome ~23 FPS (Video) bzw. ~25 FPS (Webcam). Damit überschreitet sie die in Abschnitt 1 definierte Echtzeit-Schwelle von mind. 24 FPS.<br>
+Safari bietet eine schwächere <strong>WebGPU-Implementierung</strong> (~10–12 FPS), ohne WebGPU-Support fällt das System nämlich auf single-threaded WebAssembly zurück (~4 FPS), d.h. WASM (native CPU). Für optimale Performance wird also Google Chrome oder auch Edge empfohlen.</p>
 <section id="grid-manipulation" class="level3">
 <h3 class="anchored" data-anchor-id="grid-manipulation">4.1 Grid-Manipulation</h3>
 <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.21.0/dist/ort.min.js"></script>
