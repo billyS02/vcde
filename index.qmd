@@ -934,7 +934,6 @@ async function inferLoop() {
       status.textContent = `STATUS: ${lastBoxes.length} Objekt(e) erkannt | ${fps} FPS`;
       updateDetList(lastBoxes, conf);
     }
-    await new Promise(r => setTimeout(r, 200));  // ~5 Inferenzen/Sek.
   }
   status.textContent = 'STATUS: Video beendet.';
 }
@@ -1139,7 +1138,9 @@ function updateDetList(filtered, conf) {
 // ── Kamera starten ───────────────────────────────────────────────────────────
 btnStart.addEventListener('click', async () => {
   try {
-    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+    stream = await navigator.mediaDevices.getUserMedia({ 
+      video: { facingMode: { ideal: 'environment' } }  // ← hier
+    });
     video.srcObject = stream;
     await video.play();
 
