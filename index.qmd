@@ -252,7 +252,7 @@ def process_video(input_video_path, output_path):
     # Ausgabedatei mit gleicher Auflösung und FPS wie Eingabe vorbereiten
     out    = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*"MP4V"), fps, (width, height))
     
-    # Optional: Laufzeitstatistik, Initalsierung
+    # Optional: Laufzeitstatistik (hier Initialisierung)
     # frame_count = 0
     # total_infer_ms = 0.0
 
@@ -262,7 +262,7 @@ def process_video(input_video_path, output_path):
             # Ende des Videos erreicht
             break
         
-        # Optional: Laufzeitstatistik, weiter definieren
+        # Optional: Laufzeitstatistik (hier aktuelles Frame)
         # t0 = time.perf_counter()
         results = model(frame, verbose=False)
         # total_infer_ms += (time.perf_counter() - t0) * 1000
@@ -288,7 +288,7 @@ def process_video(input_video_path, output_path):
         # Verarbeiteten Frame in Ausgabevideo schreiben
         out.write(frame)
 
-    # Optional: Laufzeitstatistik, Berechnung und Ausgabe
+    # Optional: Laufzeitstatistik (hier finale Berechnung und Ausgabe)
     # avg_ms  = total_infer_ms / frame_count if frame_count else 0
     # avg_fps = 1000 / avg_ms if avg_ms else 0
     # print(f"Verarbeitete Frames:                {frame_count}")
