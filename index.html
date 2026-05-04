@@ -341,7 +341,7 @@ Das Raster im <span class="math inline">\(7 \times 7\)</span> Format ergibt sich
 <p>Die Bibliothek <code>ultralytics</code> enthält YOLOv8 inklusive aller Abhängigkeiten (u.a. PyTorch).<br>
 <code>opencv-python</code> wird für das Einlesen und Verarbeiten von Bild- und Videodaten sowie die Ansteuerung von Kamera und Peripherie verwendet.</p>
 <p><strong>Überprüfen der Installation:</strong></p>
-<div id="89b0280c" class="cell" data-execution_count="1">
+<div id="347cc538" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ultralytics</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -364,19 +364,19 @@ OpenCV Version:      4.13.0</code></pre>
 <h3 class="anchored" data-anchor-id="objekterkennung-im-straßenverkehr">3.2 Objekterkennung im Straßenverkehr</h3>
 <p>Als Testmedium dienen verschiedene frei verfügbares Video aus dem Kontext <em>Straßenverkehr</em>. Diese werdem Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und die erkannten Objekte anschließend mit Bounding Boxes versehen.</p>
 <p><strong>Modell laden:</strong></p>
-<div id="986e4c4a" class="cell" data-execution_count="2">
+<div id="d229f03e" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> YOLO(<span class="st">"yolov8s.pt"</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># OUTPUT:</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading https://github.com/ultralytics/assets/releases/download/v8.4.0/yolov8s.pt to 'yolov8s.pt': 100% ━━━━━━━━━━━━ 21.5MB 81.3MB/s 0.3s</code></pre>
+<pre><code>Downloading https://github.com/ultralytics/assets/releases/download/v8.4.0/yolov8s.pt to 'yolov8s.pt': 100% ━━━━━━━━━━━━ 21.5MB 96.7MB/s 0.2s</code></pre>
 </div>
 </div>
 <p>YOLOv8 steht in verschiedenen Größen zur Verfügung, von <code>yolov8n.pt</code> (Nano, schneller) bis <code>yolov8x.pt</code> (Extra Large, genauer). Für dieses Projekt wird <code>yolov8s.pt</code> (Small) verwendet, da es eine gute Balance zwischen Geschwindigkeit und Genauigkeit bietet.</p>
 <p><strong>Verarbeitungsfunktion definieren:</strong></p>
-<div id="5950f15f" class="cell" data-execution_count="3">
+<div id="16e652fb" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2, random, time</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Jeder Klasse wird eine eindeutige reproduzierbare Farbe zugewiesen (z.B. "Auto" immer blau)</span></span>
@@ -999,16 +999,19 @@ async function startVideoLoop() {
 
 let lastBoxes = [];
 
-let lastInferTime = performance.now();
 async function inferLoop() {
   while (loopActive && !video.paused && !video.ended) {
     const W = video.videoWidth, H = video.videoHeight;
     if (W > 0) {
       const conf = parseFloat(cSlider.value);
+
+      const t0 = performance.now();
       const { input, scale, px, py } = preprocess(video, W, H);
       const tensor = new ort.Tensor('float32', input, [1,3,640,640]);
       const feed = {}; feed[session.inputNames[0]] = tensor;
       const out = await session.run(feed);
+      const fps = (1000 / (performance.now() - t0)).toFixed(1);
+
       const boxes = parseOutput(out[session.outputNames[0]].data, scale, px, py, W, H, conf);
       lastBoxes = nms(boxes);
       const now = performance.now();
@@ -1115,7 +1118,6 @@ const detList   = document.getElementById('camDetList');
 let loopActive  = false;
 let stream      = null;
 let lastBoxes   = [];
-let lastInferTime = performance.now();
 
 cSlider.addEventListener('input', () => {
   cVal.textContent = parseFloat(cSlider.value).toFixed(2);
@@ -1260,10 +1262,14 @@ async function inferLoop(session) {
     const W = video.videoWidth, H = video.videoHeight;
     if (W > 0) {
       const conf = parseFloat(cSlider.value);
+
+      const t0 = performance.now();
       const { input, scale, px, py } = preprocess(video, W, H);
       const tensor = new ort.Tensor('float32', input, [1,3,640,640]);
       const feed = {}; feed[session.inputNames[0]] = tensor;
       const out  = await session.run(feed);
+      const fps = (1000 / (performance.now() - t0)).toFixed(1);
+
       const boxes = parseOutput(out[session.outputNames[0]].data, scale, px, py, W, H, conf);
       lastBoxes = nms(boxes);
       const now = performance.now();
