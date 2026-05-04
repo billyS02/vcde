@@ -73,14 +73,14 @@ Visuell wird also eine sog. *Bounding Box* erzeugt, die das erkannte Objekt umra
 \n
 
 Besondere Anforderungen stellt dabei das **autonome Fahren**. 
-Hier reicht es nicht, Objekte lediglich zu erkennen, denn zusätzlich muss das auch in **Echtzeit** geschehen, also mit mindestens 24 fps (Frames pro Sekunde), damit ein Fahrzeug rechtzeitig reagieren kann.
+Hier reicht es nicht, Objekte lediglich zu erkennen, denn zusätzlich muss das auch in **Echtzeit** geschehen, also mit mindestens $24$ FPS (Frames pro Sekunde), damit ein Fahrzeug rechtzeitig reagieren kann.
 Klassische Verfahren wie R-CNN sind zwar präzise, scheitern jedoch an genau diesem Anspruch, da sie das Bild in mehreren Schritten verarbeiten [@girshick2014]. 
 Die Rede ist von einem sogenannten *Two-Stage-Detector*.
 
 \n
 
 Als One-Stage-Detector löst **YOLO** (You Only Look Once) dieses Problem mit einem anderen Ansatz. 
-Das gesamte Medium wird nämlich in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Erkennung von 45 fps (als base model) bis zu 166 fps (als fast model) ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht [@redmon2015].
+Das gesamte Medium wird nämlich in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Erkennung von $45$ FPS (als base model) bis zu $166$ FPS (als fast model) ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht [@redmon2015].
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
@@ -93,7 +93,7 @@ Das bedeutet, dass das gesamte Bild **genau einmal durch ein einziges** Neuronal
 Es gibt also keine zweiten Schritte oder separaten Klassifikatoren.
 
 Wir erinnern uns: Zweistufige Verfahren wie R-CNN beginnen hingegen mit sog. *Region Proposals*, d.h. der Algorithmus schlägt zunächst hunderte mögliche Bildausschnitte vor, die ein Objekt enthalten könnten und klassifiziert dann jeden einzeln.
-**Faster R-CNN** schafft als einer der schnellsten Varianten etwa 5 fps bis 17 fps auf einem Standard Backbone, was für ein fahrendes Auto schlicht zu wenig ist.
+**Faster R-CNN** schafft als einer der schnellsten Varianten etwa $5$ FPS bis $17$ FPS auf einem Standard Backbone, was für ein fahrendes Auto schlicht zu wenig ist.
 
 ![Geschwindigkeit von YOLO im Vergleich zu anderen Modellen. [@sanchez2020, Abbildung 6]](./img/yolo_compare.png){fig-align="center"}  
 
@@ -214,8 +214,8 @@ print(f"OpenCV Version:      {cv2.__version__}")
 
 ### 3.2 Objekterkennung im Straßenverkehr
 
-Als Testmedium dienen verschiedene frei verfügbares Video aus dem Kontext *Straßenverkehr*.
-Diese werdem Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und die erkannten Objekte anschließend mit Bounding Boxes versehen.
+Als Testmedium dient ein frei verfügbares Video aus dem Kontext *Straßenverkehr*.
+Dieses wurde Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und die erkannten Objekte anschließend mit Bounding Boxes und Label versehen.
 
 **Modell laden:**
 
@@ -302,8 +302,8 @@ def process_video(input_video_path, output_path):
 **Demonstration mit Video**[^3]**:**
 
 Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab. 
-Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos 40–100+ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise 5–25 FPS realistisch. 
-Die interaktiven Demos in Abschnitt 4 erreichen mit WebGPU-Beschleunigung in Chrome ~23 FPS (Video) bzw. ~25-26 FPS (Webcam für Live-Stream), aber mehr dazu später.
+Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos $40–100+$ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise $5–25$ FPS realistisch. 
+Die interaktiven Demos in Abschnitt 4 erreichen mit WebGPU-Beschleunigung in Chrome $~23$ FPS (Video-Input) bzw. $~25-26$ FPS (Webcam für Live-Stream), aber mehr dazu später.
 
 ```{python}
 #| echo: false
@@ -337,9 +337,9 @@ os.close(old_stderr)
 Die folgenden Demos laufen direkt im Browser ohne lokale Installation. 
 Möglich macht das das zuvor exportierte Modell `yolov8n.onnx`, das über die Bibliohtek `onnxruntime-web` direkt im Browser ausgeführt wird [^4]. 
 
-Die Inferenz läuft über WebGPU-Beschleunigung direkt im Browser und erreicht in Chrome ~23 FPS (Video) bzw. ~25-26 FPS (Webcam). 
-Damit überschreitet sie die in Abschnitt 1 definierte Echtzeitanforderung von mind. 24 FPS.  
-Safari (macOS Browser) bietet eine schwächere **WebGPU-Implementierung** (~10–12 FPS), ohne WebGPU-Support fällt das System nämlich auf single-threaded WebAssembly zurück (~4 FPS), d.h. WASM über die native CPU. 
+Die Inferenz läuft über WebGPU-Beschleunigung direkt im Browser und erreicht in Chrome $~23$ FPS (Video) bzw. $~25-26$ FPS (Webcam). 
+Damit überschreitet sie die in Abschnitt 1 definierte Echtzeitanforderung von mind. $24$ FPS.  
+Safari (macOS Browser) bietet eine schwächere **WebGPU-Implementierung** ($~10–12$ FPS), ohne WebGPU-Support fällt das System nämlich auf single-threaded WebAssembly zurück ($~4$ FPS), d.h. WASM über die native CPU. 
 Für optimale Performance wird also Google Chrome oder auch Edge empfohlen. 
 
 Für noch höhere FPS wäre eine Server-seitige Inferenz über Dienste wie *Hugging Face Spaces* oder *Netlify Functions* möglich, bei der das Modell auf dedizierten Servern im Backend läuft und nur die Ergebnisse im Browser angezeigt werden.
@@ -916,7 +916,7 @@ async function startVideoLoop() {
   await video.play();
   loopActive = true;
   inferLoop();               // Inferenz-Loop (langsam, entkoppelt)
-  drawLoop();                // Draw-Loop (schnell, 60fps)
+  drawLoop();                // Draw-Loop (schnell)
 }
 
 let lastBoxes = [];
