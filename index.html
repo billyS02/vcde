@@ -317,6 +317,7 @@ Das Raster im <span class="math inline">\(7 \times 7\)</span> Format ergibt sich
 <li><strong>YOLOv3 (2018):</strong> Erkennung auf <em>drei Skalen</em> gleichzeitig; besonders hilfreich für Objekte unterschiedlicher Größe im selben Bild.</li>
 <li><strong>YOLOv4/v5 (2020):</strong> Community-getriebene Weiterentwicklungen mit zahlreichen Trainingstricks; YOLOv5 vollzog den Wechsel zu PyTorch und vereinfachte den Export auf Edge-Geräte erheblich <span class="citation" data-cites="terven2023">(<a href="#ref-terven2023" role="doc-biblioref">Terven and Cordova-Esparza 2023</a>, Kapitel 9)</span>.</li>
 <li><strong><u>YOLOv8</u> (2023):</strong> Die aktuell verbreitetste Version. Kernerneuerung ist die <em>anchor-free</em> Architektur: Statt vordefinierten Acnhor Boxes lernt das Modell Boxpositionen direkt, was den Trainingsprozess vereinfacht und die Genauigkeit steigert. Zudem wurde ein <em>decoupled head</em> eingeführt, der Klassifizierung und Lokalisation in getrennten Zweigen berechnet <span class="citation" data-cites="jocher2023">(<a href="#ref-jocher2023" role="doc-biblioref">Jocher et al. 2023</a>)</span>.</li>
+<li><strong>YOLO26 (2025):</strong> Aktuellste Version. Führt NMS-freie End-to-End-Inferenz ein und entfernt den Distribution Focal Loss (DFL), was den Export vereinfacht und die native CPU-Inferenz um bis zu 43 % beschleunigt. Für dieses Projekt wird dennoch <u>YOLOv8</u> eingesetzt, da es zu diese, Zeitpunkt die am weitesten verbreitete und best dokumentierteste Version ist und die zugrunde liegenden Konzepte (anchor-free Detektion, decoupled head, etc.) exemplarisch vermittelt.</li>
 </ul>
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 </section>
@@ -341,7 +342,7 @@ Das Raster im <span class="math inline">\(7 \times 7\)</span> Format ergibt sich
 <p>Die Bibliothek <code>ultralytics</code> enthält YOLOv8 inklusive aller Abhängigkeiten (u.a. PyTorch).<br>
 <code>opencv-python</code> wird für das Einlesen und Verarbeiten von Bild- und Videodaten sowie die Ansteuerung von Kamera und Peripherie verwendet.</p>
 <p><strong>Überprüfen der Installation:</strong></p>
-<div id="4c1e55b5" class="cell" data-execution_count="1">
+<div id="3688ee94" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ultralytics</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -364,19 +365,19 @@ OpenCV Version:      4.13.0</code></pre>
 <h3 class="anchored" data-anchor-id="objekterkennung-im-straßenverkehr">3.2 Objekterkennung im Straßenverkehr</h3>
 <p>Als Testmedium dienen verschiedene frei verfügbares Video aus dem Kontext <em>Straßenverkehr</em>. Diese werdem Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und die erkannten Objekte anschließend mit Bounding Boxes versehen.</p>
 <p><strong>Modell laden:</strong></p>
-<div id="24fa0eb2" class="cell" data-execution_count="2">
+<div id="e95e2405" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> YOLO(<span class="st">"yolov8s.pt"</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># OUTPUT:</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading https://github.com/ultralytics/assets/releases/download/v8.4.0/yolov8s.pt to 'yolov8s.pt': 100% ━━━━━━━━━━━━ 21.5MB 327.7MB/s 0.1s</code></pre>
+<pre><code>Downloading https://github.com/ultralytics/assets/releases/download/v8.4.0/yolov8s.pt to 'yolov8s.pt': 100% ━━━━━━━━━━━━ 21.5MB 238.0MB/s 0.1s</code></pre>
 </div>
 </div>
 <p>YOLOv8 steht in verschiedenen Größen zur Verfügung, von <code>yolov8n.pt</code> (Nano, schneller) bis <code>yolov8x.pt</code> (Extra Large, genauer). Für dieses Projekt wird <code>yolov8s.pt</code> (Small) verwendet, da es eine gute Balance zwischen Geschwindigkeit und Genauigkeit bietet.</p>
 <p><strong>Verarbeitungsfunktion definieren:</strong></p>
-<div id="090bb886" class="cell" data-execution_count="3">
+<div id="0f6c0ab9" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2, random, time</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Jeder Klasse wird eine eindeutige reproduzierbare Farbe zugewiesen (z.B. "Auto" immer blau)</span></span>
@@ -435,9 +436,9 @@ OpenCV Version:      4.13.0</code></pre>
 <span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Optional: Laufzeitstatistik, Berechnung und Ausgabe</span></span>
 <span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>    <span class="co"># avg_ms  = total_infer_ms / frame_count if frame_count else 0</span></span>
 <span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>    <span class="co"># avg_fps = 1000 / avg_ms if avg_ms else 0</span></span>
-<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(f"Verarbeitete Frames:      {frame_count}")</span></span>
-<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(f"Ø Inferenzzeit pro Frame: {avg_ms:.1f} ms")</span></span>
-<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(f"Ø Inferenz-FPS:           {avg_fps:.1f}")</span></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(f"Verarbeitete Frames:                {frame_count}")</span></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(f"Durchschn. Inferenzzeit pro Frame:  {avg_ms:.1f} ms")</span></span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(f"Durchschn. Inferenz-FPS:            {avg_fps:.1f}")</span></span>
 <span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a>    cap.release()</span>
 <span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a>    out.release()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1241,7 +1242,7 @@ btnStart.addEventListener('click', async () => {
     inferLoop(session);
     drawLoop();
   } catch(e) {
-    status.textContent = `STATUS: Kamera-Fehler — ${e.message}`;
+    status.textContent = `STATUS: Kamera-Fehler | ${e.message}`;
   }
 });
 
@@ -1324,7 +1325,7 @@ Fast R-CNN hingegen erkennt fast dreimal so häufig Hintergrundbereiche fälschl
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-friedrich2026" class="csl-entry" role="listitem">
-Friedrich, Markus. 2026. <em>Visual Computing: Erkennung (Klassifikation, Segmentierung, Objekterkennung, Anomalierkennung)</em>. <a href="https://hm.edu/kontakte_de/contact_detail_55814.de.html">https://hm.edu/kontakte_de/contact_detail_55814.de.html</a>.
+Friedrich, Markus. 2026. <em>Visual Computing: Erkennung (Klassifikation, Segmentierung, Objekterkennung, Anomalierkennung)</em>. In <em>Vorlesungsskript, Hochschule München (HM) Für Angewandte Wissenschaften</em>. <a href="https://hm.edu/kontakte_de/contact_detail_55814.de.html">https://hm.edu/kontakte_de/contact_detail_55814.de.html</a>.
 </div>
 <div id="ref-girshick2014" class="csl-entry" role="listitem">
 Girshick, Ross, Jeff Donahue, Trevor Darrell, and Jitendra Malik. 2014. <em>Rich Feature Hierarchies for Accurate Object Detection and Semantic Segmentation</em>. <a href="https://arxiv.org/abs/1311.2524">https://arxiv.org/abs/1311.2524</a>.
