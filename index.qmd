@@ -922,9 +922,6 @@ async function inferLoop() {
 
       const boxes = parseOutput(out[session.outputNames[0]].data, scale, px, py, W, H, conf);
       lastBoxes = nms(boxes);
-      const now = performance.now();
-      const fps = (1000 / (now - lastInferTime)).toFixed(1);
-      lastInferTime = now;
       status.textContent = `STATUS: ${lastBoxes.length} Objekt(e) erkannt | ${fps} FPS`;
       updateDetList(lastBoxes, conf);
     }
@@ -1182,9 +1179,6 @@ async function inferLoop(session) {
 
       const boxes = parseOutput(out[session.outputNames[0]].data, scale, px, py, W, H, conf);
       lastBoxes = nms(boxes);
-      const now = performance.now();
-      const fps = (1000 / (now - lastInferTime)).toFixed(1);
-      lastInferTime = now;
       status.textContent = `STATUS: ${lastBoxes.length} Objekt(e) erkannt | ${fps} FPS`;
       updateDetList(lastBoxes, conf);
     }
