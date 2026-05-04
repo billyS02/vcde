@@ -302,7 +302,7 @@ def process_video(input_video_path, output_path):
 **Demonstration mit Video**[^3]**:**
 
 Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab. 
-Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos $40–100+$ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise $5–25$ FPS realistisch. 
+Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos $40–100+$ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise $5–25$ FPS realistisch.   
 Die interaktiven Demos in Abschnitt 4 erreichen mit WebGPU-Beschleunigung in Chrome $~23$ FPS (Video-Input) bzw. $~25-26$ FPS (Webcam für Live-Stream), aber mehr dazu später.
 
 ```{python}
@@ -338,7 +338,7 @@ Die folgenden Demos laufen direkt im Browser ohne lokale Installation.
 Möglich macht das das zuvor exportierte Modell `yolov8n.onnx`, das über die Bibliohtek `onnxruntime-web` direkt im Browser ausgeführt wird [^4]. 
 
 Die Inferenz läuft über WebGPU-Beschleunigung direkt im Browser und erreicht in Chrome $~23$ FPS (Video) bzw. $~25-26$ FPS (Webcam). 
-Damit überschreitet sie die in Abschnitt 1 definierte Echtzeitanforderung von mind. $24$ FPS.  
+Damit überschreitet sie die in Abschnitt 1 definierte Echtzeitanforderung von mind. $24$ FPS. 
 Safari (macOS Browser) bietet eine schwächere **WebGPU-Implementierung** ($~10–12$ FPS), ohne WebGPU-Support fällt das System nämlich auf single-threaded WebAssembly zurück ($~4$ FPS), d.h. WASM über die native CPU. 
 Für optimale Performance wird also Google Chrome oder auch Edge empfohlen. 
 
