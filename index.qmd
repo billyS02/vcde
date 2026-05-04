@@ -251,22 +251,28 @@ def process_video(input_video_path, output_path):
     # Ausgabedatei mit gleicher Auflösung und FPS wie Eingabe vorbereiten
     out    = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*"MP4V"), fps, (width, height))
     
-    # Optional: Laufzeitstatistik initalsieren
-    # frame_count = 0
-    # start = time.time()
+    # Optional: Laufzeitstatistik, Initalsierung
+    frame_count = 0
+    total_infer_ms = 0.0
 
     while True:
         ret, frame = cap.read()
         if not ret:
             # Ende des Videos erreicht
             break
+        
+        # Optional: Laufzeitstatistik, weiter definieren
+        t0 = time.perf_counter()
+        results = model(frame, verbose=False)
+        total_infer_ms += (time.perf_counter() - t0) * 1000
+        frame_count += 1
 
         # Aktuellen Frame durch YOLO schicken; gibt Bounding Boxes, Klassen und Confidence zurück
-        results = model(frame, verbose=False)
         for result in results:
 
             # Nur Boxen mit Confidence > 40% anzeigen (niedrigere Werte sind meist Fehler)
             for box in result.boxes:
+
                 if box.conf[0] > 0.4:
                     x1, y1, x2, y2 = map(int, box.xyxy[0])                    # Eckpunkte der Bounding Box
                     cls   = int(box.cls[0])                                   # Klassen-ID (z.B. 2 = Auto)
@@ -281,11 +287,12 @@ def process_video(input_video_path, output_path):
         # Verarbeiteten Frame in Ausgabevideo schreiben
         out.write(frame)
 
-    # Optional: Laufzeitstatistik ausgeben
-    # elapsed = time.time() - start
-    # print(f"Verarbeitete Frames: {frame_count}")
-    # print(f"Gesamtzeit: {elapsed:.2f}s")
-    # print(f"Durchschnittliche FPS: {frame_count/elapsed:.1f}")
+    # Optional: Laufzeitstatistik, Berechnung und Ausgabe
+    avg_ms  = total_infer_ms / frame_count if frame_count else 0
+    avg_fps = 1000 / avg_ms if avg_ms else 0
+    print(f"Verarbeitete Frames:      {frame_count}")
+    print(f"Ø Inferenzzeit pro Frame: {avg_ms:.1f} ms")
+    print(f"Ø Inferenz-FPS:           {avg_fps:.1f}")
 
     cap.release()
     out.release()
