@@ -222,7 +222,7 @@ Diese werdem Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und 
 ```{python}
 from ultralytics import YOLO
 
-model = YOLO("yolov8s.pt")
+model = YOLO("yolov8n.pt")
 
 # OUTPUT:
 ```
@@ -303,7 +303,7 @@ def process_video(input_video_path, output_path):
 
 Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab. 
 Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos 40–100+ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise 5–25 FPS realistisch. 
-Die Browser-Demos in Abschnitt 4 erreichen mit WebGPU-Beschleunigung in Chrome ~23 FPS (Video) bzw. ~25 FPS (Webcam für Live-Stream), mehr dazu später.
+Die interaktiven Demos in Abschnitt 4 erreichen mit WebGPU-Beschleunigung in Chrome ~23 FPS (Video) bzw. ~25-26 FPS (Webcam für Live-Stream), aber mehr dazu später.
 
 ```{python}
 #| echo: false
@@ -335,11 +335,14 @@ os.close(old_stderr)
 ## 4. YOLO: Eigentests {#sec-eigentests}
 
 Die folgenden Demos laufen direkt im Browser ohne lokale Installation. 
-Möglich macht das das zuvor exportierte Modell `yolov8n.onnx`, das über die Bibliohtek `onnxruntime-web` direkt im Browser ausgeführt wird [^4].  
-Die Inferenz läuft über WebGPU-Beschleunigung direkt im Browser und erreicht in Chrome ~23 FPS (Video) bzw. ~25 FPS (Webcam). 
-Damit überschreitet sie die in Abschnitt 1 definierte Echtzeit-Schwelle von mind. 24 FPS.  
-Safari bietet eine schwächere **WebGPU-Implementierung** (~10–12 FPS), ohne WebGPU-Support fällt das System nämlich auf single-threaded WebAssembly zurück (~4 FPS), d.h. WASM (native CPU). 
-Für optimale Performance wird also Google Chrome oder auch Edge empfohlen.
+Möglich macht das das zuvor exportierte Modell `yolov8n.onnx`, das über die Bibliohtek `onnxruntime-web` direkt im Browser ausgeführt wird [^4]. 
+
+Die Inferenz läuft über WebGPU-Beschleunigung direkt im Browser und erreicht in Chrome ~23 FPS (Video) bzw. ~25-26 FPS (Webcam). 
+Damit überschreitet sie die in Abschnitt 1 definierte Echtzeitanforderung von mind. 24 FPS.  
+Safari (macOS Browser) bietet eine schwächere **WebGPU-Implementierung** (~10–12 FPS), ohne WebGPU-Support fällt das System nämlich auf single-threaded WebAssembly zurück (~4 FPS), d.h. WASM über die native CPU. 
+Für optimale Performance wird also Google Chrome oder auch Edge empfohlen. 
+
+Für noch höhere FPS wäre eine Server-seitige Inferenz über Dienste wie *Hugging Face Spaces* oder *Netlify Functions* möglich, bei der das Modell auf dedizierten Servern im Backend läuft und nur die Ergebnisse im Browser angezeigt werden.
 
 [^4]: Der vollständige Code inkl. Modell für diese Umsetzung ist im [GitHub-Repository](https://github.com/billyS02/vcde) einsehbar.
 
