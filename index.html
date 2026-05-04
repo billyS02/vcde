@@ -342,7 +342,7 @@ Das Raster im <span class="math inline">\(7 \times 7\)</span> Format ergibt sich
 <p>Die Bibliothek <code>ultralytics</code> enthält YOLOv8 inklusive aller Abhängigkeiten (u.a. PyTorch).<br>
 <code>opencv-python</code> wird für das Einlesen und Verarbeiten von Bild- und Videodaten sowie die Ansteuerung von Kamera und Peripherie verwendet.</p>
 <p><strong>Überprüfen der Installation:</strong></p>
-<div id="459da299" class="cell" data-execution_count="1">
+<div id="259dd066" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ultralytics</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -365,19 +365,19 @@ OpenCV Version:      4.13.0</code></pre>
 <h3 class="anchored" data-anchor-id="objekterkennung-im-straßenverkehr">3.2 Objekterkennung im Straßenverkehr</h3>
 <p>Als Testmedium dienen verschiedene frei verfügbares Video aus dem Kontext <em>Straßenverkehr</em>. Diese werdem Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und die erkannten Objekte anschließend mit Bounding Boxes versehen.</p>
 <p><strong>Modell laden:</strong></p>
-<div id="6163f9be" class="cell" data-execution_count="2">
+<div id="c7dc0402" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> YOLO(<span class="st">"yolov8s.pt"</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># OUTPUT:</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Downloading https://github.com/ultralytics/assets/releases/download/v8.4.0/yolov8s.pt to 'yolov8s.pt': 100% ━━━━━━━━━━━━ 21.5MB 90.1MB/s 0.2s</code></pre>
+<pre><code>Downloading https://github.com/ultralytics/assets/releases/download/v8.4.0/yolov8s.pt to 'yolov8s.pt': 100% ━━━━━━━━━━━━ 21.5MB 109.6MB/s 0.2s</code></pre>
 </div>
 </div>
 <p>YOLOv8 steht in verschiedenen Größen zur Verfügung, von <code>yolov8n.pt</code> (Nano, schneller) bis <code>yolov8x.pt</code> (Extra Large, genauer). Für dieses Projekt wird <code>yolov8s.pt</code> (Small) verwendet, da es eine gute Balance zwischen Geschwindigkeit und Genauigkeit bietet.</p>
 <p><strong>Verarbeitungsfunktion definieren:</strong></p>
-<div id="5da4de5a" class="cell" data-execution_count="3">
+<div id="b81a0f5e" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2, random, time</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Jeder Klasse wird eine eindeutige reproduzierbare Farbe zugewiesen (z.B. "Auto" immer blau)</span></span>
@@ -455,7 +455,7 @@ OpenCV Version:      4.13.0</code></pre>
 Aufgrund technischer Einschränkungen des Hostings (GitHub Pages) ist die Inferenzgeschwindigkeit bei Video und Webcam auf geringere FPS begrenzt. Die Objekterkennung funktioniert korrekt, läuft jedoch nicht in optimaler Echtzeit. Diese Demos dienen somit in erster Linie dem <strong>tieferen Verständnis</strong> des Lesers.</p>
 <section id="grid-manipulation" class="level3">
 <h3 class="anchored" data-anchor-id="grid-manipulation">4.1 Grid-Manipulation</h3>
-<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/ort.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.21.0/dist/ort.min.js"></script>
 
 <div id="yolo-demo" style="padding:1rem 0;">
 
@@ -549,7 +549,7 @@ let currentImg = null;   // HTMLImageElement
 let rawBoxes   = [];     // alle Boxen über minConf=0.05
 
 // ── Modell laden ────────────────────────────────────────────────────────────
-ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/';
+ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.21.0/dist/';
 
 status.textContent = 'STATUS: Lade YOLO-Modell (bitte noch keine Medien hochladen) …';
 ort.InferenceSession.create('./models/yolov8n.onnx', {
