@@ -252,8 +252,8 @@ def process_video(input_video_path, output_path):
     out    = cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(*"MP4V"), fps, (width, height))
     
     # Optional: Laufzeitstatistik, Initalsierung
-    frame_count = 0
-    total_infer_ms = 0.0
+    # frame_count = 0
+    # total_infer_ms = 0.0
 
     while True:
         ret, frame = cap.read()
@@ -262,10 +262,10 @@ def process_video(input_video_path, output_path):
             break
         
         # Optional: Laufzeitstatistik, weiter definieren
-        t0 = time.perf_counter()
+        # t0 = time.perf_counter()
         results = model(frame, verbose=False)
-        total_infer_ms += (time.perf_counter() - t0) * 1000
-        frame_count += 1
+        # total_infer_ms += (time.perf_counter() - t0) * 1000
+        # frame_count += 1
 
         # Aktuellen Frame durch YOLO schicken; gibt Bounding Boxes, Klassen und Confidence zurück
         for result in results:
@@ -288,11 +288,11 @@ def process_video(input_video_path, output_path):
         out.write(frame)
 
     # Optional: Laufzeitstatistik, Berechnung und Ausgabe
-    avg_ms  = total_infer_ms / frame_count if frame_count else 0
-    avg_fps = 1000 / avg_ms if avg_ms else 0
-    print(f"Verarbeitete Frames:      {frame_count}")
-    print(f"Ø Inferenzzeit pro Frame: {avg_ms:.1f} ms")
-    print(f"Ø Inferenz-FPS:           {avg_fps:.1f}")
+    # avg_ms  = total_infer_ms / frame_count if frame_count else 0
+    # avg_fps = 1000 / avg_ms if avg_ms else 0
+    # print(f"Verarbeitete Frames:      {frame_count}")
+    # print(f"Ø Inferenzzeit pro Frame: {avg_ms:.1f} ms")
+    # print(f"Ø Inferenz-FPS:           {avg_fps:.1f}")
 
     cap.release()
     out.release()
@@ -326,7 +326,7 @@ os.close(old_stderr)
 ```
 {{< video ./img/autobahn_h264.mp4 >}}   <!-- Es musste auf ein h264-Format ausgewichen werden, damit das Video auf Safari und Google-Chrome angezeigt werden kann -->
 
-[^3]: Beispiel-Eingabevideo bei [GeeksForGeeks](https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4) erreichbar.
+[^3]: Beispiel-Eingabevideo unter [GeeksForGeeks](https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4) erreichbar.
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
