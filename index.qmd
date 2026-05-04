@@ -290,9 +290,9 @@ def process_video(input_video_path, output_path):
     # Optional: Laufzeitstatistik, Berechnung und Ausgabe
     # avg_ms  = total_infer_ms / frame_count if frame_count else 0
     # avg_fps = 1000 / avg_ms if avg_ms else 0
-    # print(f"Verarbeitete Frames:      {frame_count}")
-    # print(f"Ø Inferenzzeit pro Frame: {avg_ms:.1f} ms")
-    # print(f"Ø Inferenz-FPS:           {avg_fps:.1f}")
+    # print(f"Verarbeitete Frames:                {frame_count}")
+    # print(f"Durchschn. Inferenzzeit pro Frame:  {avg_ms:.1f} ms")
+    # print(f"Durchschn. Inferenz-FPS:            {avg_fps:.1f}")
 
     cap.release()
     out.release()
@@ -1151,7 +1151,7 @@ btnStart.addEventListener('click', async () => {
     inferLoop(session);
     drawLoop();
   } catch(e) {
-    status.textContent = `STATUS: Kamera-Fehler — ${e.message}`;
+    status.textContent = `STATUS: Kamera-Fehler | ${e.message}`;
   }
 });
 
