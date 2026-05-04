@@ -80,7 +80,7 @@ Die Rede ist von einem sogenannten *Two-Stage-Detector*.
 \n
 
 Als One-Stage-Detector löst **YOLO** (You Only Look Once) dieses Problem mit einem anderen Ansatz. 
-Das gesamte Medium wird nämlich in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Erkennung von $45$ FPS (als base model) bis zu $166$ FPS (als fast model) ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht [@redmon2015].
+Das gesamte Medium wird nämlich in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Erkennung von $45$ FPS (als base model) bis zu $155$ FPS (als fast model) ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht [@redmon2015].
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
@@ -302,8 +302,8 @@ def process_video(input_video_path, output_path):
 **Demonstration mit Video**[^3]**:**
 
 Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab. 
-Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos $40–100+$ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise $5–25$ FPS realistisch.   
-Die interaktiven Demos in Abschnitt 4 erreichen mit WebGPU-Beschleunigung in Chrome $~23$ FPS (Video-Input) bzw. $~25-26$ FPS (Webcam für Live-Stream), aber mehr dazu später.
+Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos $40–100+$ FPS bishin zu $300$ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise $5–25$ FPS realistisch.   
+Die interaktiven Demos in Abschnitt 4 erreichen mit WebGPU-Beschleunigung etwa $~23$ FPS (Video-Input) bzw. $~25-26$ FPS (Webcam für Live-Stream), aber mehr dazu später.
 
 ```{python}
 #| echo: false
