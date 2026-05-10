@@ -1,6 +1,6 @@
 ---
 title: "Echtzeit-Objekterkennung mit YOLO"
-subtitle: "**Am Beispiel des Autonomen Fahrens**"
+subtitle: "**Eine demonstrative Implementierung am Beispiel des Autonomen Fahrens**"
 author: "Bledar Sllamniku (Digital Engineering, B.Sc.)"
 format:
   html:
@@ -28,7 +28,7 @@ Echtzeit-Objekterkennung ist im Kontext des autonomen Fahrens nicht nur eine aka
 Klassische zweistufige Verfahren wie R-CNN sind zwar präzise, scheitern jedoch an der nötigen Geschwindigkeit.  
 YOLO begegnet diesem Problem, indem es die Erkennung als ein einziges Regressionsproblem formuliert, d.h. Grid-System, Bounding Boxes und Confidence Score werden in einem einzigen Durchgang durch ein 24-schichtiges Convolutional-Netz berechnet und im $7 \times 7 \times 30$ Ausgabetensor kodiert. 
 Mit YOLOv8 ist dieses Prinzip heute mit wenigen Zeilen Python praktisch umsetzbar und liefert auf Standard-Hardware bereits echtzeitfähige Ergebnisse.  
-Dennoch ist YOLO keine universelle Lösung. Verdeckung, kleine Objekte und schwierige Umgebungsbedingungen bleiben Herausforderungen, die je nach Einsatzszenario eine sorgfältige Modellwahl erfordern.
+Dennoch ist YOLO keine universelle Lösung. Verdeckung, kleine Objekte und schwierige Umgebungsbedingungen bleiben Herausforderungen, die je nach Einsatzszenario eine sorgfältige Anforderungsanalyse erfordern.
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
@@ -118,9 +118,9 @@ $$
 \underbrace{\text{IoU}_{\text{pred}}^{\text{truth}}}_{\substack{\text{Wie gut passt} \\ \text{die Box?}}}
 $$
 
-- **Klassenwahrscheinlichkeiten**: Zusätzlich zur Box schätzt jede Zelle, welcher Klasse das Objekt angehört, z.B. Auto, Person oder Fahrrad. Diese Klassenwahrscheinlichkeit $C§ wird am Ende mit dem Confidence Score multipliziert, sodass das Modell für jede Box einen finalen, klassenspezifischen Score ausgibt.
+- **Klassenwahrscheinlichkeiten**: Zusätzlich zur Box schätzt jede Zelle, welcher Klasse das Objekt angehört, z.B. Auto, Person oder Fahrrad. Diese Klassenwahrscheinlichkeit $C$ wird am Ende mit dem Confidence Score multipliziert, sodass das Modell für jede Box einen finalen, klassenspezifischen Score ausgibt.
 
-Das **Gesamtmodell** fasst also alle Vorhersagen aller Zellen in einer einzigen verschachtelten Zahlenstruktur zusammen, dem sog. *Tensor*, vereinfacht gesagt ein mehrdimensionales Array.  
+Das **Gesamtmodell** fasst also alle Vorhersagen aller Zellen in einer einzigen verschachtelten Zahlenstruktur zusammen, dem sog. *Tensor*, vereinfacht gesagt ein mehrdimensionales Array. 
 Seine Dimension beträgt $S \times S \times (B \cdot 5 + C)$, d.h. jede der $S \times S$ Zellen werden $B$ Boxen mit je 5 Werten sowie $C$ Klassenwahrscheinlichkeiten gespeichert.  
 Die Autoren evaluierten ihr Modell auf **PASCAL VOC**, einem standardisierten Benchmark-Datensatz für Objekterkennung mit 20 vordefinierten Klassen (u.a. Auto, Person, Hund), der in der Computer-Vision-Forschung als gemeinsame Vergleichsbasis weit verbreitet ist. 
 Mit $S = 7$, $B = 2$ und $C = 20$ ergibt sich ein Ausgabe-Tensor der Größe $7 \times 7 \times 30$.
@@ -306,8 +306,8 @@ def process_video(input_video_path, output_path):
 **Demonstration mit Video**[^5]**:**
 
 Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab.  
-Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos $40–100+$ FPS bishin zu $300$ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise $5–25$ FPS realistisch.   
-Die interaktiven Demos in Abschnitt 4 erreichen mit WebGPU-Beschleunigung etwa $~23$ FPS (Video-Input) bzw. $24-26$ FPS (Webcam für Live-Stream), doch dazu später mehr.
+Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos $40–100$ FPS bishin zu $300$ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise $5–25$ FPS realistisch.   
+Die interaktiven Demos in Abschnitt 4 erreichen mit WebGPU-Beschleunigung etwa $23$ FPS (Video-Input) bzw. $24-26$ FPS (Webcam für Live-Stream), doch dazu später mehr.
 
 ```{python}
 #| echo: false
@@ -341,14 +341,14 @@ os.close(old_stderr)
 Die folgenden Demos laufen direkt im Browser ohne lokale Installation. 
 Möglich macht das das zuvor exportierte Modell `yolov8n.onnx`, das über die Bibliohtek `onnxruntime-web` direkt im Browser ausgeführt wird [^6]. 
 
-Die Inferenz läuft über **WebGPU-Beschleunigung** direkt im Browser, ohne WebGPU-Support fällt das System nämlich auf single-threaded WebAssembly zurück (ca. $4$ FPS), d.h. das Modell läuft auf WASM über der nativen CPU des eigenen Rechners. 
+Die Inferenz läuft über **WebGPU-Beschleunigung** direkt im Browser, ohne WebGPU-Support fällt das System nämlich auf single-threaded WebAssembly zurück (ca. $4$ FPS), d.h. das Modell läuft auf WASM über der nativen CPU des eigenen Rechners.  
 Bei den Tests in Google Chrome konnten $23$ FPS (Video) bzw. $24-26$ FPS (Webcam) erreicht werden. 
 Damit überschreitet sie die in Abschnitt 1 definierte Echtzeitanforderung von mind. $24$ FPS. 
 Safari (macOS-Browser) unterstützt bekanntermaßen eine schwächere WebGPU-Implementierung mit $10–14$ FPS. 
 Für optimale Performance wird also Google Chrome oder auch Edge empfohlen. 
 
 Für noch höhere FPS wäre eine Server-seitige Inferenz über Dienste wie *Hugging Face Spaces* oder *Netlify Functions* möglich, bei der das Modell auf dedizierten Servern im Backend läuft und nur die Ergebnisse im Browser angezeigt werden. 
-Zu beachten ist hierbei jedoch die Abhängigkeit von Hintergund-Diensten, d.h. bei einem Ausfall dieser fällt die Echtzeit-Objekterkennung aus.
+Hierbei ist jedoch die Abhängigkeit von Hintergund-Diensten zu beachten, d.h. bei einem Ausfall dieser fällt auch die Echtzeit-Objekterkennung aus.
 
 [^6]: Der vollständige Code inkl. Modell für diese Umsetzung kann im [GitHub-Repository](https://github.com/billyS02/vcde) eingesehen werden.
 
