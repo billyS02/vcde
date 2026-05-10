@@ -27,19 +27,19 @@ bibliography: references.bib
 Echtzeit-Objekterkennung ist im Kontext des autonomen Fahrens nicht nur eine akademische, sondern eine sicherheitskritische Anforderung. 
 Klassische zweistufige Verfahren wie R-CNN sind zwar präzise, scheitern jedoch an der nötigen Geschwindigkeit.  
 YOLO begegnet diesem Problem, indem es die Erkennung als ein einziges Regressionsproblem formuliert, d.h. Grid-System, Bounding Boxes und Confidence Score werden in einem einzigen Durchgang durch ein 24-schichtiges Convolutional-Netz berechnet und im $7 \times 7 \times 30$ Ausgabetensor kodiert. 
-Mit YOLOv8 ist dieses Prinzip heute mit wenigen Zeilen Python praktisch einsetzbar und liefert auf Standard-Hardware bereits echtzeitfähige Ergebnisse.  
-Dennoch ist YOLO keine universelle Lösung: Verdeckung, kleine Objekte und schwierige Umgebungsbedingungen bleiben Herausforderungen, die je nach Einsatzszenario eine sorgfältige Modellwahl erfordern
+Mit YOLOv8 ist dieses Prinzip heute mit wenigen Zeilen Python praktisch umsetzbar und liefert auf Standard-Hardware bereits echtzeitfähige Ergebnisse.  
+Dennoch ist YOLO keine universelle Lösung. Verdeckung, kleine Objekte und schwierige Umgebungsbedingungen bleiben Herausforderungen, die je nach Einsatzszenario eine sorgfältige Modellwahl erfordern.
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
 ## Methodik {#sec-methodik}
 
 Die Echtzeit-Objekterkennung erfolgt in diesem Projekt über die frei verfügbaren Technologien **YOLO** und **OpenCV**. 
-Zur Einführung und der darauffolgenden Implementierung dieser, beginnt dieses Projekt mit einer kurzen [Einordnung](#sec-einordnung) der **Objekterkennung** als Wiederholung, um dem Leser[^1] die **Vernetzung** des Kernthemas zu anderen Tehmen zu erleichtern. 
+Zur Einführung und dem darauffolgenden Einsatz dieser, beginnt dieses Projekt mit einer kurzen [Einordnung](#sec-einordnung) der **Objekterkennung** als Wiederholung, um dem Leser[^1] die **Vernetzung** des Kernthemas zu anderen Tehmen zu erleichtern. 
 
 \n
 
-Die Brücke zu YOLO wird über den gleichnamigen Abschnitt [YOLO: Intro](#sec-intro) geschlagen, wo dem Leser die Geschichte und die Natur der verwendeteten Technologie nahegelegt und mit anderen Standards verglichen werden.
+Die Brücke zu YOLO wird dann über den gleichnamigen Abschnitt [YOLO: Intro](#sec-intro) geschlagen, wo dem Leser die Geschichte und die Natur der verwendeteten Technologie nahegelegt und mit anderen Standards verglichen werden.
 
 \n
 
@@ -51,7 +51,7 @@ Die Implementierung wird anhand eines frei verfügbaren Videos aus dem Straßenv
 \n
 
 Daraufhin folgen im Abschnitt [YOLO: Eigentests](#sec-eigentests) drei **interaktive Demos**, die direkt hier im Browser laufen, ohne lokale Installation.
-Der Leser kann eigene Bilder hochladen, den Grid-Mechanismus und Confidence-Schwellwert live anpassen sowie einen Echtzeit-Videostream über die eigene Kamera testen.
+Der Leser kann eigene Bilder und Videos hochladen, dabei den Grid-Mechanismus und Confidence-Schwellwert anpassen sowie die Anwendung als Live-Stream über die eigene Kamera testen.
 
 \n
 
@@ -73,14 +73,14 @@ Visuell wird also eine sog. *Bounding Box* erzeugt, die das erkannte Objekt umra
 \n
 
 Besondere Anforderungen stellt dabei das **autonome Fahren**. 
-Hier reicht es nicht, Objekte lediglich zu erkennen, denn zusätzlich muss das auch in **Echtzeit** geschehen, also mit mindestens $24$ FPS (Frames pro Sekunde), damit ein Fahrzeug rechtzeitig reagieren kann.
+Hier reicht es nicht, die Objekte lediglich zu erkennen, denn zusätzlich muss das auch in **Echtzeit** geschehen, d.h. mit mindestens $24$ FPS (Frames pro Sekunde), damit ein Fahrzeug rechtzeitig reagieren kann.
 Klassische Verfahren wie R-CNN sind zwar präzise, scheitern jedoch an genau diesem Anspruch, da sie das Bild in mehreren Schritten verarbeiten [@girshick2014]. 
 Die Rede ist von einem sogenannten *Two-Stage-Detector*.
 
 \n
 
 Als One-Stage-Detector löst **YOLO** (You Only Look Once) dieses Problem mit einem anderen Ansatz. 
-Das gesamte Medium wird nämlich in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Erkennung von $45$ FPS (als base model) bis zu $155$ FPS (als fast model) ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht [@redmon2015].
+Das gesamte Medium wird nämlich in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Objekterkennung von $45$ FPS (als base model) bis zu $155$ FPS (als fast model) ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht [@redmon2015].
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
@@ -104,24 +104,24 @@ Das Eingabebild wird dabei in ein gleichmäßiges Raster $S \times S$ aufgeteilt
 Jede dieser Rasterzellen übernimmt dann die Verantwortung für genau den Bildbereich, den sie abdeckt.
 Konkret gilt: Fällt der Mittelpunkt eines Objekts in eine bestimme Zelle, ist genau diese für die Erkennung dieses Objektes verantworklich [@redmon2015, Kapitel 2].
 
-![Das Bild wird in ein $S \times S$ Grid aufgeteilt. Jede Zelle sagt $B$ Bounding Boxes mit Confidence und $C$ Klassenwahrscheinlichkeiten voraus. Alles kodiert in einem einzigen Tesnor: $S \times S \times (B \cdot 5 + C)$. [@redmon2015, Abbildung 2]](./img/yolo_SSGrid.png){fig-align="center"}  
+![Das Bild wird in ein $S \times S$ Grid aufgeteilt. Jede Zelle sagt $B$ Bounding Boxes mit Confidence Score und $C$ Klassenwahrscheinlichkeiten voraus. Alles kodiert in einem einzigen Tesnor: $S \times S \times (B \cdot 5 + C)$. [@redmon2015, Abbildung 2]](./img/yolo_SSGrid.png){fig-align="center"}  
 
 Für jeder dieser Zellen sagt das Modell gleichzeitig mehrere Dinge vorher:
 
-- **Bounding Boxes**: Jede Zelle schlägt $B$ mögliche Bounding Boxes vor, beschrieben durch fünf Werte aus Mittelpunkt $(x, y)$ des erkannten Objekts zur Rasterzelle, Abmessung $(w, h)$ zwischen Box und Gesamtbild und Confidence Score.  
+- **Bounding Boxes**: Jede Zelle schlägt $B$ mögliche Bounding Boxes vor, beschrieben durch fünf Werte aus dem Mittelpunkt $(x, y)$ des erkannten Objekts zur Rasterzelle, der Abmessung $(w, h)$ zwischen Box und Gesamtbild sowie des Confidence Scores.  
 - **Confidence Score**: Dieser Wert beantwortet zum einen, ob ein Objekt überhaupt in der Box vorhanden ist und zum anderen, wie gut die Box wirklich zum Objekt passt. Das Modell kombiniert beide Informationen in einer einzigen Kennzahl:
 
 $$
 \text{Confidence} = 
 \underbrace{\Pr(\text{Object})}_{\substack{\text{Ist ein Objekt} \\ \text{vorhanden?}}}
 \times
-\underbrace{\text{IOU}_{\text{pred}}^{\text{truth}}}_{\substack{\text{Wie gut passt} \\ \text{die Box?}}}
+\underbrace{\text{IoU}_{\text{pred}}^{\text{truth}}}_{\substack{\text{Wie gut passt} \\ \text{die Box?}}}
 $$
 
-- **Klassenwahrscheinlichkeiten**: Zusätzlich zur Box schätzt jede Zelle, welcher Klasse das Objekt angehört, also z.B. „Auto", „Person" oder „Fahrrad". Diese Klassenwahrscheinlichkeit wird am Ende mit dem Confidence Score multipliziert, sodass das Modell für jede Box einen finalen, klassenspezifischen Score ausgibt.
+- **Klassenwahrscheinlichkeiten**: Zusätzlich zur Box schätzt jede Zelle, welcher Klasse das Objekt angehört, z.B. Auto, Person oder Fahrrad. Diese Klassenwahrscheinlichkeit $C§ wird am Ende mit dem Confidence Score multipliziert, sodass das Modell für jede Box einen finalen, klassenspezifischen Score ausgibt.
 
-Das **Gesamtmodell** fasst alle Vorhersagen aller Zellen in einer einzigen verschachtelten Zahlenstruktur zusammen (*Tensor*, vereinfacht gesagt ein mehrdimensionales Array).
-Seine Dimension ist $S \times S \times (B \cdot 5 + C)$, d.h. jede der $S \times S$ Zellen werden $B$ Boxen mit je 5 Werten sowie $C$ Klassenwahrscheinlichkeiten gespeichert.  
+Das **Gesamtmodell** fasst also alle Vorhersagen aller Zellen in einer einzigen verschachtelten Zahlenstruktur zusammen, dem sog. *Tensor*, vereinfacht gesagt ein mehrdimensionales Array.  
+Seine Dimension beträgt $S \times S \times (B \cdot 5 + C)$, d.h. jede der $S \times S$ Zellen werden $B$ Boxen mit je 5 Werten sowie $C$ Klassenwahrscheinlichkeiten gespeichert.  
 Die Autoren evaluierten ihr Modell auf **PASCAL VOC**, einem standardisierten Benchmark-Datensatz für Objekterkennung mit 20 vordefinierten Klassen (u.a. Auto, Person, Hund), der in der Computer-Vision-Forschung als gemeinsame Vergleichsbasis weit verbreitet ist. 
 Mit $S = 7$, $B = 2$ und $C = 20$ ergibt sich ein Ausgabe-Tensor der Größe $7 \times 7 \times 30$.
 
@@ -134,19 +134,21 @@ Das YOLO-Netz besteht aus zwei klar getrenten Phasen, die auf ImageNet[^2] train
 - **Feature-Extractor**  
 
 24 Convolutional Layer verarbeiten das Eingabebild ($448 \times 448$ Pixel) schrittweise. 
-Vier zwischengeschaltete MaxPooling-Schichten sowie ein abschließender Conv-Layer mit Stride 2 halbieren die räumliche Auflösung, während die Kanaltiefe gleichzeitig wächst (von ursprünglichen $3$ für RGB auf schließlich $1024$). 
-Das Bild wird also räumlich von $448 \times 448$ auf $7 \times 7$ komprimiert, während das Netz durch die mehr Kanäle auch zunehmend mehr abstrakte Merkmale extrahieren kann, d.h. von bloßen Kanten und Ecken hin zu ganzen Objektformen.  
+Vier zwischengeschaltete MaxPooling-Schichten[^3] sowie ein abschließender Convolutional-Layer mit Stride 2[^4] halbieren die räumliche Auflösung, während die Kanaltiefe gleichzeitig wächst (von ursprünglichen $3$ für RGB auf schließlich $1024$).  
+Das Bild wird also räumlich von $448 \times 448$ auf $7 \times 7$ komprimiert, während das Netz durch die höhere Kanalanzahl auch zunehmend mehr abstrakte Merkmale extrahieren kann, d.h. von bloßen Kanten und Ecken hin zu ganzen Objektformen.  
 Zwiscchen den 3x3-Convolutional-Layern schalten die Autoren sogenannte 1x1-Convolutional-Layer ein, die die Kanaltiefe vorübergehend reduzieren. 
 Eine bewerte Methode, um den Rechenaufwand zu reduzieren (*Echtzeitverhalten*), ohne wesentliche Genauigkeit zu verlieren [@redmon2015, Kapitel 2.1].  
 
 - **Predicition Head**  
 
 Die nun im Format $7 \times 7 \times 1024$ vorliegenden Maps mit den extrahierten Features werden abgeflacht (*flattened*) und durch zwei vollverbundene Schichten geleitet. 
-Dabei zunächst auf $4096$ Neuronen und dann direkt auf den finalen Ausgabetensor der Größe $7 \times 7 \times 30$. 
-Dieser Tensor entspricht genau dem in Abschnitt 2.1 beschriebenen Grid mit Anzahl Zellen $S = 7$, Anzahl Boxen $B = 2$ und Anzahl Klassen $C = 20$.  
+Dabei zunächst auf $4096$ Neuronen und dann direkt auf den finalen Ausgabetensor der Größe $7 \times 7 \times 30$.  
+Dieser Tensor entspricht genau dem in Abschnitt 2.1 beschriebenen Grid mit Anzahl Zellen $S = 7$, Anzahl Boxen $B = 2$ und Anzahl Klassen $C = 20$. 
 Das Raster im $7 \times 7$ Format ergibt sich also natürlich aus der Netzarchitektur selbst [@redmon2015, Abbildung 3]. 
 
-[^2]: ImageNet ist ein riesiger Bilddatensatz mit über 14 Millionen annotierten Bildern aus über 20.000 Klassen, der als Standard-Benchmark für das Vortraining von Bilderkennungsnetzen gilt. YOLO nutzt jedoch beim Vortraining nur die ILSVRC-Untermenge mit 1000 Klassen und ca. 1,2 Millionen Bildern [@redmon2015, Kapitel 2.2].
+[^2]: ImageNet ist ein riesiger Bilddatensatz mit über 14 Millionen annotierten Bildern aus über 20.000 Klassen, der als Standard-Benchmark für das Vortraining von Bilderkennungsnetzen gilt. YOLO nutzt beim Vortraining nur die ILSVRC-Untermenge mit 1000 Klassen und ca. 1,2 Millionen Bildern [@redmon2015, Kapitel 2.2].
+[^3]: MaxPooling reduziert eine Feature-Map, indem es aus jedem lokalen Fenster nur den größten Wert behält.
+[^4]: Ein Conv-Layer mit Stride 2 verschiebt den Faltungskernel in Zweierschritten, wodurch die räumliche Auflösung der Feature-Map halbiert wird.
 
 ### 2.3 YOLO-Versionen
 
@@ -162,7 +164,7 @@ Die wichtigsten Meilensteine sind wohl:
 - **YOLOv3 (2018):** Erkennung auf *drei Skalen* gleichzeitig; besonders hilfreich für Objekte unterschiedlicher Größe im selben Bild.
 - **YOLOv4/v5 (2020):** Community-getriebene Weiterentwicklungen mit zahlreichen Trainingstricks; YOLOv5 vollzog den Wechsel zu PyTorch und vereinfachte den Export auf Edge-Geräte erheblich [@terven2023, Kapitel 9].
 - **<u>YOLOv8</u> (2023):** Die aktuell verbreitetste Version. Kernerneuerung ist die *anchor-free* Architektur: Statt vordefinierten Acnhor Boxes lernt das Modell Boxpositionen direkt, was den Trainingsprozess vereinfacht und die Genauigkeit steigert. Zudem wurde ein *decoupled head* eingeführt, der Klassifizierung und Lokalisation in getrennten Zweigen berechnet [@jocher2023].
-- **YOLO26 (2025):** Aktuellste Version. Führt NMS-freie End-to-End-Inferenz ein und entfernt den Distribution Focal Loss (DFL), was den Export vereinfacht und die native CPU-Inferenz um bis zu 43 % beschleunigt. Für dieses Projekt wird dennoch <u>YOLOv8</u> eingesetzt, da es zu diese, Zeitpunkt die am weitesten verbreitete und best dokumentierteste Version ist und die zugrunde liegenden Konzepte (anchor-free Detektion, decoupled head, etc.) exemplarisch vermittelt.
+- **YOLO26 (2025):** Die aktuellste Version. Führt NMS-freie End-to-End-Inferenz (d.h. keine separater Nachverarbeitungsschritt zur Duplikatelimination) ein und entfernt den Distribution Focal Loss (d.h. die Bounding-Box-Regression wird direkt ohne verteilungsbasierte Hilfsverlustfunktion gelernt). Das vereinfacht den Export und beschleunigt die native CPU-Inferenz um bis zu 43 %. Für dieses Projekt wird dennoch <u>YOLOv8</u> eingesetzt, da es zu diesem Zeitpunkt die am weitesten verbreitete und best dokumentierteste Version ist und die zugrundeliegenden Konzepte exemplarisch vermittelt.
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
@@ -204,7 +206,7 @@ Die Bibliothek `ultralytics` enthält YOLOv8 inklusive aller Abhängigkeiten (u.
 import ultralytics
 import cv2
 
-# Ggf. ist ein Neustart der Entwicklungsumgebung nötig.
+# Ggf. ist ein Neustart der Entwicklungsumgebung nötig, damit die Bibliotheken eingebunden werden können
 
 print(f"Ultralytics Version: {ultralytics.__version__}")
 print(f"OpenCV Version:      {cv2.__version__}")
@@ -214,8 +216,10 @@ print(f"OpenCV Version:      {cv2.__version__}")
 
 ### 3.2 Objekterkennung im Straßenverkehr
 
-Als Testmedium dient ein frei verfügbares Video aus dem Kontext *Straßenverkehr*.
-Dieses wurde Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und die erkannten Objekte anschließend mit Bounding Boxes und Label versehen.
+YOLO wurde bis zu diesem Abschnitt im Kontext von Bildern behandelt. 
+Als Testmedium dient nun jedoch ein frei verfügbares Video aus dem Kontext *Straßenverkehr*. 
+Ein Video ist hierbei schlicht als eine Abfolge vieler Bilder zu interpretieren. 
+Dieses wird also Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und die erkannten Objekte anschließend mit Bounding Boxes und Label versehen.
 
 **Modell laden:**
 
@@ -291,19 +295,19 @@ def process_video(input_video_path, output_path):
     # Optional: Laufzeitstatistik (hier finale Berechnung und Ausgabe)
     avg_ms  = total_infer_ms / frame_count if frame_count else 0
     avg_fps = 1000 / avg_ms if avg_ms else 0
-    print(f"Verarbeitete Frames:                {frame_count}")
-    print(f"Durchschn. Inferenzzeit pro Frame:  {avg_ms:.1f} ms")
-    print(f"Durchschn. Inferenz-FPS:            {avg_fps:.1f}")
+    print(f"Verarbeitete Frames:                 {frame_count}")
+    print(f"Durchschn. Inferenzzeit pro Frame:   {avg_ms:.1f} ms")
+    print(f"Durchschn. Inferenz-FPS:             {avg_fps:.1f}")
 
     cap.release()
     out.release()
 ```
 
-**Demonstration mit Video**[^3]**:**
+**Demonstration mit Video**[^5]**:**
 
-Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab. 
+Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab.  
 Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos $40–100+$ FPS bishin zu $300$ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise $5–25$ FPS realistisch.   
-Die interaktiven Demos in Abschnitt 4 erreichen mit WebGPU-Beschleunigung etwa $~23$ FPS (Video-Input) bzw. $~25-26$ FPS (Webcam für Live-Stream), aber mehr dazu später.
+Die interaktiven Demos in Abschnitt 4 erreichen mit WebGPU-Beschleunigung etwa $~23$ FPS (Video-Input) bzw. $24-26$ FPS (Webcam für Live-Stream), doch dazu später mehr.
 
 ```{python}
 #| echo: false
@@ -328,23 +332,25 @@ os.close(old_stderr)
 ```
 {{< video ./img/autobahn_h264.mp4 >}}   <!-- Es musste auf ein h264-Format ausgewichen werden, damit das Video auf Safari und Google-Chrome angezeigt werden kann -->
 
-[^3]: Beispiel-Eingabevideo unter [GeeksForGeeks](https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4) erreichbar.
+[^5]: Beispiel-Eingabevideo unter [GeeksForGeeks](https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4) erreichbar.
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
 ## 4. YOLO: Eigentests {#sec-eigentests}
 
 Die folgenden Demos laufen direkt im Browser ohne lokale Installation. 
-Möglich macht das das zuvor exportierte Modell `yolov8n.onnx`, das über die Bibliohtek `onnxruntime-web` direkt im Browser ausgeführt wird [^4]. 
+Möglich macht das das zuvor exportierte Modell `yolov8n.onnx`, das über die Bibliohtek `onnxruntime-web` direkt im Browser ausgeführt wird [^6]. 
 
-Die Inferenz läuft über WebGPU-Beschleunigung direkt im Browser und erreicht in Chrome $~23$ FPS (Video) bzw. $~25-26$ FPS (Webcam). 
+Die Inferenz läuft über **WebGPU-Beschleunigung** direkt im Browser, ohne WebGPU-Support fällt das System nämlich auf single-threaded WebAssembly zurück (ca. $4$ FPS), d.h. das Modell läuft auf WASM über der nativen CPU des eigenen Rechners. 
+Bei den Tests in Google Chrome konnten $23$ FPS (Video) bzw. $24-26$ FPS (Webcam) erreicht werden. 
 Damit überschreitet sie die in Abschnitt 1 definierte Echtzeitanforderung von mind. $24$ FPS. 
-Safari (macOS Browser) bietet eine schwächere **WebGPU-Implementierung** ($~10–12$ FPS), ohne WebGPU-Support fällt das System nämlich auf single-threaded WebAssembly zurück ($~4$ FPS), d.h. WASM über die native CPU. 
+Safari (macOS-Browser) unterstützt bekanntermaßen eine schwächere WebGPU-Implementierung mit $10–14$ FPS. 
 Für optimale Performance wird also Google Chrome oder auch Edge empfohlen. 
 
-Für noch höhere FPS wäre eine Server-seitige Inferenz über Dienste wie *Hugging Face Spaces* oder *Netlify Functions* möglich, bei der das Modell auf dedizierten Servern im Backend läuft und nur die Ergebnisse im Browser angezeigt werden.
+Für noch höhere FPS wäre eine Server-seitige Inferenz über Dienste wie *Hugging Face Spaces* oder *Netlify Functions* möglich, bei der das Modell auf dedizierten Servern im Backend läuft und nur die Ergebnisse im Browser angezeigt werden. 
+Zu beachten ist hierbei jedoch die Abhängigkeit von Hintergund-Diensten, d.h. bei einem Ausfall dieser fällt die Echtzeit-Objekterkennung aus.
 
-[^4]: Der vollständige Code inkl. Modell für diese Umsetzung ist im [GitHub-Repository](https://github.com/billyS02/vcde) einsehbar.
+[^6]: Der vollständige Code inkl. Modell für diese Umsetzung kann im [GitHub-Repository](https://github.com/billyS02/vcde) eingesehen werden.
 
 ### 4.1 Grid-Manipulation
 
@@ -462,15 +468,15 @@ let rawBoxes   = [];     // alle Boxen über minConf=0.05
 // ── Modell laden ────────────────────────────────────────────────────────────
 ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.21.0/dist/';
 
-status.textContent = 'STATUS: Lade YOLO-Modell (bitte noch keine Medien hochladen) …';
+status.textContent = 'STATUS: YOLO wird geladen …';
 ort.InferenceSession.create('./models/yolov8n.onnx', {
   executionProviders: ['webgpu', 'wasm'],
   graphOptimizationLevel: 'all',
 }).then(s => {
   session = s;
-  status.textContent = 'STATUS: Modell erfolgreich geladen. Bild hochladen um zu starten!';
+  status.textContent = 'STATUS: YOLO erfolgreich geladen. Bild hochladen um zu starten!';
 }).catch(e => {
-  status.textContent = 'STATUS: Modell nicht gefunden. Zuerst yolov8n.onnx exportieren!';
+  status.textContent = 'STATUS: YOLO nicht gefunden!';
 });
 
 // ── Upload-Events ────────────────────────────────────────────────────────────
@@ -746,12 +752,18 @@ cSlider.addEventListener('input', () => {
 // ── Modell ──────────────────────────────────────────────────────────────────
 async function ensureSession() {
   if (window.__yoloSession) return window.__yoloSession;
-  status.textContent = 'STATUS: Lade YOLO-Modell …';
   const s = await ort.InferenceSession.create('./models/yolov8n.onnx',
     { executionProviders: ['webgpu', 'wasm'] });
   window.__yoloSession = s;
   return s;
 }
+
+status.textContent = 'STATUS: YOLO wird geladen …';
+ensureSession().then(() => {
+  status.textContent = 'STATUS: YOLO erfolgreich geladen. Datei hochladen um zu starten!';
+}).catch(() => {
+  status.textContent = 'STATUS: YOLO nicht gefunden!';
+});
 
 // ── Upload-Events ────────────────────────────────────────────────────────────
 zone.addEventListener('click', () => fileIn.click());
@@ -1046,12 +1058,18 @@ cSlider.addEventListener('input', () => {
 // ── Session ───────────────────────────────────────────────────────────────────
 async function ensureSession() {
   if (window.__yoloSession) return window.__yoloSession;
-  status.textContent = 'STATUS: Lade YOLO-Modell …';
   const s = await ort.InferenceSession.create('./models/yolov8n.onnx',
     { executionProviders: ['webgpu', 'wasm'] });
   window.__yoloSession = s;
   return s;
 }
+
+status.textContent = 'STATUS: YOLO wird geladen …';
+ensureSession().then(() => {
+  status.textContent = 'STATUS: YOLO erfolgreich geladen. Kamera starten um zu beginnen!';
+}).catch(() => {
+  status.textContent = 'STATUS: YOLO nicht gefunden!';
+});
 
 // ── Vorverarbeitung (Letterbox -> 640×640) ────────────────────────────────────
 const _offCanvas = document.createElement('canvas');
