@@ -217,9 +217,9 @@ print(f"OpenCV Version:      {cv2.__version__}")
 ### 3.2 Objekterkennung im Straßenverkehr
 
 YOLO wurde bis zu diesem Abschnitt im Kontext von Bildern behandelt. 
-Als Testmedium dient nun jedoch ein frei verfügbares Video aus dem Kontext *Straßenverkehr*. 
+Als Testmedium dient nun jedoch ein frei verfügbares Video aus dem *Straßenverkehr*. 
 Ein Video ist hierbei schlicht als eine Abfolge vieler Bilder zu interpretieren. 
-Dieses wird also Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und die erkannten Objekte anschließend mit Bounding Boxes und Label versehen.
+Dieses wird also Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und die erkannten Objekte anschließend mit Bounding Boxes, Labels und der zugehörigen Wahrscheinlichkeit versehen.
 
 **Modell laden:**
 
@@ -231,8 +231,7 @@ model = YOLO("yolov8n.pt")
 # OUTPUT:
 ```
 
-YOLOv8 steht in verschiedenen Größen zur Verfügung, von `yolov8n.pt` (Nano, schneller) bis `yolov8x.pt` (Extra Large, genauer). 
-Für dieses Projekt wird `yolov8s.pt` (Small) verwendet, da es eine gute Balance zwischen Geschwindigkeit und Genauigkeit bietet. 
+YOLOv8 steht in verschiedenen Größen zur Verfügung, von `yolov8n.pt` (Nano, schneller),  `yolov8s.pt` (Small, Balance zwischen Geschwindigkeit und Genauigkeit) bishin zu `yolov8x.pt` (Extra Large, genauer). 
 
 **Verarbeitungsfunktion definieren:**
 
