@@ -305,7 +305,7 @@ def process_video(input_video_path, output_path):
 **Demonstration mit Video**[^5]**:**
 
 Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab.  
-Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos $40–100$ FPS bishin zu $300$ FPS ermöglicht, sind auf einer standard Laptop-CPU typischerweise $5–25$ FPS realistisch.   
+Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos $40–100$ FPS bishin zu $300$ FPS ermöglicht, ist auf einer standard Laptop-CPU typischerweise eine Range von $5–20$ FPS realistisch.   
 Die interaktiven Demos in Abschnitt 4 erreichen mit WebGPU-Beschleunigung etwa $23$ FPS (Video-Input) bzw. $24-26$ FPS (Webcam für Live-Stream), doch dazu später mehr.
 
 ```{python}
@@ -1241,7 +1241,7 @@ function drawLoop() {
 ## Fazit {#sec-fazit}
 
 YOLO löst das in [Abschnitt 1]{#sec-einordnung} beschriebene Problem der Echtzeit-Objekterkennung konsequent. Statt ein Bild in mehreren Schritten zu verarbeiten, formuliert es die Erkennung als ein einziges Regressionsproblem: Einmal durch das Netz, ein Ausgabetensor, alle Ergebnisse. 
-Die Implementierung mit YOLOv8 in [Abschnitt 3]{#sec-implementierung} zeigt, dass dieses Prinzip heute mit wenigen Zeilen Python produktiv einsetzbar ist, und die interaktiven Demos in [Abschnitt 4]{#sec-eigentests} machen die zugrundeliegenden Konzepte direkt erfahrbar. 
+Die Implementierung mit YOLOv8 in [Abschnitt 3]{#sec-implementierung} zeigt, dass dieses Prinzip heute mit wenigen Zeilen Python produktiv umsetzbar ist, und die interaktiven Demos in [Abschnitt 4]{#sec-eigentests} machen die zugrundeliegenden Konzepte direkt erfahrbar. 
 
 So leistungsfähig YOLO auch ist gibt es Szenarien, in denen das System an seine Grenzen stößt. 
 Diese zu kennen sind wichtig, um die Ergebnisse im Demo-Kapitel korrekt einordnen zu können.
