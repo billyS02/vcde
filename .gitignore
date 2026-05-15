@@ -1,3 +1,4 @@
 .venv/
 img/*.mp4
 !img/autobahn_h264.mp4
+PowerPoint/

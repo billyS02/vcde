@@ -89,11 +89,16 @@ Das gesamte Medium wird nämlich in einem einzigen Durchgang durch das neuronale
 YOLO ist ein Open Source Projekt zur Echtzeit-Objekterkennung welches in seiner Originalfassung erstmalig 2015 von Joseph Redmon, Santosh Divvala, Ross Girshik und Ali Farhadi unter dem Titel *You Only Look Once: Unified, Real-Time Object Detection* veröffentlich wurde [@redmon2015]. 
 
 Die Autoren setzten in ihrer Forschungsarbeit auf einen Ansatz, der die Objekterkennung als ein einziges Regressionsproblem formuliert.
-Das bedeutet, dass das gesamte Bild **genau einmal durch ein einziges** Neuronales Netz geschickt wird und dieses dabei gleichzeitig alle erkannten Objekte mit ihren Positionen und Klasen ausgibt.
+Das bedeutet, dass das gesamte Bild **genau einmal durch ein einziges** Neuronales Netz geschickt wird und dieses dabei gleichzeitig alle erkannten Objekte mit ihren Positionen und Klassen ausgibt.
 Es gibt also keine zweiten Schritte oder separaten Klassifikatoren.
 
 Wir erinnern uns: Zweistufige Verfahren wie R-CNN beginnen hingegen mit sog. *Region Proposals*, d.h. der Algorithmus schlägt zunächst hunderte mögliche Bildausschnitte vor, die ein Objekt enthalten könnten und klassifiziert dann jeden einzeln.
-**Faster R-CNN** schafft als einer der schnellsten Varianten etwa $5$ FPS bis $17$ FPS auf einem Standard Backbone, was für ein fahrendes Auto schlicht zu wenig ist.
+**Faster R-CNN** schaffte in einer Studie als einer der schnellsten Varianten etwa $5$ FPS bis $17$ FPS auf einem Standard Backbone, was für ein fahrendes Auto schlicht zu wenig ist.
+
+SSD (*Single Shot Multibox Detector*) ist ein weiterer One-Stage-Detektor [@liu2016]. 
+Das Bild wird auch hier in einem einzigen Durchgang durch ein CNN geschickt, das aber an mehreren Zwischenstellen in Raster unterschiedlicher Auflösung aufgeteilt wird. 
+Grobe Raster erkennen große Objekte, feine Raster kleine. 
+SSD erreichte in den Versuchstest damit 22–59 FPS, d.h. es war schneller als R-CNN, aber schwächer bei sehr kleinen Objekten. 
 
 ![Geschwindigkeit von YOLO im Vergleich zu anderen Modellen. [@sanchez2020, Abbildung 6]](./img/yolo_compare.png){fig-align="center"}  
 
