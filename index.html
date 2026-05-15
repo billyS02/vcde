@@ -246,8 +246,9 @@ Dennoch ist YOLO keine universelle Lösung. Verdeckung, kleine Objekte und schwi
 <section id="sec-intro" class="level2">
 <h2 class="anchored" data-anchor-id="sec-intro">2. YOLO: Intro</h2>
 <p>YOLO ist ein Open Source Projekt zur Echtzeit-Objekterkennung welches in seiner Originalfassung erstmalig 2015 von Joseph Redmon, Santosh Divvala, Ross Girshik und Ali Farhadi unter dem Titel <em>You Only Look Once: Unified, Real-Time Object Detection</em> veröffentlich wurde <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>)</span>.</p>
-<p>Die Autoren setzten in ihrer Forschungsarbeit auf einen Ansatz, der die Objekterkennung als ein einziges Regressionsproblem formuliert. Das bedeutet, dass das gesamte Bild <strong>genau einmal durch ein einziges</strong> Neuronales Netz geschickt wird und dieses dabei gleichzeitig alle erkannten Objekte mit ihren Positionen und Klasen ausgibt. Es gibt also keine zweiten Schritte oder separaten Klassifikatoren.</p>
-<p>Wir erinnern uns: Zweistufige Verfahren wie R-CNN beginnen hingegen mit sog. <em>Region Proposals</em>, d.h. der Algorithmus schlägt zunächst hunderte mögliche Bildausschnitte vor, die ein Objekt enthalten könnten und klassifiziert dann jeden einzeln. <strong>Faster R-CNN</strong> schafft als einer der schnellsten Varianten etwa <span class="math inline">\(5\)</span> FPS bis <span class="math inline">\(17\)</span> FPS auf einem Standard Backbone, was für ein fahrendes Auto schlicht zu wenig ist.</p>
+<p>Die Autoren setzten in ihrer Forschungsarbeit auf einen Ansatz, der die Objekterkennung als ein einziges Regressionsproblem formuliert. Das bedeutet, dass das gesamte Bild <strong>genau einmal durch ein einziges</strong> Neuronales Netz geschickt wird und dieses dabei gleichzeitig alle erkannten Objekte mit ihren Positionen und Klassen ausgibt. Es gibt also keine zweiten Schritte oder separaten Klassifikatoren.</p>
+<p>Wir erinnern uns: Zweistufige Verfahren wie R-CNN beginnen hingegen mit sog. <em>Region Proposals</em>, d.h. der Algorithmus schlägt zunächst hunderte mögliche Bildausschnitte vor, die ein Objekt enthalten könnten und klassifiziert dann jeden einzeln. <strong>Faster R-CNN</strong> schaffte in einer Studie als einer der schnellsten Varianten etwa <span class="math inline">\(5\)</span> FPS bis <span class="math inline">\(17\)</span> FPS auf einem Standard Backbone, was für ein fahrendes Auto schlicht zu wenig ist.</p>
+<p>SSD (<em>Single Shot Multibox Detector</em>) ist ein weiterer One-Stage-Detektor <span class="citation" data-cites="liu2016">(<a href="#ref-liu2016" role="doc-biblioref">Liu et al. 2016</a>)</span>. Das Bild wird auch hier in einem einzigen Durchgang durch ein CNN geschickt, das aber an mehreren Zwischenstellen in Raster unterschiedlicher Auflösung aufgeteilt wird. Grobe Raster erkennen große Objekte, feine Raster kleine. SSD erreichte in den Versuchstest damit 22–59 FPS, d.h. es war schneller als R-CNN, aber schwächer bei sehr kleinen Objekten.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="./img/yolo_compare.png" class="img-fluid figure-img"></p>
@@ -343,7 +344,7 @@ Dieser Tensor entspricht genau dem in Abschnitt 2.1 beschriebenen Grid mit Anzah
 <p>Die Bibliothek <code>ultralytics</code> enthält YOLOv8 inklusive aller Abhängigkeiten (u.a. PyTorch).<br>
 <code>opencv-python</code> wird für das Einlesen und Verarbeiten von Bild- und Videodaten sowie die Ansteuerung von Kamera und Peripherie verwendet.</p>
 <p><strong>Überprüfen der Installation:</strong></p>
-<div id="02d77ab8" class="cell" data-execution_count="1">
+<div id="72a40f5e" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ultralytics</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -357,7 +358,7 @@ Dieser Tensor entspricht genau dem in Abschnitt 2.1 beschriebenen Grid mit Anzah
 <pre><code>Creating new Ultralytics Settings v0.0.6 file ✅ 
 View Ultralytics Settings with 'yolo settings' or at '/home/runner/.config/Ultralytics/settings.json'
 Update Settings with 'yolo settings key=value', i.e. 'yolo settings runs_dir=path/to/dir'. For help see https://docs.ultralytics.com/quickstart/#ultralytics-settings.
-Ultralytics Version: 8.4.50
+Ultralytics Version: 8.4.51
 OpenCV Version:      4.13.0</code></pre>
 </div>
 </div>
@@ -366,7 +367,7 @@ OpenCV Version:      4.13.0</code></pre>
 <h3 class="anchored" data-anchor-id="objekterkennung-im-straßenverkehr">3.2 Objekterkennung im Straßenverkehr</h3>
 <p>YOLO wurde bis zu diesem Abschnitt im Kontext von Bildern behandelt. Als Testmedium dient nun jedoch ein frei verfügbares Video aus dem <em>Straßenverkehr</em>. Ein Video ist hierbei schlicht als eine Abfolge vieler Bilder zu interpretieren. Dieses wird also Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und die erkannten Objekte anschließend mit Bounding Boxes, Labels und der zugehörigen Wahrscheinlichkeit versehen.</p>
 <p><strong>Modell laden:</strong></p>
-<div id="41933d0f" class="cell" data-execution_count="2">
+<div id="5998e9a3" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> YOLO(<span class="st">"yolov8n.pt"</span>)</span>
@@ -375,7 +376,7 @@ OpenCV Version:      4.13.0</code></pre>
 </div>
 <p>YOLOv8 steht in verschiedenen Größen zur Verfügung, von <code>yolov8n.pt</code> (Nano, schneller), <code>yolov8s.pt</code> (Small, Balance zwischen Geschwindigkeit und Genauigkeit) bishin zu <code>yolov8x.pt</code> (Extra Large, genauer).</p>
 <p><strong>Verarbeitungsfunktion definieren:</strong></p>
-<div id="0cffaf04" class="cell" data-execution_count="3">
+<div id="1e144d85" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2, random, time</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Jeder Klasse wird eine eindeutige reproduzierbare Farbe zugewiesen (z.B. "Auto" immer blau)</span></span>
@@ -445,11 +446,11 @@ OpenCV Version:      4.13.0</code></pre>
 <p>Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab.<br>
 Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos <span class="math inline">\(40–100\)</span> FPS bishin zu <span class="math inline">\(300\)</span> FPS ermöglicht, ist auf einer standard Laptop-CPU typischerweise eine Range von <span class="math inline">\(5–20\)</span> FPS realistisch.<br>
 Die interaktiven Demos in Abschnitt 4 erreichen mit WebGPU-Beschleunigung etwa <span class="math inline">\(23\)</span> FPS (Video-Input) bzw. <span class="math inline">\(24-26\)</span> FPS (Webcam für Live-Stream), doch dazu später mehr.</p>
-<div id="f7d79ed8" class="cell" data-execution_count="4">
+<div id="8421fe2b" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-stdout">
 <pre><code>Verarbeitete Frames:                 1501
-Durchschn. Inferenzzeit pro Frame:   68.8 ms
-Durchschn. Inferenz-FPS:             14.5</code></pre>
+Durchschn. Inferenzzeit pro Frame:   65.8 ms
+Durchschn. Inferenz-FPS:             15.2</code></pre>
 </div>
 </div>
 <p></p><div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="./img/autobahn_h264.mp4"></video></div> <!-- Es musste auf ein h264-Format ausgewichen werden, damit das Video auf Safari und Google-Chrome angezeigt werden kann --><p></p>
@@ -1360,6 +1361,9 @@ Jocher, Glenn, Ayush Chaurasia, and Jing Qiu. 2023. <span>“Ultralytics YOLOv8.
 </div>
 <div id="ref-keita2024" class="csl-entry" role="listitem">
 Keita, Zoumana. 2024. <span>“YOLO Object Detection Erklärt.”</span> <em>DataCamp</em>. <a href="https://www.datacamp.com/de/blog/yolo-object-detection-explained">https://www.datacamp.com/de/blog/yolo-object-detection-explained</a>.
+</div>
+<div id="ref-liu2016" class="csl-entry" role="listitem">
+Liu, Wei, Dragomir Anguelov, Dumitru Erhan, et al. 2016. <em>SSD: Single Shot MultiBox Detector</em>. <a href="https://arxiv.org/pdf/1512.02325">https://arxiv.org/pdf/1512.02325</a>.
 </div>
 <div id="ref-redmon2015" class="csl-entry" role="listitem">
 Redmon, Joseph, Santosh Divvala, Ross Girshick, and Ali Farhadi. 2015. <em>You Only Look Once: Unified, Real-Time Object Detection</em>. <a href="https://arxiv.org/abs/1506.02640">https://arxiv.org/abs/1506.02640</a>.
