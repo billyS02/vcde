@@ -6,9 +6,9 @@ project:
 website:
   title: "Echtzeit-Objekterkennung mit YOLO"
   sidebar:
+    title: false
     search: true
-    contents:
-      - index.qmd
+
 
 format:
   html:
