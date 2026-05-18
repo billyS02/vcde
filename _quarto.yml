@@ -4,7 +4,7 @@ project:
     - models/yolov8n.onnx
 
 website:
-  title: "Search""
+  title: "Suchen"
   sidebar:
     title: false
     search: true
