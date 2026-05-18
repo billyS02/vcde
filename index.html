@@ -219,8 +219,8 @@ window.Quarto = {
   <li><a href="#sec-eigentests" id="toc-sec-eigentests" class="nav-link" data-scroll-target="#sec-eigentests">4. YOLO: Eigentests</a>
   <ul class="collapse">
   <li><a href="#grid-manipulation" id="toc-grid-manipulation" class="nav-link" data-scroll-target="#grid-manipulation">4.1 Grid-Manipulation</a></li>
-  <li><a href="#objekterkennung-bildvideo" id="toc-objekterkennung-bildvideo" class="nav-link" data-scroll-target="#objekterkennung-bildvideo">4.2 Objekterkennung Bild/Video</a></li>
-  <li><a href="#objekterkennung-kameralive-stream" id="toc-objekterkennung-kameralive-stream" class="nav-link" data-scroll-target="#objekterkennung-kameralive-stream">4.3 Objekterkennung Kamera/Live-Stream</a></li>
+  <li><a href="#bildvideo" id="toc-bildvideo" class="nav-link" data-scroll-target="#bildvideo">4.2 Bild/Video</a></li>
+  <li><a href="#kameralive-stream" id="toc-kameralive-stream" class="nav-link" data-scroll-target="#kameralive-stream">4.3 Kamera/Live-Stream</a></li>
   </ul></li>
   <li><a href="#sec-fazit" id="toc-sec-fazit" class="nav-link" data-scroll-target="#sec-fazit">Fazit</a></li>
   </ul>
@@ -386,7 +386,7 @@ Dieser Tensor entspricht genau dem in Abschnitt 2.1 beschriebenen Grid mit Anzah
 <p>Die Bibliothek <code>ultralytics</code> enthält YOLOv8 inklusive aller Abhängigkeiten (u.a. PyTorch).<br>
 <code>opencv-python</code> wird für das Einlesen und Verarbeiten von Bild- und Videodaten sowie die Ansteuerung von Kamera und Peripherie verwendet.</p>
 <p><strong>Überprüfen der Installation:</strong></p>
-<div id="75476862" class="cell" data-execution_count="1">
+<div id="3e019bf0" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ultralytics</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -409,7 +409,7 @@ OpenCV Version:      4.13.0</code></pre>
 <h3 class="anchored" data-anchor-id="objekterkennung-im-straßenverkehr">3.2 Objekterkennung im Straßenverkehr</h3>
 <p>YOLO wurde bis zu diesem Abschnitt im Kontext von Bildern behandelt. Als Testmedium dient nun jedoch ein frei verfügbares Video aus dem <em>Straßenverkehr</em>. Ein Video ist hierbei schlicht als eine Abfolge vieler Bilder zu interpretieren. Dieses wird also Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und die erkannten Objekte anschließend mit Bounding Boxes, Labels und der zugehörigen Wahrscheinlichkeit versehen.</p>
 <p><strong>Modell laden:</strong></p>
-<div id="1fae116d" class="cell" data-execution_count="2">
+<div id="3a332f00" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> YOLO(<span class="st">"yolov8n.pt"</span>)</span>
@@ -418,7 +418,7 @@ OpenCV Version:      4.13.0</code></pre>
 </div>
 <p>YOLOv8 steht in verschiedenen Größen zur Verfügung, von <code>yolov8n.pt</code> (Nano, schneller), <code>yolov8s.pt</code> (Small, Balance zwischen Geschwindigkeit und Genauigkeit) bishin zu <code>yolov8x.pt</code> (Extra Large, genauer).</p>
 <p><strong>Verarbeitungsfunktion definieren:</strong></p>
-<div id="910a664d" class="cell" data-execution_count="3">
+<div id="2c0f7551" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2, random, time</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Jeder Klasse wird eine eindeutige reproduzierbare Farbe zugewiesen (z.B. "Auto" immer blau)</span></span>
@@ -488,11 +488,11 @@ OpenCV Version:      4.13.0</code></pre>
 <p>Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab.<br>
 Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos <span class="math inline">\(40–100\)</span> FPS bishin zu <span class="math inline">\(300\)</span> FPS ermöglicht, ist auf einer standard Laptop-CPU typischerweise eine Range von <span class="math inline">\(5–20\)</span> FPS realistisch.<br>
 Die interaktiven Demos in Abschnitt 4 erreichen mit WebGPU-Beschleunigung etwa <span class="math inline">\(23\)</span> FPS (Video-Input) bzw. <span class="math inline">\(24-26\)</span> FPS (Webcam für Live-Stream), doch dazu später mehr.</p>
-<div id="9dae890b" class="cell" data-execution_count="4">
+<div id="312fe163" class="cell" data-execution_count="4">
 <div class="cell-output cell-output-stdout">
 <pre><code>Verarbeitete Frames:                 1501
-Durchschn. Inferenzzeit pro Frame:   54.6 ms
-Durchschn. Inferenz-FPS:             18.3</code></pre>
+Durchschn. Inferenzzeit pro Frame:   56.8 ms
+Durchschn. Inferenz-FPS:             17.6</code></pre>
 </div>
 </div>
 <p></p><div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="./img/autobahn_h264.mp4"></video></div> <!-- Es musste auf ein h264-Format ausgewichen werden, damit das Video auf Safari und Google-Chrome angezeigt werden kann --><p></p>
@@ -796,8 +796,8 @@ cSlider.addEventListener('input', render);
 })();
 </script>
 </section>
-<section id="objekterkennung-bildvideo" class="level3">
-<h3 class="anchored" data-anchor-id="objekterkennung-bildvideo">4.2 Objekterkennung Bild/Video</h3>
+<section id="bildvideo" class="level3">
+<h3 class="anchored" data-anchor-id="bildvideo">4.2 Bild/Video</h3>
 <div id="yolo-img" style="padding:1rem 0;">
 
   <!-- Upload-Zone -->
@@ -1102,8 +1102,8 @@ function drawLoop() {
 })();
 </script>
 </section>
-<section id="objekterkennung-kameralive-stream" class="level3">
-<h3 class="anchored" data-anchor-id="objekterkennung-kameralive-stream">4.3 Objekterkennung Kamera/Live-Stream</h3>
+<section id="kameralive-stream" class="level3">
+<h3 class="anchored" data-anchor-id="kameralive-stream">4.3 Kamera/Live-Stream</h3>
 <div id="yolo-cam" style="padding:1rem 0;">
 
   <!-- Steuerung -->
