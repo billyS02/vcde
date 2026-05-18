@@ -654,7 +654,7 @@ cSlider.addEventListener('input', render);
 </script>
 ```
 
-### 4.2 Objekterkennung Bild/Video
+### 4.2 Bild/Video
 
 ```{=html}
 <div id="yolo-img" style="padding:1rem 0;">
@@ -962,7 +962,7 @@ function drawLoop() {
 </script>
 ```
 
-### 4.3 Objekterkennung Kamera/Live-Stream
+### 4.3 Kamera/Live-Stream
 
 ```{=html}
 <div id="yolo-cam" style="padding:1rem 0;">
