@@ -8,18 +8,6 @@ format:
 jupyter: python3
 bibliography: references.bib
 ---
-
-::: {.callout-note appearance="minimal"}
-**Inhalte**  
-[Zusammenfassung](#sec-zsm)  
-[Methodik](#sec-methodik)  
-[1. Einordnung](#sec-einordnung)  
-[2. YOLO: Intro](#sec-intro)  
-[3. YOLO: Implementierung](#sec-implementierung)  
-[4. YOLO: Eigentests](#sec-eigentests)  
-[Fazit](#sec-fazit)
-:::
-
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
 ## *Zusammenfassung* {#sec-zsm} 

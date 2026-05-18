@@ -2,3 +2,13 @@ project:
   type: website
   resources:
     - models/yolov8n.onnx
+
+website:
+  title: "Echtzeit-Objekterkennung mit YOLO"
+  search: true
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
