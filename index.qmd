@@ -35,16 +35,16 @@ Dennoch ist YOLO keine universelle Lösung. Verdeckung, kleine Objekte und schwi
 ## Methodik {#sec-methodik}
 
 Die Echtzeit-Objekterkennung erfolgt in diesem Projekt über die frei verfügbaren Technologien **YOLO** und **OpenCV**. 
-Zur Einführung und dem darauffolgenden Einsatz dieser, beginnt dieses Projekt mit einer kurzen [Einordnung](#sec-einordnung) der **Objekterkennung** als Wiederholung, um dem Leser[^1] die **Vernetzung** des Kernthemas zu anderen Tehmen zu erleichtern. 
+Zur Einführung und dem darauffolgenden Einsatz dieser, beginnt dieses Projekt mit einer kurzen [Einordnung](#sec-einordnung) der **Objekterkennung** als Wiederholung, um dem Leser[^1] die **Vernetzung** des Kernthemas zu anderen Themen zu erleichtern. 
 
 \n
 
-Die Brücke zu YOLO wird dann über den gleichnamigen Abschnitt [YOLO: Intro](#sec-intro) geschlagen, wo dem Leser die Geschichte und die Natur der verwendeteten Technologie nahegelegt und mit anderen Standards verglichen werden.
+Die Brücke zu YOLO wird dann über den gleichnamigen Abschnitt [YOLO: Intro](#sec-intro) geschlagen, wo dem Leser die Geschichte und die Natur der verwendeten Technologie nahegelegt und mit anderen Standards verglichen werden.
 
 \n
 
 In [YOLO: Implementierung](#sec-implementierung) erfolgt die sukzessive Bearbeitung der Problemstellung.
-Zugleich werden die **System Requierements** abgearbeitet (z.B. das Erstellen eines Virtual Environments oder das Installieren von notwendigen Bibliotheken), um die Schritt-für-Schritt **Reproduzierbarkeit** Seitens des Lesers zu gewährleisten.
+Zugleich werden die **System Requirements** abgearbeitet (z.B. das Erstellen eines Virtual Environments oder das Installieren von notwendigen Bibliotheken), um die Schritt-für-Schritt **Reproduzierbarkeit** Seitens des Lesers zu gewährleisten.
 Dazugehörige Code-Snippets stehen im gesamten Verlauf dieser Webseite ebenso zur Verfügung und können direkt in die eigene Entwicklungsumgebung (VSCode, etc.) kopiert werden. 
 Die Implementierung wird anhand eines frei verfügbaren Videos aus dem Straßenverkehr demonstriert und getestet.
 
@@ -107,7 +107,7 @@ SSD erreichte in den Versuchstest damit 22–59 FPS, d.h. es war schneller als R
 Das sog. **Grid-System** macht die Verarbeitung eines ganzen Bildes in einem einzigen Netz erst möglich.
 Das Eingabebild wird dabei in ein gleichmäßiges Raster $S \times S$ aufgeteilt und wie eine Schablone über das Bild gelegt.
 Jede dieser Rasterzellen übernimmt dann die Verantwortung für genau den Bildbereich, den sie abdeckt.
-Konkret gilt: Fällt der Mittelpunkt eines Objekts in eine bestimme Zelle, ist genau diese für die Erkennung dieses Objektes verantworklich [@redmon2015, Kapitel 2].
+Konkret gilt: Fällt der Mittelpunkt eines Objekts in eine bestimme Zelle, ist genau diese für die Erkennung dieses Objektes Verantwortlich [@redmon2015, Kapitel 2].
 
 ![Das Bild wird in ein $S \times S$ Grid aufgeteilt. Jede Zelle sagt $B$ Bounding Boxes mit Confidence Score und $C$ Klassenwahrscheinlichkeiten voraus. Alles kodiert in einem einzigen Tesnor: $S \times S \times (B \cdot 5 + C)$. [@redmon2015, Abbildung 2]](./img/yolo_SSGrid.png){fig-align="center"}  
 
@@ -134,7 +134,7 @@ Mit $S = 7$, $B = 2$ und $C = 20$ ergibt sich ein Ausgabe-Tensor der Größe $7 
 
 ![Die grundlegende Architektur des Modells, wie es 2015 veröffentlicht wurde. [@redmon2015, Abbildung 3]](./img/yolo_arch.png){fig-align="center"}
 
-Das YOLO-Netz besteht aus zwei klar getrenten Phasen, die auf ImageNet[^2] trainiert wurden:
+Das YOLO-Netz besteht aus zwei klar getrennten Phasen, die auf ImageNet[^2] trainiert wurden:
 
 - **Feature-Extractor**  
 
@@ -168,7 +168,7 @@ Die wichtigsten Meilensteine sind wohl:
 - **YOLOv2 (2016):** Einführung von *Anchor Boxes*, die typische Objektformen vorwegnehmen und die Erkennung kleiner Objekte verbessern.
 - **YOLOv3 (2018):** Erkennung auf *drei Skalen* gleichzeitig; besonders hilfreich für Objekte unterschiedlicher Größe im selben Bild.
 - **YOLOv4/v5 (2020):** Community-getriebene Weiterentwicklungen mit zahlreichen Trainingstricks; YOLOv5 vollzog den Wechsel zu PyTorch und vereinfachte den Export auf Edge-Geräte erheblich [@terven2023, Kapitel 9].
-- **<u>YOLOv8</u> (2023):** Die aktuell verbreitetste Version. Kernerneuerung ist die *anchor-free* Architektur: Statt vordefinierten Acnhor Boxes lernt das Modell Boxpositionen direkt, was den Trainingsprozess vereinfacht und die Genauigkeit steigert. Zudem wurde ein *decoupled head* eingeführt, der Klassifizierung und Lokalisation in getrennten Zweigen berechnet [@jocher2023].
+- **<u>YOLOv8</u> (2023):** Die aktuell verbreitetste Version. Kernerneuerung ist die *anchor-free* Architektur: Statt vordefinierten Anchor Boxes lernt das Modell Boxpositionen direkt, was den Trainingsprozess vereinfacht und die Genauigkeit steigert. Zudem wurde ein *decoupled head* eingeführt, der Klassifizierung und Lokalisation in getrennten Zweigen berechnet [@jocher2023].
 - **YOLO26 (2025):** Die aktuellste Version. Führt NMS-freie End-to-End-Inferenz (d.h. keine separater Nachverarbeitungsschritt zur Duplikatelimination) ein und entfernt den Distribution Focal Loss (d.h. die Bounding-Box-Regression wird direkt ohne verteilungsbasierte Hilfsverlustfunktion gelernt). Das vereinfacht den Export und beschleunigt die native CPU-Inferenz um bis zu 43 %. Für dieses Projekt wird dennoch <u>YOLOv8</u> eingesetzt, da es zu diesem Zeitpunkt die am weitesten verbreitete und best dokumentierteste Version ist und die zugrundeliegenden Konzepte exemplarisch vermittelt.
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
@@ -178,7 +178,7 @@ Die wichtigsten Meilensteine sind wohl:
 Die Implementierung erfolgt in Python unter Verwendung von **YOLOv8** (über Ultralytics) und **OpenCV**.
 Der gesamte Code ist so dokumentiert, dass er Schritt für Schritt reproduziert werden kann.
 
-### 3.1 System Requierements
+### 3.1 System Requireements
 
 Zur Reproduzierbarkeit wird eine Python-Umgebung benötigt.
 Um etwaige Abhängigkeiten sauber zu wissen, empfiehlt sich der Einsatz eines Virtual Environments, um den Workspace zu isolieren.
@@ -343,7 +343,7 @@ os.close(old_stderr)
 ## 4. YOLO: Eigentests {#sec-eigentests}
 
 Die folgenden Demos laufen direkt im Browser ohne lokale Installation. 
-Möglich macht das das zuvor exportierte Modell `yolov8n.onnx`, das über die Bibliohtek `onnxruntime-web` direkt im Browser ausgeführt wird [^6]. 
+Möglich macht das das zuvor exportierte Modell `yolov8n.onnx`, das über die Bibliothek `onnxruntime-web` direkt im Browser ausgeführt wird [^6]. 
 
 Die Inferenz läuft über **WebGPU-Beschleunigung** direkt im Browser, ohne WebGPU-Support fällt das System nämlich auf single-threaded WebAssembly zurück (ca. $4$ FPS), d.h. das Modell läuft auf WASM über der nativen CPU des eigenen Rechners.  
 Bei den Tests in Google Chrome konnten $23$ FPS (Video) bzw. $24-26$ FPS (Webcam) erreicht werden. 
@@ -1245,7 +1245,7 @@ function drawLoop() {
 
 ## Fazit {#sec-fazit}
 
-YOLO löst das in [Abschnitt 1]{#sec-einordnung} beschriebene Problem der Echtzeit-Objekterkennung konsequent. Statt ein Bild in mehreren Schritten zu verarbeiten, formuliert es die Erkennung als ein einziges Regressionsproblem: Einmal durch das Netz, ein Ausgabetensor, alle Ergebnisse. 
+YOLO löst das in [Abschnitt 1](#sec-einordnung) beschriebene Problem der Echtzeit-Objekterkennung konsequent. Statt ein Bild in mehreren Schritten zu verarbeiten, formuliert es die Erkennung als ein einziges Regressionsproblem: Einmal durch das Netz, ein Ausgabetensor, alle Ergebnisse. 
 Die Implementierung mit YOLOv8 in [Abschnitt 3]{#sec-implementierung} zeigt, dass dieses Prinzip heute mit wenigen Zeilen Python produktiv umsetzbar ist, und die interaktiven Demos in [Abschnitt 4]{#sec-eigentests} machen die zugrundeliegenden Konzepte direkt erfahrbar. 
 
 So leistungsfähig YOLO auch ist gibt es Szenarien, in denen das System an seine Grenzen stößt. 
