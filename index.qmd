@@ -1236,6 +1236,11 @@ function drawLoop() {
 YOLO löst das in [Abschnitt 1](#sec-einordnung) beschriebene Problem der Echtzeit-Objekterkennung konsequent. Statt ein Bild in mehreren Schritten zu verarbeiten, formuliert es die Erkennung als ein einziges Regressionsproblem: Einmal durch das Netz, ein Ausgabetensor, alle Ergebnisse. 
 Die Implementierung mit YOLOv8 in [Abschnitt 3]{#sec-implementierung} zeigt, dass dieses Prinzip heute mit wenigen Zeilen Python produktiv umsetzbar ist, und die interaktiven Demos in [Abschnitt 4]{#sec-eigentests} machen die zugrundeliegenden Konzepte direkt erfahrbar. 
 
+Über den Einsatz mit den vortrainierten Gewichten hinaus, lässt sich YOLOv8 per Fine-Tuning selbstverständlich auch gezielt auf eigene Anwendungsfälle anpassen. 
+Dabei werden die bestehenden Gewichte als Ausgangspunkt geladen und auf einem eigenen, annotierten Datensatz (z.B. landesspezifische Verkehrsschilder oder spezielle Fahrzeugtypen) mit wenigen Epochen nachtrainiert. 
+Der Feature-Extractor behält dabei sein bereits erlerntes Verständnis für allgemeine Bildmerkmale, während der Prediction Head die neuen Klassen lernt. 
+So entsteht aus dem generischen Modell ein spezialisierter Detektor, der die Stärken der YOLO-Architektur auf das eigene Einsatzszenario überträgt.
+
 So leistungsfähig YOLO auch ist gibt es Szenarien, in denen das System an seine Grenzen stößt. 
 Diese zu kennen sind wichtig, um die Ergebnisse im Demo-Kapitel korrekt einordnen zu können.
 
