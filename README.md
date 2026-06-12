@@ -1,52 +1,46 @@
-# Interaktives Website-Template
-Dieses Repository dient als technische Grundlage für die Erstellung Ihrer Webseite. 
-Die Vorlage integriert Quarto zur Dokumenterstellung, Python für computergestützte Analysen 
-sowie beispielhaft Babylon.js für die Einbindung interaktiver 3D-Visualisierungen.
+# Echtzeit-Objekterkennung mit YOLO
 
-## Konfigurationsschritte (Setup)
-Um eine eigene Arbeitsumgebung auf Basis dieser Vorlage zu erstellen, führen Sie bitte die folgenden Schritte strikt in der angegebenen Reihenfolge aus:
+Projekt von Bledar Sllamniku im Kurs Visual Computing (Digital Engineering, B.Sc.; Hochschule München – University of Applied Sciences, SoSe 2026) bei Prof. Dr. Markus Friedrich.
 
-- **Repository forken**
-Betätigen Sie die Schaltfläche "Fork" in der oberen rechten Ecke der GitHub-Oberfläche. Hierdurch wird eine identische Kopie des Projekts in Ihren persönlichen GitHub-Account übertragen.
+## Über das Projekt
 
-- **Konfiguration der Workflow-Berechtigungen**
-Standardmäßig sind Schreibzugriffe für automatisierte Prozesse in Forks deaktiviert. Zur Aktivierung der Website-Erstellung müssen Sie folgende Anpassungen vornehmen:
+Echtzeit-Objekterkennung ist im Kontext des autonomen Fahrens nicht nur eine akademische, sondern eine sicherheitskritische Anforderung. 
+Klassische zweistufige Verfahren wie R-CNN sind zwar präzise, scheitern jedoch an der nötigen Geschwindigkeit. 
+YOLO (*You Only Look Once*) begegnet diesem Problem, indem es die Erkennung als ein einziges Regressionsproblem formuliert, d.h. das gesamte Bild wird in einem einzigen Durchgang durch ein neuronales Netz geschickt und liefert alle erkannten Objekte mit Position und Klasse zurück.
 
-  - Navigieren Sie zu Settings > Actions > General.
-    
-  - Suchen Sie den Abschnitt Workflow permissions.
+Dieses Repository enthält den Quellcode der Projektwebseite zu diesem Thema. 
+Die Webseite ordnet die Objekterkennung zunächst in die Visual-Computing-Pipeline ein, behandelt anschließend die theoretischen Grundlagen von YOLO (Grid-System, Bounding Boxes, Confidence Score, Ausgabetensor $7 \times 7 \times 30$) und setzt das Verfahren mit YOLOv8 in Python um. 
+Den Abschluss bilden drei interaktive Demos, die direkt im Browser laufen. Hier kann der Leser eigene Bilder und Videos hochladen, den Grid-Mechanismus und Confidence-Schwellwert anpassen sowie die Anwendung als Live-Stream über die eigene Kamera testen.
 
-  - Aktivieren Sie die Option "Read and write permissions" und bestätigen Sie mit Save.
+## Aufruf der Webseite
 
-  - Wechseln Sie zum Reiter Actions und bestätigen Sie die Aktivierung der Workflows durch Klick auf "I understand my workflows, go ahead and enable them".
+Die Webseite ist hier erreichbar:
 
-- **Aktivierung von GitHub Pages**
-- 
-  - Navigieren Sie zu Settings > Pages.
+**[https://billys02.github.io/vcde/](https://billys02.github.io/vcde/)**
 
-  - Wählen Sie unter dem Punkt "Build and deployment" bei Branch den Branch gh-pages aus.
+Eine lokale Installation ist nicht nötig, d.h. sämtliche Inhalte inkl. der interaktiven Demos laufen direkt im Browser.
 
-  - Bestätigen Sie die Auswahl mit Save.
-(Hinweis: Der Branch gh-pages wird erst nach dem ersten erfolgreichen Durchlauf der GitHub Action generiert, oder muss manuell erstellt werden).
+## Verwendete Technologien
 
-## Workflow für Bearbeitung und Deployment
-Sämtliche Änderungen an der Datei index.qmd führen nach einem Push zum Repository automatisch zur Ausführung der CI/CD-Pipeline:
+- [Quarto](https://quarto.org/) für die Dokumenterstellung und das Website-Rendering
+- [Ultralytics YOLOv8](https://docs.ultralytics.com/) als Modell und Python-API
+- [OpenCV](https://opencv.org/) für die Bild- und Videoverarbeitung in Python
+- [ONNX Runtime Web](https://onnxruntime.ai/docs/tutorials/web/) v1.21.0 für die Inferenz im Browser
+- PyTorch als Backend für YOLOv8
 
-- Python-Umgebung: Quarto führt enthaltene Code-Segmente aus und generiert die entsprechenden Abbildungen.
+## Hinweis zu den FPS in den Demos
 
-- Rendering: Die Markdown-Inhalte werden in ein statisches HTML-Dokument transformiert.
+Die in den Demos (Abschnitt 4) erreichbaren Bildraten hängen stark vom verwendeten Browser und der Hardware ab. 
 
-- Deployment: Die aktualisierte Website wird unter folgendem URL-Schema bereitgestellt: https://<ihr-username>.github.io/<repo-name>/
+- Mit **Google Chrome oder Edge** auf einem Desktop-Gerät steht meist WebGPU zur Verfügung, was etwa $23$ FPS (Video) bzw. $24-26$ FPS (Webcam) ermöglicht.
+- In **Safari** ist die WebGPU-Implementierung bekanntermaßen schwächer und erreicht etwa $10-14$ FPS.
+- In **Firefox** oder auf älteren Geräten fällt das System oft auf reines WebAssembly zurück, was nur ca. $3-5$ FPS bedeutet.
+- Auf **mobilen Browsern** ist die Performance entsprechend variabel.
 
-## Richtlinien zur Quarto-Syntax:
-- Mathematische Formeln: Verwenden Sie die LaTeX-Notation, z. B. $E = mc^2$.
+Die in der Webseite genannten $45$ FPS bzw. $155$ FPS aus der YOLO-Originalveröffentlichung beziehen sich auf eine GPU-beschleunigte native Ausführung und sind kein Maßstab für die Browser-Demos. 
+Für ein optimales Erlebnis wird daher Google Chrome oder Edge auf einem Desktop-Gerät empfohlen.
+```
 
-- Python-Berechnungen: Code-Blöcke müssen zwingend mit ```{python} eingeleitet werden.
+## Lizenz
 
-- HTML/3D-Inhalte: Die Integration von Babylon.js-Skripten erfolgt innerhalb von ```{=html} Blöcken.
-
-## Fehleranalyse (Troubleshooting)
-- Fehlende Python-Grafiken: Überprüfen Sie das Protokoll unter dem Reiter "Actions" auf etwaige Installationsfehler der Bibliotheken matplotlib oder numpy.
-
-- Inaktiver 3D-Canvas: Sollte die 3D-Umgebung nicht geladen werden, untersuchen Sie die Browser-Konsole (Taste F12) auf einen 404 (Not Found) Fehler. Dies deutet zumeist auf eine fehlerhafte Syntax im Verweis auf das Babylon.js-Framework hin.
-
+Siehe auch [LICENSE](./LICENSE).
