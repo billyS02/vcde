@@ -39,7 +39,6 @@ Die in den Demos (Abschnitt 4) erreichbaren Bildraten hängen stark vom verwende
 
 Die in der Webseite genannten $45$ FPS bzw. $155$ FPS aus der YOLO-Originalveröffentlichung beziehen sich auf eine GPU-beschleunigte native Ausführung und sind kein Maßstab für die Browser-Demos. 
 Für ein optimales Erlebnis wird daher Google Chrome oder Edge auf einem Desktop-Gerät empfohlen.
-```
 
 ## Lizenz
 

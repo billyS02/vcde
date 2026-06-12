@@ -104,12 +104,7 @@ Für jeder dieser Zellen sagt das Modell gleichzeitig mehrere Dinge vorher:
 - **Bounding Boxes**: Jede Zelle schlägt $B$ mögliche Bounding Boxes vor, beschrieben durch fünf Werte aus dem Mittelpunkt $(x, y)$ des erkannten Objekts zur Rasterzelle, der Abmessung $(w, h)$ zwischen Box und Gesamtbild sowie des Confidence Scores.  
 - **Confidence Score**: Dieser Wert beantwortet zum einen, ob ein Objekt überhaupt in der Box vorhanden ist und zum anderen, wie gut die Box wirklich zum Objekt passt. Das Modell kombiniert beide Informationen in einer einzigen Kennzahl:
 
-$$
-\text{Confidence} = 
-\underbrace{\Pr(\text{Object})}_{\substack{\text{Ist ein Objekt} \\ \text{vorhanden?}}}
-\times
-\underbrace{\text{IoU}_{\text{pred}}^{\text{truth}}}_{\substack{\text{Wie gut passt} \\ \text{die Box?}}}
-$$
+![](./img/yolo_conf.png){fig-align="center" width=45%}
 
 - **Klassenwahrscheinlichkeiten**: Zusätzlich zur Box schätzt jede Zelle, welcher Klasse das Objekt angehört, z.B. Auto, Person oder Fahrrad. Diese Klassenwahrscheinlichkeit $C$ wird am Ende mit dem Confidence Score multipliziert, sodass das Modell für jede Box einen finalen, klassenspezifischen Score ausgibt.
 
