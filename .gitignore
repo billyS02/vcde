@@ -1,9 +1,8 @@
 .venv/
-img/*.mp4
-!img/autobahn_h264.mp4
-PowerPoint/
 .DS_Store
+PowerPoint/
 *.pt
 /.quarto/
 **/*.quarto_ipynb
 *.mp4
+!img/autobahn_h264.mp4
