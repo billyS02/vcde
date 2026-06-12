@@ -20,7 +20,7 @@ Dennoch ist YOLO keine universelle Lösung. Verdeckung, kleine Objekte und schwi
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
-## Methodik {#sec-methodik}
+## Methoden {#sec-methoden}
 
 Die Echtzeit-Objekterkennung erfolgt in diesem Projekt über die frei verfügbaren Technologien **YOLO** und **OpenCV**. 
 Zur Einführung und dem darauffolgenden Einsatz dieser, beginnt dieses Projekt mit einer kurzen [Einordnung](#sec-einordnung) der **Objekterkennung** als Wiederholung, um dem Leser[^1] die **Vernetzung** des Kernthemas zu anderen Themen zu erleichtern. 
@@ -166,7 +166,7 @@ Die wichtigsten Meilensteine sind wohl:
 Die Implementierung erfolgt in Python unter Verwendung von **YOLOv8** (über Ultralytics) und **OpenCV**.
 Der gesamte Code ist so dokumentiert, dass er Schritt für Schritt reproduziert werden kann.
 
-### 3.1 System Requireements
+### 3.1 System Requirements
 
 Zur Reproduzierbarkeit wird eine Python-Umgebung benötigt.
 Um etwaige Abhängigkeiten sauber zu wissen, empfiehlt sich der Einsatz eines Virtual Environments, um den Workspace zu isolieren.
@@ -1231,7 +1231,7 @@ function drawLoop() {
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
 
-## Fazit {#sec-fazit}
+## Fazit & Diskussion {#sec-fazit}
 
 YOLO löst das in [Abschnitt 1](#sec-einordnung) beschriebene Problem der Echtzeit-Objekterkennung konsequent. Statt ein Bild in mehreren Schritten zu verarbeiten, formuliert es die Erkennung als ein einziges Regressionsproblem: Einmal durch das Netz, ein Ausgabetensor, alle Ergebnisse. 
 Die Implementierung mit YOLOv8 in [Abschnitt 3]{#sec-implementierung} zeigt, dass dieses Prinzip heute mit wenigen Zeilen Python produktiv umsetzbar ist, und die interaktiven Demos in [Abschnitt 4]{#sec-eigentests} machen die zugrundeliegenden Konzepte direkt erfahrbar. 

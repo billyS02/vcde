@@ -4,3 +4,6 @@ img/*.mp4
 PowerPoint/
 .DS_Store
 *.pt
+/.quarto/
+**/*.quarto_ipynb
+*.mp4

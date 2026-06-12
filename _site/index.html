@@ -1,0 +1,1835 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Bledar Sllamniku (Digital Engineering, B.Sc.)">
+
+<title>Echtzeit-Objekterkennung mit YOLO –</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-f7c6d1c6b0f6eaa1f882fe09d861c6df.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/videojs/video.min.js"></script>
+<link href="site_libs/quarto-contrib/videojs/video-js.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./img/HM_Logo.png" alt="Hochschule München" class="navbar-logo light-content">
+    <img src="./img/HM_Logo.png" alt="Hochschule München" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title"></span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/billyS02/vcde"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text">GitHub</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#sec-zsm" id="toc-sec-zsm" class="nav-link active" data-scroll-target="#sec-zsm"><em>Zusammenfassung</em></a></li>
+  <li><a href="#sec-methoden" id="toc-sec-methoden" class="nav-link" data-scroll-target="#sec-methoden">Methoden</a></li>
+  <li><a href="#sec-einordnung" id="toc-sec-einordnung" class="nav-link" data-scroll-target="#sec-einordnung">1. Einordnung</a></li>
+  <li><a href="#sec-intro" id="toc-sec-intro" class="nav-link" data-scroll-target="#sec-intro">2. YOLO: Intro</a>
+  <ul class="collapse">
+  <li><a href="#ablauf" id="toc-ablauf" class="nav-link" data-scroll-target="#ablauf">2.1 Ablauf</a></li>
+  <li><a href="#architektur" id="toc-architektur" class="nav-link" data-scroll-target="#architektur">2.2 Architektur</a></li>
+  <li><a href="#yolo-versionen" id="toc-yolo-versionen" class="nav-link" data-scroll-target="#yolo-versionen">2.3 YOLO-Versionen</a></li>
+  </ul></li>
+  <li><a href="#sec-implementierung" id="toc-sec-implementierung" class="nav-link" data-scroll-target="#sec-implementierung">3. YOLO: Implementierung</a>
+  <ul class="collapse">
+  <li><a href="#system-requirements" id="toc-system-requirements" class="nav-link" data-scroll-target="#system-requirements">3.1 System Requirements</a></li>
+  <li><a href="#objekterkennung-im-straßenverkehr" id="toc-objekterkennung-im-straßenverkehr" class="nav-link" data-scroll-target="#objekterkennung-im-straßenverkehr">3.2 Objekterkennung im Straßenverkehr</a></li>
+  </ul></li>
+  <li><a href="#sec-eigentests" id="toc-sec-eigentests" class="nav-link" data-scroll-target="#sec-eigentests">4. YOLO: Eigentests</a>
+  <ul class="collapse">
+  <li><a href="#grid-manipulation" id="toc-grid-manipulation" class="nav-link" data-scroll-target="#grid-manipulation">4.1 Grid-Manipulation</a></li>
+  <li><a href="#bildvideo" id="toc-bildvideo" class="nav-link" data-scroll-target="#bildvideo">4.2 Bild/Video</a></li>
+  <li><a href="#kameralive-stream" id="toc-kameralive-stream" class="nav-link" data-scroll-target="#kameralive-stream">4.3 Kamera/Live-Stream</a></li>
+  </ul></li>
+  <li><a href="#sec-fazit" id="toc-sec-fazit" class="nav-link" data-scroll-target="#sec-fazit">Fazit &amp; Diskussion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Echtzeit-Objekterkennung mit YOLO</h1>
+<p class="subtitle lead"><strong>Eine demonstrative Implementierung am Beispiel des Autonomen Fahrens</strong></p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Bledar Sllamniku (Digital Engineering, B.Sc.) </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+<section id="sec-zsm" class="level2">
+<h2 class="anchored" data-anchor-id="sec-zsm"><em>Zusammenfassung</em></h2>
+<p>Echtzeit-Objekterkennung ist im Kontext des autonomen Fahrens nicht nur eine akademische, sondern eine sicherheitskritische Anforderung. Klassische zweistufige Verfahren wie R-CNN sind zwar präzise, scheitern jedoch an der nötigen Geschwindigkeit.<br>
+YOLO begegnet diesem Problem, indem es die Erkennung als ein einziges Regressionsproblem formuliert, d.h. Grid-System, Bounding Boxes und Confidence Score werden in einem einzigen Durchgang durch ein 24-schichtiges Convolutional-Netz berechnet und im <span class="math inline">\(7 \times 7 \times 30\)</span> Ausgabetensor kodiert. Mit YOLOv8 ist dieses Prinzip heute mit wenigen Zeilen Python praktisch umsetzbar und liefert auf Standard-Hardware bereits echtzeitfähige Ergebnisse.<br>
+Dennoch ist YOLO keine universelle Lösung. Verdeckung, kleine Objekte und schwierige Umgebungsbedingungen bleiben Herausforderungen, die je nach Einsatzszenario eine sorgfältige Anforderungsanalyse erfordern.</p>
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+</section>
+<section id="sec-methoden" class="level2">
+<h2 class="anchored" data-anchor-id="sec-methoden">Methoden</h2>
+<p>Die Echtzeit-Objekterkennung erfolgt in diesem Projekt über die frei verfügbaren Technologien <strong>YOLO</strong> und <strong>OpenCV</strong>. Zur Einführung und dem darauffolgenden Einsatz dieser, beginnt dieses Projekt mit einer kurzen <a href="#sec-einordnung">Einordnung</a> der <strong>Objekterkennung</strong> als Wiederholung, um dem Leser<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> die <strong>Vernetzung</strong> des Kernthemas zu anderen Themen zu erleichtern.</p>
+<p>Die Brücke zu YOLO wird dann über den gleichnamigen Abschnitt <a href="#sec-intro">YOLO: Intro</a> geschlagen, wo dem Leser die Geschichte und die Natur der verwendeten Technologie nahegelegt und mit anderen Standards verglichen werden.</p>
+<p>In <a href="#sec-implementierung">YOLO: Implementierung</a> erfolgt die sukzessive Bearbeitung der Problemstellung. Zugleich werden die <strong>System Requirements</strong> abgearbeitet (z.B. das Erstellen eines Virtual Environments oder das Installieren von notwendigen Bibliotheken), um die Schritt-für-Schritt <strong>Reproduzierbarkeit</strong> Seitens des Lesers zu gewährleisten. Dazugehörige Code-Snippets stehen im gesamten Verlauf dieser Webseite ebenso zur Verfügung und können direkt in die eigene Entwicklungsumgebung (VSCode, etc.) kopiert werden. Die Implementierung wird anhand eines frei verfügbaren Videos aus dem Straßenverkehr demonstriert und getestet.</p>
+<p>Daraufhin folgen im Abschnitt <a href="#sec-eigentests">YOLO: Eigentests</a> drei <strong>interaktive Demos</strong>, die direkt hier im Browser laufen, ohne lokale Installation. Der Leser kann eigene Bilder und Videos hochladen, dabei den Grid-Mechanismus und Confidence-Schwellwert anpassen sowie die Anwendung als Live-Stream über die eigene Kamera testen.</p>
+<p>Abgeschlossen wird das Thema mit <a href="#sec-fazit">Fazit</a>, wo die <strong>Ergebnisse und Herausforderungen</strong> von YOLO diskutiert werden.</p>
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+</section>
+<section id="sec-einordnung" class="level2">
+<h2 class="anchored" data-anchor-id="sec-einordnung">1. Einordnung</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./img/pipeline.png" class="img-fluid figure-img"></p>
+<figcaption>Pipeline im Visual Computing. <span class="citation" data-cites="friedrich2026">(<a href="#ref-friedrich2026" role="doc-biblioref">Friedrich 2026</a>)</span></figcaption>
+</figure>
+</div>
+<p>Die Objekterkennung ist Teil des vierten Blocks (<em>Recognition</em>) der klassischen Pipeline des Visual Computings und behandelt das Finden von Objekten in einem Bild oder Video. Dabei wird für jedes Objekt der <strong>Ort</strong> und die <strong>Klassifizierung</strong> zurückgegeben. Visuell wird also eine sog. <em>Bounding Box</em> erzeugt, die das erkannte Objekt umrahmt, zusammen mit einem Label, die das Objekt einer Klasse zuschreibt.</p>
+<p>Besondere Anforderungen stellt dabei das <strong>autonome Fahren</strong>. Hier reicht es nicht, die Objekte lediglich zu erkennen, denn zusätzlich muss das auch in <strong>Echtzeit</strong> geschehen, d.h. mit mindestens <span class="math inline">\(24\)</span> FPS (Frames pro Sekunde), damit ein Fahrzeug rechtzeitig reagieren kann. Klassische Verfahren wie R-CNN sind zwar präzise, scheitern jedoch an genau diesem Anspruch, da sie das Bild in mehreren Schritten verarbeiten <span class="citation" data-cites="girshick2014">(<a href="#ref-girshick2014" role="doc-biblioref">Girshick et al. 2014</a>)</span>. Die Rede ist von einem sogenannten <em>Two-Stage-Detector</em>.</p>
+<p>Als One-Stage-Detector löst <strong>YOLO</strong> (You Only Look Once) dieses Problem mit einem anderen Ansatz. Das gesamte Medium wird nämlich in einem einzigen Durchgang durch das neuronale Netz verarbeitet, was eine Objekterkennung von <span class="math inline">\(45\)</span> FPS (als base model) bis zu <span class="math inline">\(155\)</span> FPS (als fast model) ermöglicht und damit Echtzeit-Objekterkennung erst praktisch umsetzbar macht <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>)</span>.</p>
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+</section>
+<section id="sec-intro" class="level2">
+<h2 class="anchored" data-anchor-id="sec-intro">2. YOLO: Intro</h2>
+<p>YOLO ist ein Open Source Projekt zur Echtzeit-Objekterkennung welches in seiner Originalfassung erstmalig 2015 von Joseph Redmon, Santosh Divvala, Ross Girshik und Ali Farhadi unter dem Titel <em>You Only Look Once: Unified, Real-Time Object Detection</em> veröffentlich wurde <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>)</span>.</p>
+<p>Die Autoren setzten in ihrer Forschungsarbeit auf einen Ansatz, der die Objekterkennung als ein einziges Regressionsproblem formuliert. Das bedeutet, dass das gesamte Bild <strong>genau einmal durch ein einziges</strong> Neuronales Netz geschickt wird und dieses dabei gleichzeitig alle erkannten Objekte mit ihren Positionen und Klassen ausgibt. Es gibt also keine zweiten Schritte oder separaten Klassifikatoren.</p>
+<p>Wir erinnern uns: Zweistufige Verfahren wie R-CNN beginnen hingegen mit sog. <em>Region Proposals</em>, d.h. der Algorithmus schlägt zunächst hunderte mögliche Bildausschnitte vor, die ein Objekt enthalten könnten und klassifiziert dann jeden einzeln. <strong>Faster R-CNN</strong> schaffte in einer Studie als einer der schnellsten Varianten etwa <span class="math inline">\(5\)</span> FPS bis <span class="math inline">\(17\)</span> FPS auf einem Standard Backbone, was für ein fahrendes Auto schlicht zu wenig ist.</p>
+<p>SSD (<em>Single Shot Multibox Detector</em>) ist ein weiterer One-Stage-Detektor <span class="citation" data-cites="liu2016">(<a href="#ref-liu2016" role="doc-biblioref">Liu et al. 2016</a>)</span>. Das Bild wird auch hier in einem einzigen Durchgang durch ein CNN geschickt, das aber an mehreren Zwischenstellen in Raster unterschiedlicher Auflösung aufgeteilt wird. Grobe Raster erkennen große Objekte, feine Raster kleine. SSD erreichte in den Versuchstest damit 22–59 FPS, d.h. es war schneller als R-CNN, aber schwächer bei sehr kleinen Objekten.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./img/yolo_compare.png" class="img-fluid figure-img"></p>
+<figcaption>Geschwindigkeit von YOLO im Vergleich zu anderen Modellen. <span class="citation" data-cites="sanchez2020">(<a href="#ref-sanchez2020" role="doc-biblioref">Sanchez et al. 2020</a>, Abbildung 6)</span></figcaption>
+</figure>
+</div>
+<section id="ablauf" class="level3">
+<h3 class="anchored" data-anchor-id="ablauf">2.1 Ablauf</h3>
+<p>Das sog. <strong>Grid-System</strong> macht die Verarbeitung eines ganzen Bildes in einem einzigen Netz erst möglich. Das Eingabebild wird dabei in ein gleichmäßiges Raster <span class="math inline">\(S \times S\)</span> aufgeteilt und wie eine Schablone über das Bild gelegt. Jede dieser Rasterzellen übernimmt dann die Verantwortung für genau den Bildbereich, den sie abdeckt. Konkret gilt: Fällt der Mittelpunkt eines Objekts in eine bestimme Zelle, ist genau diese für die Erkennung dieses Objektes Verantwortlich <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>, Kapitel 2)</span>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./img/yolo_SSGrid.png" class="img-fluid figure-img"></p>
+<figcaption>Das Bild wird in ein <span class="math inline">\(S \times S\)</span> Grid aufgeteilt. Jede Zelle sagt <span class="math inline">\(B\)</span> Bounding Boxes mit Confidence Score und <span class="math inline">\(C\)</span> Klassenwahrscheinlichkeiten voraus. Alles kodiert in einem einzigen Tesnor: <span class="math inline">\(S \times S \times (B \cdot 5 + C)\)</span>. <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>, Abbildung 2)</span></figcaption>
+</figure>
+</div>
+<p>Für jeder dieser Zellen sagt das Modell gleichzeitig mehrere Dinge vorher:</p>
+<ul>
+<li><strong>Bounding Boxes</strong>: Jede Zelle schlägt <span class="math inline">\(B\)</span> mögliche Bounding Boxes vor, beschrieben durch fünf Werte aus dem Mittelpunkt <span class="math inline">\((x, y)\)</span> des erkannten Objekts zur Rasterzelle, der Abmessung <span class="math inline">\((w, h)\)</span> zwischen Box und Gesamtbild sowie des Confidence Scores.<br>
+</li>
+<li><strong>Confidence Score</strong>: Dieser Wert beantwortet zum einen, ob ein Objekt überhaupt in der Box vorhanden ist und zum anderen, wie gut die Box wirklich zum Objekt passt. Das Modell kombiniert beide Informationen in einer einzigen Kennzahl:</li>
+</ul>
+<p><span class="math display">\[
+\text{Confidence} =
+\underbrace{\Pr(\text{Object})}_{\substack{\text{Ist ein Objekt} \\ \text{vorhanden?}}}
+\times
+\underbrace{\text{IoU}_{\text{pred}}^{\text{truth}}}_{\substack{\text{Wie gut passt} \\ \text{die Box?}}}
+\]</span></p>
+<ul>
+<li><strong>Klassenwahrscheinlichkeiten</strong>: Zusätzlich zur Box schätzt jede Zelle, welcher Klasse das Objekt angehört, z.B. Auto, Person oder Fahrrad. Diese Klassenwahrscheinlichkeit <span class="math inline">\(C\)</span> wird am Ende mit dem Confidence Score multipliziert, sodass das Modell für jede Box einen finalen, klassenspezifischen Score ausgibt.</li>
+</ul>
+<p>Das <strong>Gesamtmodell</strong> fasst also alle Vorhersagen aller Zellen in einer einzigen verschachtelten Zahlenstruktur zusammen, dem sog. <em>Tensor</em>, vereinfacht gesagt ein mehrdimensionales Array. Seine Dimension beträgt <span class="math inline">\(S \times S \times (B \cdot 5 + C)\)</span>, d.h. jede der <span class="math inline">\(S \times S\)</span> Zellen werden <span class="math inline">\(B\)</span> Boxen mit je 5 Werten sowie <span class="math inline">\(C\)</span> Klassenwahrscheinlichkeiten gespeichert.<br>
+Die Autoren evaluierten ihr Modell auf <strong>PASCAL VOC</strong>, einem standardisierten Benchmark-Datensatz für Objekterkennung mit 20 vordefinierten Klassen (u.a. Auto, Person, Hund), der in der Computer-Vision-Forschung als gemeinsame Vergleichsbasis weit verbreitet ist. Mit <span class="math inline">\(S = 7\)</span>, <span class="math inline">\(B = 2\)</span> und <span class="math inline">\(C = 20\)</span> ergibt sich ein Ausgabe-Tensor der Größe <span class="math inline">\(7 \times 7 \times 30\)</span>.</p>
+</section>
+<section id="architektur" class="level3">
+<h3 class="anchored" data-anchor-id="architektur">2.2 Architektur</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./img/yolo_arch.png" class="img-fluid figure-img"></p>
+<figcaption>Die grundlegende Architektur des Modells, wie es 2015 veröffentlicht wurde. <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>, Abbildung 3)</span></figcaption>
+</figure>
+</div>
+<p>Das YOLO-Netz besteht aus zwei klar getrennten Phasen, die auf ImageNet<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> trainiert wurden:</p>
+<ul>
+<li><strong>Feature-Extractor</strong></li>
+</ul>
+<p>24 Convolutional Layer verarbeiten das Eingabebild (<span class="math inline">\(448 \times 448\)</span> Pixel) schrittweise. Vier zwischengeschaltete MaxPooling-Schichten<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> sowie ein abschließender Convolutional-Layer mit Stride 2<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> halbieren die räumliche Auflösung, während die Kanaltiefe gleichzeitig wächst (von ursprünglichen <span class="math inline">\(3\)</span> für RGB auf schließlich <span class="math inline">\(1024\)</span>).<br>
+Das Bild wird also räumlich von <span class="math inline">\(448 \times 448\)</span> auf <span class="math inline">\(7 \times 7\)</span> komprimiert, während das Netz durch die höhere Kanalanzahl auch zunehmend mehr abstrakte Merkmale extrahieren kann, d.h. von bloßen Kanten und Ecken hin zu ganzen Objektformen.<br>
+Zwiscchen den 3x3-Convolutional-Layern schalten die Autoren sogenannte 1x1-Convolutional-Layer ein, die die Kanaltiefe vorübergehend reduzieren. Eine bewerte Methode, um den Rechenaufwand zu reduzieren (<em>Echtzeitverhalten</em>), ohne wesentliche Genauigkeit zu verlieren <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>, Kapitel 2.1)</span>.</p>
+<ul>
+<li><strong>Predicition Head</strong></li>
+</ul>
+<p>Die nun im Format <span class="math inline">\(7 \times 7 \times 1024\)</span> vorliegenden Maps mit den extrahierten Features werden abgeflacht (<em>flattened</em>) und durch zwei vollverbundene Schichten geleitet. Dabei zunächst auf <span class="math inline">\(4096\)</span> Neuronen und dann direkt auf den finalen Ausgabetensor der Größe <span class="math inline">\(7 \times 7 \times 30\)</span>.<br>
+Dieser Tensor entspricht genau dem in Abschnitt 2.1 beschriebenen Grid mit Anzahl Zellen <span class="math inline">\(S = 7\)</span>, Anzahl Boxen <span class="math inline">\(B = 2\)</span> und Anzahl Klassen <span class="math inline">\(C = 20\)</span>. Das Raster im <span class="math inline">\(7 \times 7\)</span> Format ergibt sich also natürlich aus der Netzarchitektur selbst <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>, Abbildung 3)</span>.</p>
+</section>
+<section id="yolo-versionen" class="level3">
+<h3 class="anchored" data-anchor-id="yolo-versionen">2.3 YOLO-Versionen</h3>
+<p>Seit der Erstveröffentlichung 2015 wurde YOLO stetig weiterentwickelt. Jede Version adressierte konkrete Schwächen der Vorgängerversion: Scheinbar mal in Richtung Geschwindigkeit, mal in Richtung Genauigkeit und mal in Richtung einfacherer Nutzbarkeit.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./img/yolo_timeline.png" class="img-fluid figure-img"></p>
+<figcaption>YOLO Timeline von v1 bis v7. <span class="citation" data-cites="keita2024">(<a href="#ref-keita2024" role="doc-biblioref">Keita 2024</a>)</span></figcaption>
+</figure>
+</div>
+<p>Die wichtigsten Meilensteine sind wohl:</p>
+<ul>
+<li><strong>YOLOv1 (2015):</strong> Das Grundprinzip, also die Grid-basierte Regression in einem Durchgang.</li>
+<li><strong>YOLOv2 (2016):</strong> Einführung von <em>Anchor Boxes</em>, die typische Objektformen vorwegnehmen und die Erkennung kleiner Objekte verbessern.</li>
+<li><strong>YOLOv3 (2018):</strong> Erkennung auf <em>drei Skalen</em> gleichzeitig; besonders hilfreich für Objekte unterschiedlicher Größe im selben Bild.</li>
+<li><strong>YOLOv4/v5 (2020):</strong> Community-getriebene Weiterentwicklungen mit zahlreichen Trainingstricks; YOLOv5 vollzog den Wechsel zu PyTorch und vereinfachte den Export auf Edge-Geräte erheblich <span class="citation" data-cites="terven2023">(<a href="#ref-terven2023" role="doc-biblioref">Terven and Cordova-Esparza 2023</a>, Kapitel 9)</span>.</li>
+<li><strong><u>YOLOv8</u> (2023):</strong> Die aktuell verbreitetste Version. Kernerneuerung ist die <em>anchor-free</em> Architektur: Statt vordefinierten Anchor Boxes lernt das Modell Boxpositionen direkt, was den Trainingsprozess vereinfacht und die Genauigkeit steigert. Zudem wurde ein <em>decoupled head</em> eingeführt, der Klassifizierung und Lokalisation in getrennten Zweigen berechnet <span class="citation" data-cites="jocher2023">(<a href="#ref-jocher2023" role="doc-biblioref">Jocher et al. 2023</a>)</span>.</li>
+<li><strong>YOLO26 (2025):</strong> Die aktuellste Version. Führt NMS-freie End-to-End-Inferenz (d.h. keine separater Nachverarbeitungsschritt zur Duplikatelimination) ein und entfernt den Distribution Focal Loss (d.h. die Bounding-Box-Regression wird direkt ohne verteilungsbasierte Hilfsverlustfunktion gelernt). Das vereinfacht den Export und beschleunigt die native CPU-Inferenz um bis zu 43 %. Für dieses Projekt wird dennoch <u>YOLOv8</u> eingesetzt, da es zu diesem Zeitpunkt die am weitesten verbreitete und best dokumentierteste Version ist und die zugrundeliegenden Konzepte exemplarisch vermittelt.</li>
+</ul>
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+</section>
+</section>
+<section id="sec-implementierung" class="level2">
+<h2 class="anchored" data-anchor-id="sec-implementierung">3. YOLO: Implementierung</h2>
+<p>Die Implementierung erfolgt in Python unter Verwendung von <strong>YOLOv8</strong> (über Ultralytics) und <strong>OpenCV</strong>. Der gesamte Code ist so dokumentiert, dass er Schritt für Schritt reproduziert werden kann.</p>
+<section id="system-requirements" class="level3">
+<h3 class="anchored" data-anchor-id="system-requirements">3.1 System Requirements</h3>
+<p>Zur Reproduzierbarkeit wird eine Python-Umgebung benötigt. Um etwaige Abhängigkeiten sauber zu wissen, empfiehlt sich der Einsatz eines Virtual Environments, um den Workspace zu isolieren.</p>
+<p><strong>Erstellen und aktivieren der virtuellen Umgebung:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Erstellen</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> venv .venv</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Aktivieren (macOS/Linux)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternativ auf Windows</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># .venv\Scripts\activate</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Installieren der benötigten Bibliotheken:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install ultralytics opencv-python</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Die Bibliothek <code>ultralytics</code> enthält YOLOv8 inklusive aller Abhängigkeiten (u.a. PyTorch).<br>
+<code>opencv-python</code> wird für das Einlesen und Verarbeiten von Bild- und Videodaten sowie die Ansteuerung von Kamera und Peripherie verwendet.</p>
+<p><strong>Überprüfen der Installation:</strong></p>
+<div id="f000e82b" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ultralytics</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Ggf. ist ein Neustart der Entwicklungsumgebung nötig, damit die Bibliotheken eingebunden werden können</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Ultralytics Version: </span><span class="sc">{</span>ultralytics<span class="sc">.</span>__version__<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"OpenCV Version:      </span><span class="sc">{</span>cv2<span class="sc">.</span>__version__<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># OUTPUT:</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Ultralytics Version: 8.4.66
+OpenCV Version:      4.13.0</code></pre>
+</div>
+</div>
+</section>
+<section id="objekterkennung-im-straßenverkehr" class="level3">
+<h3 class="anchored" data-anchor-id="objekterkennung-im-straßenverkehr">3.2 Objekterkennung im Straßenverkehr</h3>
+<p>YOLO wurde bis zu diesem Abschnitt im Kontext von Bildern behandelt. Als Testmedium dient nun jedoch ein frei verfügbares Video aus dem <em>Straßenverkehr</em>. Ein Video ist hierbei schlicht als eine Abfolge vieler Bilder zu interpretieren. Dieses wird also Frame für Frame eingelesen, durch das YOLO-Modell verarbeitet und die erkannten Objekte anschließend mit Bounding Boxes, Labels und der zugehörigen Wahrscheinlichkeit versehen.</p>
+<p><strong>Modell laden:</strong></p>
+<div id="bf614a61" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> YOLO(<span class="st">"yolov8n.pt"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># OUTPUT:</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>YOLOv8 steht in verschiedenen Größen zur Verfügung, von <code>yolov8n.pt</code> (Nano, schneller), <code>yolov8s.pt</code> (Small, Balance zwischen Geschwindigkeit und Genauigkeit) bishin zu <code>yolov8x.pt</code> (Extra Large, genauer).</p>
+<p><strong>Verarbeitungsfunktion definieren:</strong></p>
+<div id="2f042ba0" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2, random, time</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Jeder Klasse wird eine eindeutige reproduzierbare Farbe zugewiesen (z.B. "Auto" immer blau)</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_color(cls_id):</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    random.seed(cls_id)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">tuple</span>(random.randint(<span class="dv">0</span>, <span class="dv">255</span>) <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>))</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Frame-für-Frame-Verarbeitung mit YOLO</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> process_video(input_video_path, output_path):</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Video einlesen und Metadaten (FPS, Auflösung) auslesen</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    cap    <span class="op">=</span> cv2.VideoCapture(input_video_path)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    fps    <span class="op">=</span> cap.get(cv2.CAP_PROP_FPS)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    width  <span class="op">=</span> <span class="bu">int</span>(cap.get(cv2.CAP_PROP_FRAME_WIDTH))</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    height <span class="op">=</span> <span class="bu">int</span>(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Ausgabedatei mit gleicher Auflösung und FPS wie Eingabe vorbereiten</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    out    <span class="op">=</span> cv2.VideoWriter(output_path, cv2.VideoWriter_fourcc(<span class="op">*</span><span class="st">"MP4V"</span>), fps, (width, height))</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Optional: Laufzeitstatistik (hier Initialisierung)</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    frame_count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    total_infer_ms <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>        ret, frame <span class="op">=</span> cap.read()</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> ret:</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Ende des Videos erreicht</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Optional: Laufzeitstatistik (hier aktuelles Frame)</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>        t0 <span class="op">=</span> time.perf_counter()</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>        results <span class="op">=</span> model(frame, verbose<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>        total_infer_ms <span class="op">+=</span> (time.perf_counter() <span class="op">-</span> t0) <span class="op">*</span> <span class="dv">1000</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>        frame_count <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Aktuellen Frame durch YOLO schicken; gibt Bounding Boxes, Klassen und Confidence zurück</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> result <span class="kw">in</span> results:</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Nur Boxen mit Confidence &gt; 40% anzeigen (niedrigere Werte sind meist Fehler)</span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> box <span class="kw">in</span> result.boxes:</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> box.conf[<span class="dv">0</span>] <span class="op">&gt;</span> <span class="fl">0.4</span>:</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>                    x1, y1, x2, y2 <span class="op">=</span> <span class="bu">map</span>(<span class="bu">int</span>, box.xyxy[<span class="dv">0</span>])                    <span class="co"># Eckpunkte der Bounding Box</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>                    cls   <span class="op">=</span> <span class="bu">int</span>(box.cls[<span class="dv">0</span>])                                   <span class="co"># Klassen-ID (z.B. 2 = Auto)</span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>                    label <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>result<span class="sc">.</span>names[cls]<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span><span class="bu">float</span>(box.conf[<span class="dv">0</span>])<span class="sc">:.2f}</span><span class="ss">"</span>   <span class="co"># Beispiel "car 0.87"</span></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>                    color <span class="op">=</span> get_color(cls)</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>                    <span class="co"># Bounding Box und Label in den Frame zeichnen</span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>                    cv2.rectangle(frame, (x1, y1), (x2, y2), color, <span class="dv">2</span>)</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>                    cv2.putText(frame, label, (x1, <span class="bu">max</span>(y1 <span class="op">-</span> <span class="dv">10</span>, <span class="dv">20</span>)),</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>                                cv2.FONT_HERSHEY_SIMPLEX, <span class="fl">0.6</span>, color, <span class="dv">2</span>)</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Verarbeiteten Frame in Ausgabevideo schreiben</span></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>        out.write(frame)</span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Optional: Laufzeitstatistik (hier finale Berechnung und Ausgabe)</span></span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>    avg_ms  <span class="op">=</span> total_infer_ms <span class="op">/</span> frame_count <span class="cf">if</span> frame_count <span class="cf">else</span> <span class="dv">0</span></span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>    avg_fps <span class="op">=</span> <span class="dv">1000</span> <span class="op">/</span> avg_ms <span class="cf">if</span> avg_ms <span class="cf">else</span> <span class="dv">0</span></span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Verarbeitete Frames:                 </span><span class="sc">{</span>frame_count<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Durchschn. Inferenzzeit pro Frame:   </span><span class="sc">{</span>avg_ms<span class="sc">:.1f}</span><span class="ss"> ms"</span>)</span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Durchschn. Inferenz-FPS:             </span><span class="sc">{</span>avg_fps<span class="sc">:.1f}</span><span class="ss">"</span>)</span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>    cap.release()</span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a>    out.release()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Demonstration mit Video</strong><a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a><strong>:</strong></p>
+<p>Die erreichbare Verarbeitungsgeschwindigkeit hängt stark von der verfügbaren Hardware ab.<br>
+Während eine dedizierte GPU für eingebettete Fahrzeugtechnik (z.B. NVIDIA mit CUDA) problemlos <span class="math inline">\(40–100\)</span> FPS bishin zu <span class="math inline">\(300\)</span> FPS ermöglicht, ist auf einer standard Laptop-CPU typischerweise eine Range von <span class="math inline">\(5–20\)</span> FPS realistisch.<br>
+Die interaktiven Demos in Abschnitt 4 erreichen mit WebGPU-Beschleunigung etwa <span class="math inline">\(23\)</span> FPS (Video-Input) bzw. <span class="math inline">\(24-26\)</span> FPS (Webcam für Live-Stream), doch dazu später mehr.</p>
+<div id="541cf162" class="cell" data-execution_count="4">
+<div class="cell-output cell-output-stdout">
+<pre><code>Verarbeitete Frames:                 1501
+Durchschn. Inferenzzeit pro Frame:   28.3 ms
+Durchschn. Inferenz-FPS:             35.4</code></pre>
+</div>
+</div>
+<p></p><div class="quarto-video"><video id="video_shortcode_videojs_video1" class="video-js vjs-default-skin vjs-big-play-centered vjs-fluid" controls="" preload="auto" data-setup="{}" title=""><source src="./img/autobahn_h264.mp4"></video></div> <!-- Es musste auf ein h264-Format ausgewichen werden, damit das Video auf Safari und Google-Chrome angezeigt werden kann --><p></p>
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+</section>
+</section>
+<section id="sec-eigentests" class="level2">
+<h2 class="anchored" data-anchor-id="sec-eigentests">4. YOLO: Eigentests</h2>
+<p>Die folgenden Demos laufen direkt im Browser ohne lokale Installation. Möglich macht das das zuvor exportierte Modell <code>yolov8n.onnx</code>, das über die Bibliothek <code>onnxruntime-web</code> direkt im Browser ausgeführt wird <a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>.</p>
+<p>Die Inferenz läuft über <strong>WebGPU-Beschleunigung</strong> direkt im Browser, ohne WebGPU-Support fällt das System nämlich auf single-threaded WebAssembly zurück (ca. <span class="math inline">\(4\)</span> FPS), d.h. das Modell läuft auf WASM über der nativen CPU des eigenen Rechners.<br>
+Bei den Tests in Google Chrome konnten <span class="math inline">\(23\)</span> FPS (Video) bzw. <span class="math inline">\(24-26\)</span> FPS (Webcam) erreicht werden. Damit überschreitet sie die in Abschnitt 1 definierte Echtzeitanforderung von mind. <span class="math inline">\(24\)</span> FPS. Safari (macOS-Browser) unterstützt bekanntermaßen eine schwächere WebGPU-Implementierung mit <span class="math inline">\(10–14\)</span> FPS. Für optimale Performance wird also Google Chrome oder auch Edge empfohlen.</p>
+<p>Für noch höhere FPS wäre eine Server-seitige Inferenz über Dienste wie <em>Hugging Face Spaces</em> oder <em>Netlify Functions</em> möglich, bei der das Modell auf dedizierten Servern im Backend läuft und nur die Ergebnisse im Browser angezeigt werden. Hierbei ist jedoch die Abhängigkeit von Hintergund-Diensten zu beachten, d.h. bei einem Ausfall dieser fällt auch die Echtzeit-Objekterkennung aus.</p>
+<section id="grid-manipulation" class="level3">
+<h3 class="anchored" data-anchor-id="grid-manipulation">4.1 Grid-Manipulation</h3>
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.21.0/dist/ort.min.js"></script>
+
+<div id="yolo-demo" style="padding:1rem 0;">
+
+  <!-- Upload-Zone -->
+  <div id="uploadZone" style="
+    border:2px dashed #bbb; border-radius:8px; padding:2rem;
+    text-align:center; cursor:pointer; color:#888; font-size:15px;
+    margin-bottom:1rem; transition:border-color 0.2s;">
+    <svg width="40" height="40" viewbox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:0.5rem;">
+      <line x1="12" y1="16" x2="12" y2="4"></line>
+      <polyline points="8 8 12 4 16 8"></polyline>
+      <line x1="4" y1="20" x2="20" y2="20"></line>
+    </svg>
+    Bild hier ablegen oder <u>klicken zum Auswählen</u>
+    <input type="file" id="fileInput" accept="image/*" style="display:none;">
+  </div>
+
+  <!-- Status -->
+  <div id="statusMsg" style="font-size:13px;color:#888;margin-bottom:0.75rem;min-height:1.2em;"></div>
+
+  <!-- Slider-Controls -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:0.75rem;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <label style="font-size:14px;color:#555;white-space:nowrap;">Grid <strong>S</strong> =</label>
+      <input type="range" id="sSlider" min="3" max="13" step="2" value="7" style="flex:1;" disabled="">
+      <span id="sVal" style="font-size:15px;font-weight:600;min-width:2ch;">7</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <label style="font-size:14px;color:#555;white-space:nowrap;">Conf. <strong>C</strong>≥</label>
+      <input type="range" id="confSlider" min="0.05" max="0.95" step="0.05" value="0.40" style="flex:1;" disabled="">
+      <span id="confVal" style="font-size:15px;font-weight:600;min-width:3ch;">0.40</span>
+    </div>
+  </div>
+
+  <!-- Canvas -->
+  <canvas id="demoCanvas" style="width:100%;display:none;border-radius:8px;border:1px solid #ddd;"></canvas>
+
+  <!-- Legenden -->
+  <div style="margin-top:0.6rem;display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:#666;">
+    <span style="display:flex;align-items:center;gap:4px;">
+      <span style="width:12px;height:12px;background:rgba(24,95,165,0.22);border:1.5px solid #185FA5;display:inline-block;border-radius:2px;"></span>Verantwortliche Zelle
+    </span>
+    <span style="display:flex;align-items:center;gap:4px;">
+      <span style="width:14px;height:3px;background:#E24B4A;display:inline-block;border-radius:1px;"></span>Bounding Box
+    </span>
+    <span style="display:flex;align-items:center;gap:4px;">
+      <span style="width:9px;height:9px;border-radius:50%;background:#E24B4A;display:inline-block;"></span>Objektmittelpunkt
+    </span>
+  </div>
+
+  <!-- Erkennungsliste -->
+  <div id="detList" style="margin-top:0.75rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;"></div>
+</div>
+
+<script>
+(function () {
+
+// ── COCO-Klassen ────────────────────────────────────────────────────────────
+const COCO = ['person','bicycle','car','motorcycle','airplane','bus','train',
+  'truck','boat','traffic light','fire hydrant','stop sign','parking meter',
+  'bench','bird','cat','dog','horse','sheep','cow','elephant','bear','zebra',
+  'giraffe','backpack','umbrella','handbag','tie','suitcase','frisbee','skis',
+  'snowboard','sports ball','kite','baseball bat','baseball glove','skateboard',
+  'surfboard','tennis racket','bottle','wine glass','cup','fork','knife','spoon',
+  'bowl','banana','apple','sandwich','orange','broccoli','carrot','hot dog',
+  'pizza','donut','cake','chair','couch','potted plant','bed','dining table',
+  'toilet','tv','laptop','mouse','remote','keyboard','cell phone','microwave',
+  'oven','toaster','sink','refrigerator','book','clock','vase','scissors',
+  'teddy bear','hair drier','toothbrush'];
+
+// Farbe je Klasse (deterministisch)
+function clsColor(c) {
+  const h = (c * 47) % 360;
+  return `hsl(${h},70%,45%)`;
+}
+
+// ── Elemente ────────────────────────────────────────────────────────────────
+const zone     = document.getElementById('uploadZone');
+const fileIn   = document.getElementById('fileInput');
+const canvas   = document.getElementById('demoCanvas');
+const ctx      = canvas.getContext('2d');
+const sSlider  = document.getElementById('sSlider');
+const cSlider  = document.getElementById('confSlider');
+const sVal     = document.getElementById('sVal');
+const cVal     = document.getElementById('confVal');
+const status   = document.getElementById('statusMsg');
+const detList  = document.getElementById('detList');
+
+let session    = null;
+let currentImg = null;   // HTMLImageElement
+let rawBoxes   = [];     // alle Boxen über minConf=0.05
+
+// ── Modell laden ────────────────────────────────────────────────────────────
+ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.21.0/dist/';
+
+status.textContent = 'STATUS: YOLO wird geladen …';
+ort.InferenceSession.create('./models/yolov8n.onnx', {
+  executionProviders: ['webgpu', 'wasm'],
+  graphOptimizationLevel: 'all',
+}).then(s => {
+  session = s;
+  status.textContent = 'STATUS: YOLO erfolgreich geladen. Bild hochladen um zu starten!';
+}).catch(e => {
+  status.textContent = 'STATUS: YOLO nicht gefunden!';
+});
+
+// ── Upload-Events ────────────────────────────────────────────────────────────
+zone.addEventListener('click', () => fileIn.click());
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.borderColor='#185FA5'; });
+zone.addEventListener('dragleave', () => { zone.style.borderColor='#bbb'; });
+zone.addEventListener('drop', e => {
+  e.preventDefault(); zone.style.borderColor='#bbb';
+  if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+});
+fileIn.addEventListener('change', () => { if (fileIn.files[0]) loadFile(fileIn.files[0]); });
+
+function loadFile(file) {
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => { currentImg = img; runInference(); };
+  img.src = url;
+}
+
+// ── Vorverarbeitung (Letterbox -> 640×640) ───────────────────────────────────
+function preprocess(img) {
+  const MODEL = 640;
+  const scale = Math.min(MODEL / img.width, MODEL / img.height);
+  const nw = Math.round(img.width  * scale);
+  const nh = Math.round(img.height * scale);
+  const px = Math.floor((MODEL - nw) / 2);
+  const py = Math.floor((MODEL - nh) / 2);
+
+  const off = document.createElement('canvas');
+  off.width = MODEL; off.height = MODEL;
+  const oc = off.getContext('2d', { willReadFrequently: true });
+  oc.fillStyle = 'rgb(114,114,114)';
+  oc.fillRect(0, 0, MODEL, MODEL);
+  oc.drawImage(img, px, py, nw, nh);
+
+  const pixels = oc.getImageData(0, 0, MODEL, MODEL).data;
+  const input  = new Float32Array(3 * MODEL * MODEL);
+  for (let i = 0; i < MODEL * MODEL; i++) {
+    input[i]               = pixels[i * 4]     / 255;  // R
+    input[MODEL*MODEL + i] = pixels[i * 4 + 1] / 255;  // G
+    input[2*MODEL*MODEL+i] = pixels[i * 4 + 2] / 255;  // B
+  }
+  return { input, scale, px, py };
+}
+
+// ── NMS ─────────────────────────────────────────────────────────────────────
+function iou(a, b) {
+  const x1 = Math.max(a.x1,b.x1), y1 = Math.max(a.y1,b.y1);
+  const x2 = Math.min(a.x2,b.x2), y2 = Math.min(a.y2,b.y2);
+  const inter = Math.max(0,x2-x1) * Math.max(0,y2-y1);
+  return inter / ((a.x2-a.x1)*(a.y2-a.y1) + (b.x2-b.x1)*(b.y2-b.y1) - inter + 1e-6);
+}
+function nms(boxes, iouThr=0.45) {
+  boxes.sort((a,b) => b.conf - a.conf);
+  const keep = [], sup = new Set();
+  for (let i = 0; i < boxes.length; i++) {
+    if (sup.has(i)) continue;
+    keep.push(boxes[i]);
+    for (let j = i+1; j < boxes.length; j++) {
+      if (!sup.has(j) && boxes[i].cls===boxes[j].cls && iou(boxes[i],boxes[j])>iouThr)
+        sup.add(j);
+    }
+  }
+  return keep;
+}
+
+// ── Inferenz ─────────────────────────────────────────────────────────────────
+async function runInference() {
+  if (!session || !currentImg) return;
+  status.textContent = 'STATUS: Inferenz läuft …';
+  canvas.style.display = 'none';
+
+  const { input, scale, px, py } = preprocess(currentImg);
+  const tensor = new ort.Tensor('float32', input, [1, 3, 640, 640]);
+  const feed = {}; feed[session.inputNames[0]] = tensor;
+  const out  = await session.run(feed);
+  const data = out[session.outputNames[0]].data;  // [1, 84, 8400]
+
+  const N = 8400;
+  rawBoxes = [];
+  for (let i = 0; i < N; i++) {
+    let maxScore = 0, maxCls = 0;
+    for (let c = 0; c < 80; c++) {
+      const s = data[(4 + c) * N + i];
+      if (s > maxScore) { maxScore = s; maxCls = c; }
+    }
+    if (maxScore < 0.05) continue;  // sehr niedrige Schwelle – für Slider-Flexibilität
+    const cx = data[0*N+i], cy = data[1*N+i], w = data[2*N+i], h = data[3*N+i];
+    const x1 = Math.max(0, (cx - w/2 - px) / scale);
+    const y1 = Math.max(0, (cy - h/2 - py) / scale);
+    const x2 = Math.min(currentImg.width,  (cx + w/2 - px) / scale);
+    const y2 = Math.min(currentImg.height, (cy + h/2 - py) / scale);
+    rawBoxes.push({ x1, y1, x2, y2, conf: maxScore, cls: maxCls });
+  }
+  status.textContent = '';
+  sSlider.disabled = false;
+  cSlider.disabled = false;
+  render();
+}
+
+// ── Zeichnen ─────────────────────────────────────────────────────────────────
+function render() {
+  if (!currentImg) return;
+  const S    = parseInt(sSlider.value);
+  const conf = parseFloat(cSlider.value);
+  sVal.textContent  = S;
+  cVal.textContent  = conf.toFixed(2);
+
+  canvas.width  = currentImg.width;
+  canvas.height = currentImg.height;
+  canvas.style.display = 'block';
+  const W = canvas.width, H = canvas.height;
+
+  ctx.drawImage(currentImg, 0, 0);
+
+  // Grid
+  const cw = W/S, ch = H/S;
+  ctx.strokeStyle = 'rgba(255,255,255,0.28)'; ctx.lineWidth = 1.2;
+  for (let i=0;i<=S;i++){
+    ctx.beginPath();ctx.moveTo(i*cw,0);ctx.lineTo(i*cw,H);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,i*ch);ctx.lineTo(W,i*ch);ctx.stroke();
+  }
+
+  // Gefilterte + NMS-Boxen
+  const filtered = nms(rawBoxes.filter(b => b.conf >= conf));
+
+  // Verantwortliche Zellen hervorheben
+  const seen = new Set();
+  filtered.forEach(b => {
+    const cx = (b.x1+b.x2)/2, cy = (b.y1+b.y2)/2;
+    const col = Math.min(Math.floor(cx/cw), S-1);
+    const row = Math.min(Math.floor(cy/ch), S-1);
+    const key = `${row}-${col}`;
+    if (!seen.has(key)) {
+      ctx.fillStyle = 'rgba(24,95,165,0.20)';
+      ctx.fillRect(col*cw, row*ch, cw, ch);
+      ctx.strokeStyle = '#185FA5'; ctx.lineWidth = 1.5;
+      ctx.strokeRect(col*cw, row*ch, cw, ch);
+      seen.add(key);
+    }
+  });
+
+  // Bounding Boxes
+  filtered.forEach(b => {
+    const color = clsColor(b.cls);
+    const bw = b.x2-b.x1, bh = b.y2-b.y1;
+    ctx.strokeStyle = color; ctx.lineWidth = 4;
+    ctx.strokeRect(b.x1, b.y1, bw, bh);
+
+    const lbl = `${COCO[b.cls]} ${(b.conf*100).toFixed(0)}%`;
+    ctx.font = 'bold 16px sans-serif';
+    const tw = ctx.measureText(lbl).width;
+    ctx.fillStyle = color;
+    ctx.fillRect(b.x1-1, b.y1-21, tw+10, 21);
+    ctx.fillStyle = '#fff';
+    ctx.fillText(lbl, b.x1+4, b.y1-5);
+
+    const mx = (b.x1+b.x2)/2, my = (b.y1+b.y2)/2;
+    ctx.fillStyle='#E24B4A';
+    ctx.beginPath();ctx.arc(mx,my,5,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#fff';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(mx,my,5,0,Math.PI*2);ctx.stroke();
+  });
+
+  // Detektionsliste
+  detList.innerHTML = filtered.length === 0
+    ? `<div style="font-size:13px;color:#999;">Keine Objekte über Schwellwert ${conf.toFixed(2)} erkannt.</div>`
+    : filtered.map(b => {
+        const cx = (b.x1+b.x2)/2, cy = (b.y1+b.y2)/2;
+        const col = Math.min(Math.floor(cx/cw),S-1);
+        const row = Math.min(Math.floor(cy/ch),S-1);
+        return `<div style="background:#f5f5f5;border-radius:6px;padding:0.5rem 0.75rem;border-left:3px solid ${clsColor(b.cls)};">
+          <div style="font-size:11px;color:#888;">${COCO[b.cls]} · ${(b.conf*100).toFixed(0)}% Conf.</div>
+          <div style="font-size:13px;font-weight:600;">Zelle (${row}, ${col})</div>
+        </div>`;
+      }).join('');
+}
+
+sSlider.addEventListener('input', render);
+cSlider.addEventListener('input', render);
+
+})();
+</script>
+</section>
+<section id="bildvideo" class="level3">
+<h3 class="anchored" data-anchor-id="bildvideo">4.2 Bild/Video</h3>
+<div id="yolo-img" style="padding:1rem 0;">
+
+  <!-- Upload-Zone -->
+  <div id="imgUploadZone" style="
+    border:2px dashed #bbb; border-radius:8px; padding:2rem;
+    text-align:center; cursor:pointer; color:#888; font-size:15px;
+    margin-bottom:1rem; transition:border-color 0.2s;">
+    <svg width="40" height="40" viewbox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:0.5rem;">
+      <line x1="12" y1="16" x2="12" y2="4"></line>
+      <polyline points="8 8 12 4 16 8"></polyline>
+      <line x1="4" y1="20" x2="20" y2="20"></line>
+    </svg>
+    Bild oder Video hier ablegen oder <u>klicken zum Auswählen</u>
+    <input type="file" id="imgFileInput" accept="image/*,video/*" style="display:none;">
+  </div>
+
+  <!-- Status -->
+  <div id="imgStatus" style="font-size:13px;color:#888;margin-bottom:0.75rem;min-height:1.2em;"></div>
+
+  <!-- Confidence Slider -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem;max-width:340px;">
+    <label style="font-size:14px;color:#555;white-space:nowrap;">Conf. <strong>C</strong>≥</label>
+    <input type="range" id="imgConfSlider" min="0.05" max="0.95" step="0.05" value="0.40" style="flex:1;" disabled="">
+    <span id="imgConfVal" style="font-size:15px;font-weight:600;min-width:3ch;">0.40</span>
+  </div>
+
+  <!-- Ausgabe-Container: Video + Canvas übereinander -->
+  <div id="imgWrapper" style="position:relative;width:100%;display:none;">
+    <video id="imgVideo" muted="" playsinline="" style="width:100%;border-radius:8px;display:block;"></video>
+    <canvas id="imgCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:8px;"></canvas>
+  </div>
+
+  <!-- Legende -->
+  <div style="margin-top:0.6rem;display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:#666;">
+    <span style="display:flex;align-items:center;gap:4px;">
+      <span style="width:14px;height:3px;background:#E24B4A;display:inline-block;border-radius:1px;"></span>Bounding Box
+    </span>
+    <span style="display:flex;align-items:center;gap:4px;">
+      <span style="width:9px;height:9px;border-radius:50%;background:#E24B4A;display:inline-block;"></span>Objektmittelpunkt
+    </span>
+  </div>
+
+  <!-- Detektionsliste -->
+  <div id="imgDetList" style="margin-top:0.75rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;"></div>
+</div>
+
+<script>
+(function () {
+
+const COCO = ['person','bicycle','car','motorcycle','airplane','bus','train',
+  'truck','boat','traffic light','fire hydrant','stop sign','parking meter',
+  'bench','bird','cat','dog','horse','sheep','cow','elephant','bear','zebra',
+  'giraffe','backpack','umbrella','handbag','tie','suitcase','frisbee','skis',
+  'snowboard','sports ball','kite','baseball bat','baseball glove','skateboard',
+  'surfboard','tennis racket','bottle','wine glass','cup','fork','knife','spoon',
+  'bowl','banana','apple','sandwich','orange','broccoli','carrot','hot dog',
+  'pizza','donut','cake','chair','couch','potted plant','bed','dining table',
+  'toilet','tv','laptop','mouse','remote','keyboard','cell phone','microwave',
+  'oven','toaster','sink','refrigerator','book','clock','vase','scissors',
+  'teddy bear','hair drier','toothbrush'];
+
+function clsColor(c) { return `hsl(${(c*47)%360},70%,45%)`; }
+
+const zone    = document.getElementById('imgUploadZone');
+const fileIn  = document.getElementById('imgFileInput');
+const wrapper = document.getElementById('imgWrapper');
+const video   = document.getElementById('imgVideo');
+const canvas  = document.getElementById('imgCanvas');
+const ctx     = canvas.getContext('2d');
+const cSlider = document.getElementById('imgConfSlider');
+const cVal    = document.getElementById('imgConfVal');
+const status  = document.getElementById('imgStatus');
+const detList = document.getElementById('imgDetList');
+
+let session   = null;
+let rawBoxes  = [];      // für Bild-Modus (statisch)
+let isVideo   = false;
+let loopActive = false;
+
+cSlider.addEventListener('input', () => {
+  cVal.textContent = parseFloat(cSlider.value).toFixed(2);
+  if (!isVideo) renderStatic();   // Bild: sofort neu zeichnen
+});
+
+// ── Modell ──────────────────────────────────────────────────────────────────
+async function ensureSession() {
+  if (window.__yoloSession) return window.__yoloSession;
+  const s = await ort.InferenceSession.create('./models/yolov8n.onnx',
+    { executionProviders: ['webgpu', 'wasm'] });
+  window.__yoloSession = s;
+  return s;
+}
+
+status.textContent = 'STATUS: YOLO wird geladen …';
+ensureSession().then(() => {
+  status.textContent = 'STATUS: YOLO erfolgreich geladen. Datei hochladen um zu starten!';
+}).catch(() => {
+  status.textContent = 'STATUS: YOLO nicht gefunden!';
+});
+
+// ── Upload-Events ────────────────────────────────────────────────────────────
+zone.addEventListener('click', () => fileIn.click());
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.style.borderColor='#185FA5'; });
+zone.addEventListener('dragleave', () => { zone.style.borderColor='#bbb'; });
+zone.addEventListener('drop', e => {
+  e.preventDefault(); zone.style.borderColor='#bbb';
+  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+fileIn.addEventListener('change', () => { if (fileIn.files[0]) handleFile(fileIn.files[0]); });
+
+function handleFile(file) {
+  loopActive = false;                       // laufenden Video-Loop stoppen
+  const url = URL.createObjectURL(file);
+  if (file.type.startsWith('image/')) {
+    isVideo = false;
+    const img = new Image();
+    img.onload = () => runImageInference(img);
+    img.src = url;
+  } else {
+    isVideo = true;
+    video.src = url;
+    video.onloadeddata = () => startVideoLoop();
+  }
+}
+
+// ── Vorverarbeitung (Letterbox -> 640×640) ───────────────────────────────────
+function preprocess(source, sw, sh) {
+  const MODEL = 640;
+  const scale = Math.min(MODEL/sw, MODEL/sh);
+  const nw = Math.round(sw*scale), nh = Math.round(sh*scale);
+  const px = Math.floor((MODEL-nw)/2), py = Math.floor((MODEL-nh)/2);
+  const off = document.createElement('canvas');
+  off.width = MODEL; off.height = MODEL;
+  const oc = off.getContext('2d', { willReadFrequently: true });
+  oc.fillStyle = 'rgb(114,114,114)'; oc.fillRect(0,0,MODEL,MODEL);
+  oc.drawImage(source, px, py, nw, nh);
+  const pixels = oc.getImageData(0,0,MODEL,MODEL).data;
+  const input = new Float32Array(3*MODEL*MODEL);
+  for (let i=0;i<MODEL*MODEL;i++) {
+    input[i]              = pixels[i*4]  /255;
+    input[MODEL*MODEL+i]  = pixels[i*4+1]/255;
+    input[2*MODEL*MODEL+i]= pixels[i*4+2]/255;
+  }
+  return { input, scale, px, py };
+}
+
+// ── NMS ──────────────────────────────────────────────────────────────────────
+function iou(a,b) {
+  const x1=Math.max(a.x1,b.x1), y1=Math.max(a.y1,b.y1);
+  const x2=Math.min(a.x2,b.x2), y2=Math.min(a.y2,b.y2);
+  const inter=Math.max(0,x2-x1)*Math.max(0,y2-y1);
+  return inter/((a.x2-a.x1)*(a.y2-a.y1)+(b.x2-b.x1)*(b.y2-b.y1)-inter+1e-6);
+}
+function nms(boxes, thr=0.45) {
+  boxes.sort((a,b)=>b.conf-a.conf);
+  const keep=[], sup=new Set();
+  for(let i=0;i<boxes.length;i++){
+    if(sup.has(i)) continue;
+    keep.push(boxes[i]);
+    for(let j=i+1;j<boxes.length;j++)
+      if(!sup.has(j)&&boxes[i].cls===boxes[j].cls&&iou(boxes[i],boxes[j])>thr) sup.add(j);
+  }
+  return keep;
+}
+
+// ── Tensor -> Boxen ───────────────────────────────────────────────────────────
+function parseOutput(data, scale, px, py, W, H, minConf=0.05) {
+  const N=8400, boxes=[];
+  for(let i=0;i<N;i++){
+    let maxScore=0, maxCls=0;
+    for(let c=0;c<80;c++){ const s=data[(4+c)*N+i]; if(s>maxScore){maxScore=s;maxCls=c;} }
+    if(maxScore<minConf) continue;
+    const cx=data[0*N+i], cy=data[1*N+i], w=data[2*N+i], h=data[3*N+i];
+    boxes.push({
+      x1: Math.max(0,(cx-w/2-px)/scale),
+      y1: Math.max(0,(cy-h/2-py)/scale),
+      x2: Math.min(W,(cx+w/2-px)/scale),
+      y2: Math.min(H,(cy+h/2-py)/scale),
+      conf: maxScore, cls: maxCls
+    });
+  }
+  return boxes;
+}
+
+// ── Zeichnen ──────────────────────────────────────────────────────────────────
+function drawBoxes(filtered) {
+  filtered.forEach(b => {
+    const color = clsColor(b.cls);
+    ctx.strokeStyle=color; ctx.lineWidth=8;
+    ctx.strokeRect(b.x1, b.y1, b.x2-b.x1, b.y2-b.y1);
+    const lbl=`${COCO[b.cls]} ${(b.conf*100).toFixed(0)}%`;
+    ctx.font='bold 22px sans-serif';
+    const tw=ctx.measureText(lbl).width;
+    ctx.fillStyle=color; ctx.fillRect(b.x1-1, b.y1-21, tw+10, 21);
+    ctx.fillStyle='#fff'; ctx.fillText(lbl, b.x1+4, b.y1-5);
+    const mx=(b.x1+b.x2)/2, my=(b.y1+b.y2)/2;
+    ctx.fillStyle='#E24B4A'; ctx.beginPath(); ctx.arc(mx,my,5,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(mx,my,5,0,Math.PI*2); ctx.stroke();
+  });
+}
+
+function updateDetList(filtered, conf) {
+  detList.innerHTML = filtered.length === 0
+    ? `<div style="font-size:13px;color:#999;">Keine Objekte über Schwellwert ${conf.toFixed(2)} erkannt.</div>`
+    : filtered.map(b=>`
+        <div style="background:#f5f5f5;border-radius:6px;padding:0.5rem 0.75rem;border-left:3px solid ${clsColor(b.cls)};">
+          <div style="font-size:11px;color:#888;">${COCO[b.cls]} · ${(b.conf*100).toFixed(0)}% Conf.</div>
+          <div style="font-size:13px;font-weight:600;">Box: ${Math.round(b.x2-b.x1)}×${Math.round(b.y2-b.y1)} px</div>
+        </div>`).join('');
+}
+
+// ── BILD-Modus ────────────────────────────────────────────────────────────────
+async function runImageInference(img) {
+  status.textContent = 'STATUS: Inferenz läuft …';
+  wrapper.style.display = 'none';
+  session = await ensureSession();
+
+  const { input, scale, px, py } = preprocess(img, img.width, img.height);
+  const tensor = new ort.Tensor('float32', input, [1,3,640,640]);
+  const feed = {}; feed[session.inputNames[0]] = tensor;
+  const out  = await session.run(feed);
+  rawBoxes = parseOutput(out[session.outputNames[0]].data, scale, px, py, img.width, img.height);
+
+  // Video-Element ausblenden, Bild direkt auf Canvas
+  video.style.display = 'none';
+  canvas.style.position = 'static';
+  canvas.style.width = '100%';
+  canvas.style.height = 'auto';
+  canvas.width  = img.width;
+  canvas.height = img.height;
+  wrapper.style.display = 'block';
+
+  cSlider.disabled = false;
+  status.textContent = `STATUS: ${rawBoxes.filter(b=>b.conf>=0.05).length} Kandidaten gefunden.`;
+  renderStatic(img);
+}
+
+function renderStatic(img) {
+  const conf = parseFloat(cSlider.value);
+  cVal.textContent = conf.toFixed(2);
+  // Bild neu zeichnen
+  if (img) renderStatic._img = img;
+  const src = renderStatic._img;
+  if (!src) return;
+  canvas.width = src.width; canvas.height = src.height;
+  ctx.drawImage(src, 0, 0);
+  const filtered = nms(rawBoxes.filter(b => b.conf >= conf));
+  drawBoxes(filtered);
+  updateDetList(filtered, conf);
+}
+
+// ── VIDEO-Modus ───────────────────────────────────────────────────────────────
+async function startVideoLoop() {
+  session = await ensureSession();
+  video.style.display = 'block';
+  canvas.style.position = 'absolute';
+  canvas.style.width = '100%';
+  canvas.style.height = '100%';
+  wrapper.style.display = 'block';
+  cSlider.disabled = false;
+  await video.play();
+  loopActive = true;
+  inferLoop();               // Inferenz-Loop (langsam, entkoppelt)
+  drawLoop();                // Draw-Loop (schnell)
+}
+
+let lastBoxes = [];
+
+async function inferLoop() {
+  while (loopActive && !video.paused && !video.ended) {
+    const W = video.videoWidth, H = video.videoHeight;
+    if (W > 0) {
+      const conf = parseFloat(cSlider.value);
+
+      const t0 = performance.now();
+      const { input, scale, px, py } = preprocess(video, W, H);
+      const tensor = new ort.Tensor('float32', input, [1,3,640,640]);
+      const feed = {}; feed[session.inputNames[0]] = tensor;
+      const out = await session.run(feed);
+      const fps = (1000 / (performance.now() - t0)).toFixed(1);
+
+      const boxes = parseOutput(out[session.outputNames[0]].data, scale, px, py, W, H, conf);
+      lastBoxes = nms(boxes);
+      status.textContent = `STATUS: ${lastBoxes.length} Objekt(e) erkannt | ${fps} FPS`;
+      updateDetList(lastBoxes, conf);
+    }
+  }
+  status.textContent = 'STATUS: Video beendet.';
+}
+
+function drawLoop() {
+  if (!loopActive || video.ended) return;
+  const W = video.videoWidth, H = video.videoHeight;
+  if (W > 0) {
+    canvas.width = W; canvas.height = H;
+    ctx.clearRect(0, 0, W, H);
+    drawBoxes(lastBoxes);
+  }
+  requestAnimationFrame(drawLoop);
+}
+
+})();
+</script>
+</section>
+<section id="kameralive-stream" class="level3">
+<h3 class="anchored" data-anchor-id="kameralive-stream">4.3 Kamera/Live-Stream</h3>
+<div id="yolo-cam" style="padding:1rem 0;">
+
+  <!-- Steuerung -->
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:0.75rem;">
+    <button id="camStart" style="
+      background:#185FA5;color:#fff;border:none;border-radius:6px;
+      padding:0.45rem 1.1rem;font-size:14px;cursor:pointer;font-weight:600;">
+      ▶ Kamera starten
+    </button>
+    <button id="camStop" disabled="" style="
+      background:#e0e0e0;color:#888;border:none;border-radius:6px;
+      padding:0.45rem 1.1rem;font-size:14px;cursor:pointer;font-weight:600;">
+      ■ Stoppen
+    </button>
+  </div>
+
+  <!-- Status -->
+  <div id="camStatus" style="font-size:13px;color:#888;margin-bottom:0.75rem;min-height:1.2em;"></div>
+
+  <!-- Confidence Slider -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem;max-width:340px;">
+    <label style="font-size:14px;color:#555;white-space:nowrap;">Conf. <strong>C</strong>≥</label>
+    <input type="range" id="camConfSlider" min="0.05" max="0.95" step="0.05" value="0.40" style="flex:1;" disabled="">
+    <span id="camConfVal" style="font-size:15px;font-weight:600;min-width:3ch;">0.40</span>
+  </div>
+
+  <!-- Kamera-Feed + Canvas übereinander -->
+  <div id="camWrapper" style="position:relative;width:100%;display:none;">
+    <video id="camVideo" muted="" playsinline="" autoplay="" style="width:100%;border-radius:8px;display:block;"></video>
+    <canvas id="camCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:8px;"></canvas>
+  </div>
+
+  <!-- Legende -->
+  <div style="margin-top:0.6rem;display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:#666;">
+    <span style="display:flex;align-items:center;gap:4px;">
+      <span style="width:14px;height:3px;background:#E24B4A;display:inline-block;border-radius:1px;"></span>Bounding Box
+    </span>
+    <span style="display:flex;align-items:center;gap:4px;">
+      <span style="width:9px;height:9px;border-radius:50%;background:#E24B4A;display:inline-block;"></span>Objektmittelpunkt
+    </span>
+  </div>
+
+  <!-- Detektionsliste -->
+  <div id="camDetList" style="margin-top:0.75rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;"></div>
+</div>
+
+<script>
+(function () {
+
+const COCO = ['person','bicycle','car','motorcycle','airplane','bus','train',
+  'truck','boat','traffic light','fire hydrant','stop sign','parking meter',
+  'bench','bird','cat','dog','horse','sheep','cow','elephant','bear','zebra',
+  'giraffe','backpack','umbrella','handbag','tie','suitcase','frisbee','skis',
+  'snowboard','sports ball','kite','baseball bat','baseball glove','skateboard',
+  'surfboard','tennis racket','bottle','wine glass','cup','fork','knife','spoon',
+  'bowl','banana','apple','sandwich','orange','broccoli','carrot','hot dog',
+  'pizza','donut','cake','chair','couch','potted plant','bed','dining table',
+  'toilet','tv','laptop','mouse','remote','keyboard','cell phone','microwave',
+  'oven','toaster','sink','refrigerator','book','clock','vase','scissors',
+  'teddy bear','hair drier','toothbrush'];
+
+function clsColor(c) { return `hsl(${(c*47)%360},70%,45%)`; }
+
+const btnStart  = document.getElementById('camStart');
+const btnStop   = document.getElementById('camStop');
+const wrapper   = document.getElementById('camWrapper');
+const video     = document.getElementById('camVideo');
+const canvas    = document.getElementById('camCanvas');
+const ctx       = canvas.getContext('2d');
+const cSlider   = document.getElementById('camConfSlider');
+const cVal      = document.getElementById('camConfVal');
+const status    = document.getElementById('camStatus');
+const detList   = document.getElementById('camDetList');
+
+let loopActive  = false;
+let stream      = null;
+let lastBoxes   = [];
+
+cSlider.addEventListener('input', () => {
+  cVal.textContent = parseFloat(cSlider.value).toFixed(2);
+});
+
+// ── Session ───────────────────────────────────────────────────────────────────
+async function ensureSession() {
+  if (window.__yoloSession) return window.__yoloSession;
+  const s = await ort.InferenceSession.create('./models/yolov8n.onnx',
+    { executionProviders: ['webgpu', 'wasm'] });
+  window.__yoloSession = s;
+  return s;
+}
+
+status.textContent = 'STATUS: YOLO wird geladen …';
+ensureSession().then(() => {
+  status.textContent = 'STATUS: YOLO erfolgreich geladen. Kamera starten um zu beginnen!';
+}).catch(() => {
+  status.textContent = 'STATUS: YOLO nicht gefunden!';
+});
+
+// ── Vorverarbeitung (Letterbox -> 640×640) ────────────────────────────────────
+const _offCanvas = document.createElement('canvas');
+_offCanvas.width = 640; _offCanvas.height = 640;
+const _offCtx = _offCanvas.getContext('2d', { willReadFrequently: true });
+
+function preprocess(source, sw, sh) {
+  const MODEL = 640;
+  const scale = Math.min(MODEL/sw, MODEL/sh);
+  const nw = Math.round(sw*scale), nh = Math.round(sh*scale);
+  const px = Math.floor((MODEL-nw)/2), py = Math.floor((MODEL-nh)/2);
+  _offCtx.fillStyle = 'rgb(114,114,114)'; _offCtx.fillRect(0,0,MODEL,MODEL);
+  _offCtx.drawImage(source, px, py, nw, nh);
+  const pixels = _offCtx.getImageData(0,0,MODEL,MODEL).data;
+  const input = new Float32Array(3*MODEL*MODEL);
+  for (let i=0;i<MODEL*MODEL;i++) {
+    input[i]              = pixels[i*4]  /255;
+    input[MODEL*MODEL+i]  = pixels[i*4+1]/255;
+    input[2*MODEL*MODEL+i]= pixels[i*4+2]/255;
+  }
+  return { input, scale, px, py };
+}
+
+// ── NMS ───────────────────────────────────────────────────────────────────────
+function iou(a,b) {
+  const x1=Math.max(a.x1,b.x1), y1=Math.max(a.y1,b.y1);
+  const x2=Math.min(a.x2,b.x2), y2=Math.min(a.y2,b.y2);
+  const inter=Math.max(0,x2-x1)*Math.max(0,y2-y1);
+  return inter/((a.x2-a.x1)*(a.y2-a.y1)+(b.x2-b.x1)*(b.y2-b.y1)-inter+1e-6);
+}
+function nms(boxes, thr=0.45) {
+  boxes.sort((a,b)=>b.conf-a.conf);
+  const keep=[], sup=new Set();
+  for(let i=0;i<boxes.length;i++){
+    if(sup.has(i)) continue;
+    keep.push(boxes[i]);
+    for(let j=i+1;j<boxes.length;j++)
+      if(!sup.has(j)&&boxes[i].cls===boxes[j].cls&&iou(boxes[i],boxes[j])>thr) sup.add(j);
+  }
+  return keep;
+}
+
+// ── Tensor -> Boxen ────────────────────────────────────────────────────────────
+function parseOutput(data, scale, px, py, W, H, minConf=0.05) {
+  const N=8400, boxes=[];
+  for(let i=0;i<N;i++){
+    let maxScore=0, maxCls=0;
+    for(let c=0;c<80;c++){ const s=data[(4+c)*N+i]; if(s>maxScore){maxScore=s;maxCls=c;} }
+    if(maxScore<minConf) continue;
+    const cx=data[0*N+i], cy=data[1*N+i], w=data[2*N+i], h=data[3*N+i];
+    boxes.push({
+      x1: Math.max(0,(cx-w/2-px)/scale),
+      y1: Math.max(0,(cy-h/2-py)/scale),
+      x2: Math.min(W,(cx+w/2-px)/scale),
+      y2: Math.min(H,(cy+h/2-py)/scale),
+      conf: maxScore, cls: maxCls
+    });
+  }
+  return boxes;
+}
+
+// ── Zeichnen ──────────────────────────────────────────────────────────────────
+function drawBoxes(filtered) {
+  filtered.forEach(b => {
+    const color = clsColor(b.cls);
+    ctx.strokeStyle=color; ctx.lineWidth=8;
+    ctx.strokeRect(b.x1, b.y1, b.x2-b.x1, b.y2-b.y1);
+    const lbl=`${COCO[b.cls]} ${(b.conf*100).toFixed(0)}%`;
+    ctx.font='bold 22px sans-serif';
+    const tw=ctx.measureText(lbl).width;
+    ctx.fillStyle=color; ctx.fillRect(b.x1-1, b.y1-21, tw+10, 21);
+    ctx.fillStyle='#fff'; ctx.fillText(lbl, b.x1+4, b.y1-5);
+    const mx=(b.x1+b.x2)/2, my=(b.y1+b.y2)/2;
+    ctx.fillStyle='#E24B4A'; ctx.beginPath(); ctx.arc(mx,my,5,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle='#fff'; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(mx,my,5,0,Math.PI*2); ctx.stroke();
+  });
+}
+
+function updateDetList(filtered, conf) {
+  detList.innerHTML = filtered.length === 0
+    ? `<div style="font-size:13px;color:#999;">Keine Objekte über Schwellwert ${conf.toFixed(2)} erkannt.</div>`
+    : filtered.map(b=>`
+        <div style="background:#f5f5f5;border-radius:6px;padding:0.5rem 0.75rem;border-left:3px solid ${clsColor(b.cls)};">
+          <div style="font-size:11px;color:#888;">${COCO[b.cls]} · ${(b.conf*100).toFixed(0)}% Conf.</div>
+          <div style="font-size:13px;font-weight:600;">Box: ${Math.round(b.x2-b.x1)}×${Math.round(b.y2-b.y1)} px</div>
+        </div>`).join('');
+}
+
+// ── Kamera starten ───────────────────────────────────────────────────────────
+btnStart.addEventListener('click', async () => {
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ 
+      video: { facingMode: { ideal: 'environment' } }  // ← hier
+    });
+    video.srcObject = stream;
+    await video.play();
+
+    wrapper.style.display = 'block';
+    btnStart.disabled = true;
+    btnStop.disabled  = false;
+    btnStop.style.cssText = btnStop.style.cssText.replace('background:#e0e0e0;color:#888','background:#c0392b;color:#fff');
+    cSlider.disabled = false;
+
+    const session = await ensureSession();
+    loopActive = true;
+    inferLoop(session);
+    drawLoop();
+  } catch(e) {
+    status.textContent = `STATUS: Kamera-Fehler | ${e.message}`;
+  }
+});
+
+// ── Kamera stoppen ────────────────────────────────────────────────────────────
+btnStop.addEventListener('click', () => {
+  loopActive = false;
+  if (stream) stream.getTracks().forEach(t => t.stop());
+  stream = null;
+  video.srcObject = null;
+  wrapper.style.display = 'none';
+  btnStart.disabled = false;
+  btnStop.disabled  = true;
+  btnStop.style.cssText = btnStop.style.cssText.replace('background:#c0392b;color:#fff','background:#e0e0e0;color:#888');
+  cSlider.disabled = true;
+  status.textContent = 'STATUS: Kamera gestoppt.';
+  detList.innerHTML = '';
+});
+
+// ── Inferenz-Loop (entkoppelt) ────────────────────────────────────────────────
+async function inferLoop(session) {
+  while (loopActive) {
+    const W = video.videoWidth, H = video.videoHeight;
+    if (W > 0) {
+      const conf = parseFloat(cSlider.value);
+
+      const t0 = performance.now();
+      const { input, scale, px, py } = preprocess(video, W, H);
+      const tensor = new ort.Tensor('float32', input, [1,3,640,640]);
+      const feed = {}; feed[session.inputNames[0]] = tensor;
+      const out  = await session.run(feed);
+      const fps = (1000 / (performance.now() - t0)).toFixed(1);
+
+      const boxes = parseOutput(out[session.outputNames[0]].data, scale, px, py, W, H, conf);
+      lastBoxes = nms(boxes);
+      status.textContent = `STATUS: ${lastBoxes.length} Objekt(e) erkannt | ${fps} FPS`;
+      updateDetList(lastBoxes, conf);
+    } else {
+      await new Promise(r => setTimeout(r, 16)); // nur warten wenn kein Frame da
+    }
+  }
+}
+
+// ── Draw-Loop (60 fps) ────────────────────────────────────────────────────────
+function drawLoop() {
+  if (!loopActive) return;
+  const W = video.videoWidth, H = video.videoHeight;
+  if (W > 0) {
+    canvas.width = W; canvas.height = H;
+    ctx.clearRect(0, 0, W, H);
+    drawBoxes(lastBoxes);
+  }
+  requestAnimationFrame(drawLoop);
+}
+
+})();
+</script>
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+</section>
+</section>
+<section id="sec-fazit" class="level2">
+<h2 class="anchored" data-anchor-id="sec-fazit">Fazit &amp; Diskussion</h2>
+<p>YOLO löst das in <a href="#sec-einordnung">Abschnitt 1</a> beschriebene Problem der Echtzeit-Objekterkennung konsequent. Statt ein Bild in mehreren Schritten zu verarbeiten, formuliert es die Erkennung als ein einziges Regressionsproblem: Einmal durch das Netz, ein Ausgabetensor, alle Ergebnisse. Die Implementierung mit YOLOv8 in <span id="sec-implementierung">Abschnitt 3</span> zeigt, dass dieses Prinzip heute mit wenigen Zeilen Python produktiv umsetzbar ist, und die interaktiven Demos in <span id="sec-eigentests">Abschnitt 4</span> machen die zugrundeliegenden Konzepte direkt erfahrbar.</p>
+<p>Über den Einsatz mit den vortrainierten Gewichten hinaus, lässt sich YOLOv8 per Fine-Tuning selbstverständlich auch gezielt auf eigene Anwendungsfälle anpassen. Dabei werden die bestehenden Gewichte als Ausgangspunkt geladen und auf einem eigenen, annotierten Datensatz (z.B. landesspezifische Verkehrsschilder oder spezielle Fahrzeugtypen) mit wenigen Epochen nachtrainiert. Der Feature-Extractor behält dabei sein bereits erlerntes Verständnis für allgemeine Bildmerkmale, während der Prediction Head die neuen Klassen lernt. So entsteht aus dem generischen Modell ein spezialisierter Detektor, der die Stärken der YOLO-Architektur auf das eigene Einsatzszenario überträgt.</p>
+<p>So leistungsfähig YOLO auch ist gibt es Szenarien, in denen das System an seine Grenzen stößt. Diese zu kennen sind wichtig, um die Ergebnisse im Demo-Kapitel korrekt einordnen zu können.</p>
+<p><strong>Occlusion (Verdeckung):</strong> Da jede Rasterzelle nur eine Klasse vorhersagen kann, hat YOLO Schwierigkeiten, wenn mehrere Objekte derselben Klasse eng beieinanderliegen oder sich gar überlappen. Zum Beispiel eine Menschenmenge oder dicht aufgefahrene Fahrzeuge. Verdeckte Objekte werden oft auch gar nicht oder als falsche Klasse erkannt <span class="citation" data-cites="redmon2015 terven2023">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>, Kapitel 2.4; <a href="#ref-terven2023" role="doc-biblioref">Terven and Cordova-Esparza 2023</a>, Seite 29)</span>.</p>
+<p><strong>Kleine Objekte:</strong> Das Grid-System ist von Natur aus eine Vergröberung des Bildes. Sehr kleine Objekte, die vielleicht nur in einer einzigen Zelle liegen, gehen dabei leicht unter. Die Originalautoren räumen dieses Problem selbst ein <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>, Kapitel 2.4)</span>.</p>
+<p><strong>FPS vs.&nbsp;Genauigkeit:</strong> YOLO existiert in verschiedenen Größen (z.B. yolov8n bis yolov8x). Kleinere Varianten sind schneller, aber ungenauer. Größere präziser, aber langsamer. Welche Variante sinnvoll ist, hängt stets vom Einsatszenario ab. Ein Roboter in einer kontrollierten Umgebung hat selbstverständlich andere Anforderungen als ein Fahrzeug im Straßenverkehr.</p>
+<p><strong>Umgebungsbedingungen:</strong> Schlechte Lichtverhältnisse, Regen oder dicht gedrängter Verkehr können die Erkennungsrate erheblich senken, besonders im Kontext des autonomen Fahrens eine nicht zu unterschätzende Einschränkung.</p>
+<p><strong>Fehleranalyse im Vergleich zu Fast R-CNN:</strong> Die Fehlerarten beider Modelle unterschieden sich grundlegend. YOLO macht deutlich mehr Lokalisierungsfehler (Loc: 19.0% vs.&nbsp;8.6%); die Box sitzt also häufiger nicht exakt.<br>
+Fast R-CNN hingegen erkennt fast dreimal so häufig Hintergrundbereiche fälschlicherweise als Objekte (Background: 13.6% vs.&nbsp;4.75%), weil es jeden Ausschnitt isoliert betrachtet und den größeren Bildkontext nicht sieht <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>)</span>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./img/yolo_fehleranalyse.png" class="img-fluid figure-img"></p>
+<figcaption>Fehleranalyse von Fast R-CNN (links) vs.&nbsp;YOLO (rechts). YOLO macht mehr Lokalisierungsfehler, Fast R-CNN hingegen deutlich mehr Hintergrundfehler. <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>, Abbildung 4)</span></figcaption>
+</figure>
+</div>
+
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-friedrich2026" class="csl-entry" role="listitem">
+Friedrich, Markus. 2026. <em>Visual Computing: Erkennung (Klassifikation, Segmentierung, Objekterkennung, Anomalierkennung)</em>. In <em>Vorlesungsskript, Hochschule München (HM) Für Angewandte Wissenschaften</em>. <a href="https://hm.edu/kontakte_de/contact_detail_55814.de.html">https://hm.edu/kontakte_de/contact_detail_55814.de.html</a>.
+</div>
+<div id="ref-girshick2014" class="csl-entry" role="listitem">
+Girshick, Ross, Jeff Donahue, Trevor Darrell, and Jitendra Malik. 2014. <em>Rich Feature Hierarchies for Accurate Object Detection and Semantic Segmentation</em>. <a href="https://arxiv.org/abs/1311.2524">https://arxiv.org/abs/1311.2524</a>.
+</div>
+<div id="ref-jocher2023" class="csl-entry" role="listitem">
+Jocher, Glenn, Ayush Chaurasia, and Jing Qiu. 2023. <span>“Ultralytics YOLOv8.”</span> In <em>GitHub</em>. Released. <a href="https://github.com/ultralytics/ultralytics">https://github.com/ultralytics/ultralytics</a>.
+</div>
+<div id="ref-keita2024" class="csl-entry" role="listitem">
+Keita, Zoumana. 2024. <span>“YOLO Object Detection Erklärt.”</span> <em>DataCamp</em>. <a href="https://www.datacamp.com/de/blog/yolo-object-detection-explained">https://www.datacamp.com/de/blog/yolo-object-detection-explained</a>.
+</div>
+<div id="ref-liu2016" class="csl-entry" role="listitem">
+Liu, Wei, Dragomir Anguelov, Dumitru Erhan, et al. 2016. <em>SSD: Single Shot MultiBox Detector</em>. <a href="https://arxiv.org/pdf/1512.02325">https://arxiv.org/pdf/1512.02325</a>.
+</div>
+<div id="ref-redmon2015" class="csl-entry" role="listitem">
+Redmon, Joseph, Santosh Divvala, Ross Girshick, and Ali Farhadi. 2015. <em>You Only Look Once: Unified, Real-Time Object Detection</em>. <a href="https://arxiv.org/abs/1506.02640">https://arxiv.org/abs/1506.02640</a>.
+</div>
+<div id="ref-sanchez2020" class="csl-entry" role="listitem">
+Sanchez, S. A., H. J. Romero, and A. D. Morales. 2020. <span>“A Review: Comparison of Performance Metrics of Pretrained Models for Object Detection Using the TensorFlow Framework.”</span> <em>Expotecnologia 2019, IOP Conference Series: Materials Science and Engineering</em>. <a href="https://iopscience.iop.org/article/10.1088/1757-899X/844/1/012024/meta">https://iopscience.iop.org/article/10.1088/1757-899X/844/1/012024/meta</a>.
+</div>
+<div id="ref-terven2023" class="csl-entry" role="listitem">
+Terven, Juan, and Diana Cordova-Esparza. 2023. <span>“A Comprehensive Review of YOLO Architectures in Computer Vision.”</span> <em>Machine Learning and Knowledge Extraction</em>. <a href="https://arxiv.org/abs/2304.00501">https://arxiv.org/abs/2304.00501</a>.
+</div>
+</div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Aus Gründen der Lesbarkeit wird im Verlauf der gesamten Webseite das generische Maskulinum verwendet.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>ImageNet ist ein riesiger Bilddatensatz mit über 14 Millionen annotierten Bildern aus über 20.000 Klassen, der als Standard-Benchmark für das Vortraining von Bilderkennungsnetzen gilt. YOLO nutzt beim Vortraining nur die ILSVRC-Untermenge mit 1000 Klassen und ca. 1,2 Millionen Bildern <span class="citation" data-cites="redmon2015">(<a href="#ref-redmon2015" role="doc-biblioref">Redmon et al. 2015</a>, Kapitel 2.2)</span>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>MaxPooling reduziert eine Feature-Map, indem es aus jedem lokalen Fenster nur den größten Wert behält.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Ein Conv-Layer mit Stride 2 verschiebt den Faltungskernel in Zweierschritten, wodurch die räumliche Auflösung der Feature-Map halbiert wird.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Beispiel-Eingabevideo unter <a href="https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4">GeeksForGeeks</a> erreichbar.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Der vollständige Code inkl. Modell für diese Umsetzung kann im <a href="https://github.com/billyS02/vcde">GitHub-Repository</a> eingesehen werden.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script>videojs(video_shortcode_videojs_video1);</script>
+
+
+
+
+</body></html>
