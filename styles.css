@@ -14,7 +14,7 @@ main.content {
   margin-bottom: 2rem;
 }
 
-main.content h2 {color: #8b0000;}
+main.content h2 {color: #7a1518;}
 main.content h3,
 main.content h4 {
   color: #a01820;
@@ -38,7 +38,7 @@ main.content h4 {
 
 /* ── Bessere Lesbarkeit für den Titel-Bereich ──────────────── */
 #title-block-header h1.title {
-  border-bottom: 3px solid #fc5556;
+  border-bottom: 3px solid #b51d26;
   padding-bottom: 0.6rem;
   display: inline-block;
 }
