@@ -34,6 +34,12 @@ nav[role="doc-toc"] ul li a.active {
   border-left-color: #b51d26 !important;
 }
 
+#TOC a:hover,
+nav[role="doc-toc"] a:hover,
+nav[role="doc-toc"] ul li a:hover {
+  color: #b51d26 !important;
+}
+
 /* ── Navbar ────────────────────────────────────── */
 .navbar {
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
