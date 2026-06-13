@@ -2,6 +2,8 @@
 title: "Echtzeit-Objekterkennung mit YOLO"
 subtitle: "**Eine demonstrative Implementierung am Beispiel des Autonomen Fahrens**"
 author: "Bledar Sllamniku (Digital Engineering, B.Sc.)"
+date: "2026-06-13"
+date-format: "DD. MMMM YYYY"
 format:
   html:
     theme: cosmo
@@ -302,7 +304,7 @@ import urllib.request, os, sys
 
 urllib.request.urlretrieve(
     "https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4",
-    "sample.mp4"
+    "./img/sample.mp4"
 )
 
 # C-Level stderr unterdrücken
@@ -310,7 +312,7 @@ devnull = os.open(os.devnull, os.O_WRONLY)
 old_stderr = os.dup(2)
 os.dup2(devnull, 2)
 
-process_video("sample.mp4", "./img/autobahn_out.mp4")
+process_video("./img/sample.mp4", "./img/autobahn_out.mp4")
 
 # Wiederherstellen
 os.dup2(old_stderr, 2)
