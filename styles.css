@@ -14,10 +14,24 @@ main.content {
   margin-bottom: 2rem;
 }
 
-main.content h2 {color: #7a1518;}
+main.content h2 {color: #2a0608;}
 main.content h3,
 main.content h4 {
-  color: #a01820;
+  color: #2a0608;
+}
+
+main.content a {
+  color: #b51d26;
+}
+main.content a:hover {
+  color: #fc5556;
+}
+
+#TOC a.active,
+nav[role="doc-toc"] a.active,
+nav[role="doc-toc"] ul li a.active {
+  color: #b51d26 !important;
+  border-left-color: #b51d26 !important;
 }
 
 /* ── Navbar ────────────────────────────────────── */
@@ -38,7 +52,7 @@ main.content h4 {
 
 /* ── Bessere Lesbarkeit für den Titel-Bereich ──────────────── */
 #title-block-header h1.title {
-  border-bottom: 3px solid #b51d26;
+  border-bottom: 3px solid #fc5556;
   padding-bottom: 0.6rem;
   display: inline-block;
 }

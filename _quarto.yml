@@ -4,7 +4,7 @@ project:
     - models/yolov8n.onnx
 
 website:
-  title: " "
+  title: "![](img/MUCDAI_Logo.png){.second-logo}"
   navbar:
     background: "#ffd1d4"
     foreground: "#1a1814"
