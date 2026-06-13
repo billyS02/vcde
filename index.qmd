@@ -310,14 +310,14 @@ devnull = os.open(os.devnull, os.O_WRONLY)
 old_stderr = os.dup(2)
 os.dup2(devnull, 2)
 
-process_video("sample.mp4", "output.mp4")
+process_video("./img/autobahn.mp4", "./img/autobahn_out.mp4")
 
 # Wiederherstellen
 os.dup2(old_stderr, 2)
 os.close(devnull)
 os.close(old_stderr)
 ```
-{{< video ./img/autobahn_h264.mp4 >}}   <!-- Es musste auf ein h264-Format ausgewichen werden, damit das Video auf Safari und Google-Chrome angezeigt werden kann -->
+{{< video ./img/autobahn_h264.mp4 >}}   <!-- Es musste auf ein h264-Format ausgewichen werden, damit das Video auf Safari UND Google-Chrome angezeigt werden kann -->
 
 [^5]: Beispiel-Eingabevideo unter [GeeksForGeeks](https://media.geeksforgeeks.org/wp-content/uploads/20250910161721597148/sample.mp4) erreichbar.
 
