@@ -1,6 +1,7 @@
 /* ── Sanfter, warmer Hintergrund statt reinem Weiß ─────────── */
 body {
   background: #faf8f4;
+  font-size: 0.925rem !important;
 }
 
 /* ── Hauptinhalt-Card mit dezentem Schatten ────────────────── */
@@ -13,7 +14,13 @@ main.content {
   margin-bottom: 2rem;
 }
 
-/* ── Navbar-Feinschliff ────────────────────────────────────── */
+main.content h2 {color: #7a1518;}
+main.content h3,
+main.content h4 {
+  color: #a01820;
+}
+
+/* ── Navbar ────────────────────────────────────── */
 .navbar {
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
@@ -31,7 +38,7 @@ main.content {
 
 /* ── Bessere Lesbarkeit für den Titel-Bereich ──────────────── */
 #title-block-header h1.title {
-  border-bottom: 3px solid #fc5556;
+  border-bottom: 3px solid #b51d26;
   padding-bottom: 0.6rem;
   display: inline-block;
 }
