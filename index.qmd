@@ -310,7 +310,7 @@ devnull = os.open(os.devnull, os.O_WRONLY)
 old_stderr = os.dup(2)
 os.dup2(devnull, 2)
 
-process_video("./img/autobahn.mp4", "./img/autobahn_out.mp4")
+process_video("sample.mp4", "./img/autobahn_out.mp4")
 
 # Wiederherstellen
 os.dup2(old_stderr, 2)
