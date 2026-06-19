@@ -112,14 +112,15 @@ Für jeder dieser Zellen sagt das Modell gleichzeitig mehrere Dinge vorher:
 
 Das **Gesamtmodell** fasst also alle Vorhersagen aller Zellen in einer einzigen verschachtelten Zahlenstruktur zusammen, dem sog. *Tensor*, vereinfacht gesagt ein mehrdimensionales Array. 
 Seine Dimension beträgt $S \times S \times (B \cdot 5 + C)$, d.h. jede der $S \times S$ Zellen werden $B$ Boxen mit je 5 Werten sowie $C$ Klassenwahrscheinlichkeiten gespeichert.  
-Die Autoren evaluierten ihr Modell auf **PASCAL VOC**, einem standardisierten Benchmark-Datensatz für Objekterkennung mit 20 vordefinierten Klassen (u.a. Auto, Person, Hund), der in der Computer-Vision-Forschung als gemeinsame Vergleichsbasis weit verbreitet ist. 
+Die Autoren trainierten und evaluierten ihr Detection-Modell auf **PASCAL VOC**, einem standardisierten Benchmark-Datensatz für Objekterkennung mit 20 vordefinierten Klassen (u.a. Auto, Person, Hund), der in der Computer-Vision-Forschung als gemeinsame Vergleichsbasis weit verbreitet ist. 
 Mit $S = 7$, $B = 2$ und $C = 20$ ergibt sich ein Ausgabe-Tensor der Größe $7 \times 7 \times 30$.
 
 ### 2.2 Architektur
 
 ![Die grundlegende Architektur des Modells, wie es 2015 veröffentlicht wurde. [@redmon2015, Abbildung 3]](./img/yolo_arch.png){fig-align="center"}
 
-Das YOLO-Netz besteht aus zwei klar getrennten Phasen, die auf ImageNet[^2] trainiert wurden:
+Das YOLO-Netz besteht aus zwei klar getrennten Phasen. 
+Die ersten 20 Convolutional Layer des Feature-Extractors wurden auf ImageNet[^2] für die Klassifikation vortrainiert, bevor das vollständige Netz auf PASCAL VOC für die Detection trainiert wurde:
 
 - **Feature-Extractor**  
 
@@ -153,7 +154,7 @@ Die wichtigsten Meilensteine sind wohl:
 - **YOLOv2 (2016):** Einführung von *Anchor Boxes*, die typische Objektformen vorwegnehmen und die Erkennung kleiner Objekte verbessern.
 - **YOLOv3 (2018):** Erkennung auf *drei Skalen* gleichzeitig; besonders hilfreich für Objekte unterschiedlicher Größe im selben Bild.
 - **YOLOv4/v5 (2020):** Community-getriebene Weiterentwicklungen mit zahlreichen Trainingstricks; YOLOv5 vollzog den Wechsel zu PyTorch und vereinfachte den Export auf Edge-Geräte erheblich [@terven2023, Kapitel 9].
-- **<u>YOLOv8</u> (2023):** Die aktuell verbreitetste Version. Kernerneuerung ist die *anchor-free* Architektur: Statt vordefinierten Anchor Boxes lernt das Modell Boxpositionen direkt, was den Trainingsprozess vereinfacht und die Genauigkeit steigert. Zudem wurde ein *decoupled head* eingeführt, der Klassifizierung und Lokalisation in getrennten Zweigen berechnet [@jocher2023].
+- **<u>YOLOv8</u> (2023):** Die aktuell verbreitetste Version. Standardmäßig auf dem **COCO-Datensatz** mit <u>80 Klassen</u> vortrainiert. Kernerneuerung ist die *anchor-free* Architektur: Statt vordefinierten Anchor Boxes lernt das Modell Boxpositionen direkt, was den Trainingsprozess vereinfacht und die Genauigkeit steigert. Zudem wurde ein *decoupled head* eingeführt, der Klassifizierung und Lokalisation in getrennten Zweigen berechnet [@jocher2023].
 - **YOLO26 (2025):** Die aktuellste Version. Führt NMS-freie End-to-End-Inferenz (d.h. keine separater Nachverarbeitungsschritt zur Duplikatelimination) ein und entfernt den Distribution Focal Loss (d.h. die Bounding-Box-Regression wird direkt ohne verteilungsbasierte Hilfsverlustfunktion gelernt). Das vereinfacht den Export und beschleunigt die native CPU-Inferenz um bis zu 43%. Für dieses Projekt wird dennoch <u>YOLOv8</u> eingesetzt, da es zu diesem Zeitpunkt die am weitesten verbreitete und best dokumentierteste Version ist und die zugrundeliegenden Konzepte exemplarisch vermittelt.
 
 <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
